@@ -18,3 +18,23 @@ C:\Users\Jaleary\Desktop\AutoPuTTY-master\obj\Debug\autoputty.exe.manifest
 C:\Users\Jaleary\Desktop\AutoPuTTY-master\obj\Debug\autoputty.application
 C:\Users\Jaleary\Desktop\AutoPuTTY-master\obj\Debug\autoputty.exe
 C:\Users\Jaleary\Desktop\AutoPuTTY-master\obj\Debug\autoputty.pdb
+C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.exe.config
+C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.exe.manifest
+C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.application
+C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.exe
+C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.pdb
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.csprojAssemblyReference.cache
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupAbout.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupRecrypt.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.formOptions.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.formMain.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupPassword.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupImport.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.Properties.Resources.resources
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.csproj.GenerateResource.cache
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.csproj.CoreCompileInputs.cache
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\autoputty.TrustInfo.xml
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\autoputty.exe.manifest
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\autoputty.application
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\autoputty.exe
+C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\autoputty.pdb

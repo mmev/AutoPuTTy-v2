@@ -15,6 +15,7 @@ using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using AutoPuTTY.Properties;
+using AutoPuTTY.Utils;
 using ListBox=System.Windows.Forms.ListBox;
 using MenuItem=System.Windows.Forms.MenuItem;
 
@@ -42,8 +43,13 @@ namespace AutoPuTTY
         private string laststate = "normal";
         private string keysearch = "";
 
+        private xmlHelper xmlHelper;
+
+        internal xmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
+
         public formMain(bool full)
         {
+            XmlHelper = new xmlHelper();
 #if DEBUG
             DateTime time = DateTime.Now;
 #endif
@@ -60,7 +66,7 @@ namespace AutoPuTTY
                 try
                 {
                     Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
-                    XmlCreate();
+                    xmlHelper.XmlCreate();
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -69,11 +75,11 @@ namespace AutoPuTTY
                         try
                         {
                             Settings.Default.cfgpath = userpath + "\\" + Settings.Default.cfgfilepath;
-                            XmlCreate();
+                            xmlHelper.XmlCreate();
                         }
                         catch (UnauthorizedAccessException)
                         {
-                            Error("No really, I could not find nor write my configuration file :'(\rPlease check your user permissions.");
+                            otherHelper.Error("No really, I could not find nor write my configuration file :'(\rPlease check your user permissions.");
                             Environment.Exit(-1);
                         }
                     }
@@ -89,30 +95,30 @@ namespace AutoPuTTY
                 cbType.Items.Add(type);
             }
             cbType.SelectedIndex = 0;
-            if (XmlConfigGet("password") != "") Settings.Default.password = XmlConfigGet("password");
-            if (XmlConfigGet("multicolumnwidth") != "") Settings.Default.multicolumnwidth = Convert.ToInt32(XmlConfigGet("multicolumnwidth"));
-            if (XmlConfigGet("multicolumn").ToLower() == "true") Settings.Default.multicolumn = true;
-            if (XmlConfigGet("minimize").ToLower() == "false") Settings.Default.minimize = false;
-            if (XmlConfigGet("putty") != "") Settings.Default.puttypath = XmlConfigGet("putty");
-            if (XmlConfigGet("puttyexecute").ToLower() == "true") Settings.Default.puttyexecute = true;
-            if (XmlConfigGet("puttycommand") != "") Settings.Default.puttycommand = XmlConfigGet("puttycommand");
-            if (XmlConfigGet("puttykey").ToLower() == "true") Settings.Default.puttykey = true;
-            if (XmlConfigGet("puttykeyfile") != "") Settings.Default.puttykeyfile = XmlConfigGet("puttykeyfile");
-            if (XmlConfigGet("puttyforward").ToLower() == "true") Settings.Default.puttyforward = true;
-            if (XmlConfigGet("remotedesktop") != "") Settings.Default.rdpath = XmlConfigGet("remotedesktop");
-            if (XmlConfigGet("rdfilespath") != "") Settings.Default.rdfilespath = XmlConfigGet("rdfilespath");
-            if (XmlConfigGet("rdadmin").ToLower() == "true") Settings.Default.rdadmin = true;
-            if (XmlConfigGet("rddrives").ToLower() == "true") Settings.Default.rddrives = true;
-            if (XmlConfigGet("rdspan").ToLower() == "true") Settings.Default.rdspan = true;
-            if (XmlConfigGet("rdsize") != "") Settings.Default.rdsize = XmlConfigGet("rdsize");
-            if (XmlConfigGet("vnc") != "") Settings.Default.vncpath = XmlConfigGet("vnc");
-            if (XmlConfigGet("vncfilespath") != "") Settings.Default.vncfilespath = XmlConfigGet("vncfilespath");
-            if (XmlConfigGet("vncfullscreen").ToLower() == "true") Settings.Default.vncfullscreen = true;
-            if (XmlConfigGet("vncviewonly").ToLower() == "true") Settings.Default.vncviewonly = true;
-            if (XmlConfigGet("winscp") != "") Settings.Default.winscppath = XmlConfigGet("winscp");
-            if (XmlConfigGet("winscpkey").ToLower() == "true") Settings.Default.winscpkey = true;
-            if (XmlConfigGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlConfigGet("winscpkeyfile");
-            if (XmlConfigGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
+            if (XmlHelper.XmlConfigGet("password") != "") Settings.Default.password = XmlHelper.XmlConfigGet("password");
+            if (XmlHelper.XmlConfigGet("multicolumnwidth") != "") Settings.Default.multicolumnwidth = Convert.ToInt32(XmlHelper.XmlConfigGet("multicolumnwidth"));
+            if (XmlHelper.XmlConfigGet("multicolumn").ToLower() == "true") Settings.Default.multicolumn = true;
+            if (XmlHelper.XmlConfigGet("minimize").ToLower() == "false") Settings.Default.minimize = false;
+            if (XmlHelper.XmlConfigGet("putty") != "") Settings.Default.puttypath = XmlHelper.XmlConfigGet("putty");
+            if (XmlHelper.XmlConfigGet("puttyexecute").ToLower() == "true") Settings.Default.puttyexecute = true;
+            if (XmlHelper.XmlConfigGet("puttycommand") != "") Settings.Default.puttycommand = XmlHelper.XmlConfigGet("puttycommand");
+            if (XmlHelper.XmlConfigGet("puttykey").ToLower() == "true") Settings.Default.puttykey = true;
+            if (XmlHelper.XmlConfigGet("puttykeyfile") != "") Settings.Default.puttykeyfile = XmlHelper.XmlConfigGet("puttykeyfile");
+            if (XmlHelper.XmlConfigGet("puttyforward").ToLower() == "true") Settings.Default.puttyforward = true;
+            if (XmlHelper.XmlConfigGet("remotedesktop") != "") Settings.Default.rdpath = XmlHelper.XmlConfigGet("remotedesktop");
+            if (XmlHelper.XmlConfigGet("rdfilespath") != "") Settings.Default.rdfilespath = XmlHelper.XmlConfigGet("rdfilespath");
+            if (XmlHelper.XmlConfigGet("rdadmin").ToLower() == "true") Settings.Default.rdadmin = true;
+            if (XmlHelper.XmlConfigGet("rddrives").ToLower() == "true") Settings.Default.rddrives = true;
+            if (XmlHelper.XmlConfigGet("rdspan").ToLower() == "true") Settings.Default.rdspan = true;
+            if (XmlHelper.XmlConfigGet("rdsize") != "") Settings.Default.rdsize = XmlHelper.XmlConfigGet("rdsize");
+            if (XmlHelper.XmlConfigGet("vnc") != "") Settings.Default.vncpath = XmlHelper.XmlConfigGet("vnc");
+            if (XmlHelper.XmlConfigGet("vncfilespath") != "") Settings.Default.vncfilespath = XmlHelper.XmlConfigGet("vncfilespath");
+            if (XmlHelper.XmlConfigGet("vncfullscreen").ToLower() == "true") Settings.Default.vncfullscreen = true;
+            if (XmlHelper.XmlConfigGet("vncviewonly").ToLower() == "true") Settings.Default.vncviewonly = true;
+            if (XmlHelper.XmlConfigGet("winscp") != "") Settings.Default.winscppath = XmlHelper.XmlConfigGet("winscp");
+            if (XmlHelper.XmlConfigGet("winscpkey").ToLower() == "true") Settings.Default.winscpkey = true;
+            if (XmlHelper.XmlConfigGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlHelper.XmlConfigGet("winscpkeyfile");
+            if (XmlHelper.XmlConfigGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
 
             optionsform = new formOptions(this);
 
@@ -158,7 +164,7 @@ namespace AutoPuTTY
             deletemenu.Click += mDelete_Click;
             cmList.MenuItems.Add(deletemenu);
 
-            XmlToList();
+            XmlHelper.XmlToList(lbList);
             if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
             BeginInvoke(new InvokeDelegate(lbList.Focus));
 
@@ -291,206 +297,9 @@ namespace AutoPuTTY
             }
         }
 
-        public static void XmlCreate()
-        {
-            const string xmlcontent = "<?xml version=\"1.0\"?>\r\n<List>\r\n</List>";
-            TextWriter newfile = new StreamWriter(Settings.Default.cfgpath);
-            newfile.Write(xmlcontent);
-            newfile.Close();
-        }
+        
 
-        public void XmlConfigSet(string id, string val)
-        {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            XmlElement newpath = xmldoc.CreateElement("Config");
-            XmlAttribute name = xmldoc.CreateAttribute("ID");
-            name.Value = id;
-            newpath.SetAttributeNode(name);
-            newpath.InnerText = val;
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@ID=" + ParseXpathString(id) + "]");
-            if (xmlnode != null)
-            {
-                if (xmldoc.DocumentElement != null)
-                {
-                    if (xmlnode.Count > 0) {
-                        xmldoc.DocumentElement.ReplaceChild(newpath, xmlnode[0]);
-                    }
-                    else
-                    {
-                        xmldoc.DocumentElement.InsertBefore(newpath, xmldoc.DocumentElement.FirstChild);
-                    }
-                }
-            }
-
-            try
-            {
-                xmldoc.Save(file);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-            }
-        }
-
-        public string XmlConfigGet(string id)
-        {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            try
-            {
-                xmldoc.Load(file);
-            }
-            catch
-            {
-                Error("\"" + Settings.Default.cfgpath + "\" file is corrupt, delete it and try again.");
-                Environment.Exit(-1);
-            }
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@ID=" + ParseXpathString(id) + "]");
-            if (xmlnode != null)
-            {
-                if (xmlnode.Count > 0) return xmlnode[0].InnerText;
-            }
-            return "";
-        }
-
-        public void XmlDropNode(string node)
-        {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@" + node + "]");
-            if (xmldoc.DocumentElement != null)
-            {
-                if (xmlnode != null) xmldoc.DocumentElement.RemoveChild(xmlnode[0]);
-            }
-
-            try
-            {
-                xmldoc.Save(file);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-            }
-        }
-
-        public void XmlDropNode(ArrayList node)
-        {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            foreach (string item in node)
-            {
-                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@" + item + "]");
-                if (xmldoc.DocumentElement != null)
-                {
-                    if (xmlnode != null) xmldoc.DocumentElement.RemoveChild(xmlnode[0]);
-                }
-            }
-
-            try
-            {
-                xmldoc.Save(file);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-            }
-        }
-
-        internal void XmlToList()
-        {
-            lbList.Items.Clear();
-
-            if (File.Exists(Settings.Default.cfgpath))
-            {
-                string file = Settings.Default.cfgpath;
-                XmlDocument xmldoc = new XmlDocument();
-                xmldoc.Load(file);
-
-                XmlNodeList xmlnode = xmldoc.GetElementsByTagName("Server");
-                for (int i = 0; i < xmlnode.Count; i++) if (!lbList.Items.Contains(xmlnode[i].Attributes[0].Value)) lbList.Items.Add(xmlnode[i].Attributes[0].Value);
-            }
-            else
-            {
-                Error("\"" + Settings.Default.cfgpath + "\" file not found.");
-            }
-        }
-
-        public static ArrayList XmlGetServer(string name)
-        {
-            if (!File.Exists(Settings.Default.cfgpath))
-            {
-                return new ArrayList();
-            }
-
-            ArrayList server = new ArrayList();
-            string host = "";
-            string user = "";
-            string pass = "";
-            int type = 0;
-
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + ParseXpathString(name) + "]");
-            if (xmlnode != null)
-            {
-                if (xmlnode.Count > 0)
-                {
-                    foreach (XmlElement childnode in xmlnode[0].ChildNodes)
-                    {
-                        switch (childnode.Name)
-                        {
-                            case "Host":
-                                host = childnode.InnerText;
-                                break;
-                            case "User":
-                                user = childnode.InnerText;
-                                break;
-                            case "Password":
-                                pass = childnode.InnerText;
-                                break;
-                            case "Type":
-                                Int32.TryParse(childnode.InnerText, out type);
-                                break;
-                        }
-                    }
-                }
-                else return new ArrayList();
-            }
-
-            server.AddRange(new string[] {name, host, user, pass, type.ToString()});
-            return server;
-        }
-
-        public static string ParseXpathString(string input)
-        {
-            string ret = "";
-            if (input.Contains("'"))
-            {
-                string[] inputstrs = input.Split('\'');
-                foreach (string inputstr in inputstrs)
-                {
-                    if (ret != "") ret += ",\"'\",";
-                    ret += "'" + inputstr + "'";
-                }
-                ret = "concat(" + ret + ")";
-            }
-            else
-            {
-                ret = "'" + input + "'";
-            }
-            return ret;
-        }
+        
 
         private void lbList_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
         {
@@ -523,7 +332,7 @@ namespace AutoPuTTY
             }
             indexchanged = true;
 
-            ArrayList server = XmlGetServer(lbList.SelectedItem.ToString());
+            ArrayList server = xmlHelper.XmlGetServer(lbList.SelectedItem.ToString());
 
             tbName.Text = (string) server[0];
             tbHost.Text = Decrypt((string) server[1]);
@@ -632,7 +441,7 @@ namespace AutoPuTTY
 
                 foreach (object item in lbList.SelectedItems)
                 {
-                    ArrayList server = XmlGetServer(item.ToString());
+                    ArrayList server = xmlHelper.XmlGetServer(item.ToString());
 
                     string winscpprot = "sftp://";
 
@@ -987,7 +796,7 @@ namespace AutoPuTTY
         public void lbList_Filter(string s)
         {
             filter = true;
-            XmlToList();
+            XmlHelper.XmlToList(lbList);
             ListBox.ObjectCollection itemslist = new ListBox.ObjectCollection(lbList);
             itemslist.AddRange(lbList.Items);
             lbList.Items.Clear();
@@ -1052,7 +861,7 @@ namespace AutoPuTTY
                 newserver.AppendChild(type);
             }
 
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + ParseXpathString(lbList.SelectedItem.ToString()) + "]");
+            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()) + "]");
             if (xmldoc.DocumentElement != null)
             {
                 if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
@@ -1064,7 +873,7 @@ namespace AutoPuTTY
             }
             catch (UnauthorizedAccessException)
             {
-                Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
 
             remove = true;
@@ -1127,7 +936,7 @@ namespace AutoPuTTY
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                    otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
                 }
 
                 tbName.Text = tbName.Text.Trim();
@@ -1141,7 +950,7 @@ namespace AutoPuTTY
             }
             else
             {
-                Error("No name ?\nNo hostname ??\nTry again ...");
+                otherHelper.Error("No name ?\nNo hostname ??\nTry again ...");
             }
 
             if (filtervisible) tbFilter_Changed(new object(), new EventArgs());
@@ -1159,11 +968,11 @@ namespace AutoPuTTY
                     remove = true;
                     while (lbList.SelectedItems.Count > 0)
                     {
-                        _items.Add("Name=" + ParseXpathString(lbList.SelectedItem.ToString()));
+                        _items.Add("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()));
                         lbList.Items.Remove(lbList.SelectedItem);
                     }
                     remove = false;
-                    if (_items.Count > 0) XmlDropNode(_items);
+                    if (_items.Count > 0) XmlHelper.XmlDropNode(_items);
                     tbName_TextChanged(this, e);
                 }
             }
@@ -1173,7 +982,7 @@ namespace AutoPuTTY
         {
             if (lbList.SelectedItems.Count > 0)
             {
-                XmlDropNode("Name=" + ParseXpathString(lbList.SelectedItems[0].ToString()));
+                XmlHelper.XmlDropNode("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItems[0].ToString()));
                 remove = true;
                 lbList.Items.Remove(lbList.SelectedItems[0].ToString());
                 remove = false;
@@ -1192,8 +1001,8 @@ namespace AutoPuTTY
                 if (tbName.Text != lbList.SelectedItem.ToString())
                 {
                     //if new name doesn't exist in list, modify or add
-                    bModify.Enabled = XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
-                    bAdd.Enabled = XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
+                    bModify.Enabled = xmlHelper.XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
+                    bAdd.Enabled = xmlHelper.XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
                 }
                 //changed other stuff
                 else
@@ -1206,7 +1015,7 @@ namespace AutoPuTTY
             else
             {
                 bModify.Enabled = false;
-                if (tbName.Text.Trim() != "" && tbHost.Text.Trim() != "" && XmlGetServer(tbName.Text.Trim()).Count < 1) bAdd.Enabled = true;
+                if (tbName.Text.Trim() != "" && tbHost.Text.Trim() != "" && xmlHelper.XmlGetServer(tbName.Text.Trim()).Count < 1) bAdd.Enabled = true;
                 else bAdd.Enabled = false;
             }
         }
@@ -1243,11 +1052,6 @@ namespace AutoPuTTY
         private void miClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void Error(string message)
-        {
-            MessageBox.Show(this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         public string Encrypt(string toEncrypt)
@@ -1394,7 +1198,7 @@ namespace AutoPuTTY
         {
             FindSwitch(false);
             if (tbFilter.Text == "") return;
-            XmlToList();
+            XmlHelper.XmlToList(lbList);
             if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
         }
 

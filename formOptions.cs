@@ -95,13 +95,13 @@ namespace AutoPuTTY
         private void tbPuTTY_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttypath = tbPuTTYPath.Text;
-            if (!firstread) mainform.XmlConfigSet("putty", Settings.Default.puttypath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("putty", Settings.Default.puttypath);
         }
 
         private void cbPuTTYExecute_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttyexecute = cbPuTTYExecute.Checked;
-            if (!firstread) mainform.XmlConfigSet("puttyexecute", Settings.Default.puttyexecute.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyexecute", Settings.Default.puttyexecute.ToString());
             
             if (Settings.Default.puttyexecute)
             {
@@ -118,13 +118,13 @@ namespace AutoPuTTY
         private void tbPuTTYExecute_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttycommand = tbPuTTYExecute.Text;
-            if (!firstread) mainform.XmlConfigSet("puttycommand", Settings.Default.puttycommand);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttycommand", Settings.Default.puttycommand);
         }
 
         private void cbPuTTYKey_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttykey = cbPuTTYKey.Checked;
-            if (!firstread) mainform.XmlConfigSet("puttykey", Settings.Default.puttykey.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykey", Settings.Default.puttykey.ToString());
 
             if (Settings.Default.puttykey)
             {
@@ -154,7 +154,7 @@ namespace AutoPuTTY
         private void tbPuTTYKey_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttykeyfile = tbPuTTYKey.Text;
-            if (!firstread) mainform.XmlConfigSet("puttykeyfile", Settings.Default.puttykeyfile);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykeyfile", Settings.Default.puttykeyfile);
         }
 
         private void bPuTTYKey_Click(object sender, EventArgs e)
@@ -173,7 +173,7 @@ namespace AutoPuTTY
         private void cbPuTTYXforward_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttyforward = cbPuTTYForward.Checked;
-            if (!firstread) mainform.XmlConfigSet("puttyforward", Settings.Default.puttyforward.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyforward", Settings.Default.puttyforward.ToString());
         }
         
         public void bRDPath_Click(string type)
@@ -199,13 +199,13 @@ namespace AutoPuTTY
         private void tbRD_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.rdpath = tbRDPath.Text;
-            if (!firstread) mainform.XmlConfigSet("remotedesktop", Settings.Default.rdpath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("remotedesktop", Settings.Default.rdpath);
         }
 
         private void tbRDKeep_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.rdfilespath = tbRDKeep.Text;
-            if (!firstread) mainform.XmlConfigSet("rdfilespath", Settings.Default.rdfilespath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdfilespath", Settings.Default.rdfilespath);
         }
 
         private void bRDKeep_Click(object sender, EventArgs e)
@@ -224,19 +224,19 @@ namespace AutoPuTTY
         private void cbRDAdmin_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rdadmin = cbRDAdmin.Checked;
-            if (!firstread) mainform.XmlConfigSet("rdadmin", Settings.Default.rdadmin.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdadmin", Settings.Default.rdadmin.ToString());
         }
 
         private void cbDrives_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rddrives = cbRDDrives.Checked;
-            if (!firstread) mainform.XmlConfigSet("rddrives", Settings.Default.rddrives.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rddrives", Settings.Default.rddrives.ToString());
         }
 
         private void cbRDSpan_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rdspan = cbRDSpan.Checked;
-            if (!firstread) mainform.XmlConfigSet("rdspan", Settings.Default.rdspan.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdspan", Settings.Default.rdspan.ToString());
             cbRDSize.Enabled = !cbRDSpan.Checked;
         }
 
@@ -253,7 +253,7 @@ namespace AutoPuTTY
 
             if (arraylist.Count == 2 || cbRDSize.Text.Trim() == cbRDSize.Items[cbRDSize.Items.Count - 1].ToString()) Settings.Default.rdsize = cbRDSize.Text.Trim();
             else Settings.Default.rdsize = "";
-            if (!firstread) mainform.XmlConfigSet("rdsize", Settings.Default.rdsize);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdsize", Settings.Default.rdsize);
         }
 
         private void cbRDSize_TextChanged(object sender, EventArgs e)
@@ -284,25 +284,25 @@ namespace AutoPuTTY
         private void tbVNCPath_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.vncpath = tbVNCPath.Text;
-            if (!firstread) mainform.XmlConfigSet("vnc", Settings.Default.vncpath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vnc", Settings.Default.vncpath);
         }
 
         private void cbVNCFullscreen_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.vncfullscreen = cbVNCFullscreen.Checked;
-            if (!firstread) mainform.XmlConfigSet("vncfullscreen", Settings.Default.vncfullscreen.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vncfullscreen", Settings.Default.vncfullscreen.ToString());
         }
 
         private void cbVNCView_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.vncviewonly = cbVNCViewonly.Checked;
-            if (!firstread) mainform.XmlConfigSet("vncviewonly", Settings.Default.vncviewonly.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vncviewonly", Settings.Default.vncviewonly.ToString());
         }
 
         private void tbVNCKeep_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.vncfilespath = tbVNCKeep.Text;
-            if (!firstread) mainform.XmlConfigSet("vncfilespath", Settings.Default.vncfilespath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vncfilespath", Settings.Default.vncfilespath);
         }
 
         private void bVNCKeep_Click(object sender, EventArgs e)
@@ -321,7 +321,7 @@ namespace AutoPuTTY
         private void tbWSCPPath_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.winscppath = tbWSCPPath.Text;
-            if (!firstread) mainform.XmlConfigSet("winscp", Settings.Default.winscppath);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscp", Settings.Default.winscppath);
         }
 
         public void bWSCPPath_Click(string type)
@@ -347,7 +347,7 @@ namespace AutoPuTTY
         private void tbWSCPKey_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.winscpkeyfile = tbWSCPKey.Text;
-            if (!firstread) mainform.XmlConfigSet("winscpkeyfile", Settings.Default.winscpkeyfile);
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscpkeyfile", Settings.Default.winscpkeyfile);
         }
 
         private void bWSCPKey_Click(object sender, EventArgs e)
@@ -366,7 +366,7 @@ namespace AutoPuTTY
         private void cbWSCPKey_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.winscpkey = cbWSCPKey.Checked;
-            if (!firstread) mainform.XmlConfigSet("winscpkey", Settings.Default.winscpkey.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscpkey", Settings.Default.winscpkey.ToString());
 
             if (Settings.Default.winscpkey)
             {
@@ -383,13 +383,13 @@ namespace AutoPuTTY
         private void cbWSCPPassive_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.winscppassive = cbWSCPPassive.Checked;
-            if (!firstread) mainform.XmlConfigSet("winscppassive", Settings.Default.winscppassive.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscppassive", Settings.Default.winscppassive.ToString());
         }
 
         private void cbMulti_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.multicolumn = cbGMulti.Checked;
-            if (!firstread) mainform.XmlConfigSet("multicolumn", Settings.Default.multicolumn.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("multicolumn", Settings.Default.multicolumn.ToString());
 
             if (Settings.Default.multicolumn)
             {
@@ -409,7 +409,7 @@ namespace AutoPuTTY
         {
             if (!cbGMulti.Checked) return;
             Settings.Default.multicolumnwidth = slGMulti.Value;
-            if (!firstread) mainform.XmlConfigSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
             mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
         }
 
@@ -430,7 +430,7 @@ namespace AutoPuTTY
                     recryptpopup.Text = "Removing" + recryptpopup.Text;
                     recryptpopup.ShowDialog(this);
 
-                    mainform.XmlDropNode("ID='password'");
+                    mainform.XmlHelper.XmlDropNode("ID='password'");
                     Settings.Default.password = "";
                     Settings.Default.cryptkey = Settings.Default.ocryptkey;
                 }
@@ -461,7 +461,7 @@ namespace AutoPuTTY
                 if (Settings.Default.password != tbGPassword.Text)
                 {
                     Settings.Default.password = tbGPassword.Text;
-                    mainform.XmlConfigSet("password", mainform.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+                    mainform.XmlHelper.XmlConfigSet("password", mainform.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
 
                     string[] bwArgs = {"recrypt", Settings.Default.password};
                     bwProgress.RunWorkerAsync(bwArgs);
@@ -545,9 +545,10 @@ namespace AutoPuTTY
                     newserver.AppendChild(type);
                 }
 
-                XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
+                //XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
+                XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
                 if (xmldoc.DocumentElement != null)
-                {
+                    {
                     if (xmlnodename != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnodename[0]);
                 }
 
@@ -653,7 +654,7 @@ namespace AutoPuTTY
                         {
                             if (cbGReplace.Checked || (!cbGReplace.Checked && ImportAskDuplicate(_name)))
                             {
-                                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(_name) + "]");
+                                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.ParseXpathString(_name) + "]");
                                 if (xmldoc.DocumentElement != null)
                                 {
                                     if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
@@ -772,7 +773,7 @@ namespace AutoPuTTY
         private void cbGMinimize_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.minimize = cbGMinimize.Checked;
-            if (!firstread) mainform.XmlConfigSet("minimize", Settings.Default.minimize.ToString());
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("minimize", Settings.Default.minimize.ToString());
             mainform.notifyIcon.Visible = Settings.Default.minimize;
         }
 
