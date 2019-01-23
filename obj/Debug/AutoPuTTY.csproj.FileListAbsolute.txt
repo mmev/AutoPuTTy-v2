@@ -23,7 +23,6 @@ C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.exe.manifest
 C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.application
 C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.exe
 C:\Users\Jaleary\Documents\AutoPuTTY v2\bin\Debug\autoputty.pdb
-C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.csprojAssemblyReference.cache
 C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupAbout.resources
 C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.popupRecrypt.resources
 C:\Users\Jaleary\Documents\AutoPuTTY v2\obj\Debug\AutoPuTTY.formOptions.resources

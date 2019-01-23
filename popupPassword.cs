@@ -21,7 +21,7 @@ namespace AutoPuTTY
 
         private void bOK_Click(object sender, EventArgs e)
         {
-            if (mainform.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
+            if (mainform.Cryptor.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
             {
                 auth = true;
                 Close();

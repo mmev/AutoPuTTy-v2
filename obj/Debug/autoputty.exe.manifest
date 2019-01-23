@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="autoputty.exe" size="232960">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="autoputty.exe" size="233472">
       <assemblyIdentity name="autoputty" version="0.24.3.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>LgO4SjMD1HlLSvIc1C8l7MvXj4M=</dsig:DigestValue>
+        <dsig:DigestValue>jprsFr8lV7piPMymund7qHqYvkg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

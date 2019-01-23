@@ -60,7 +60,7 @@ namespace AutoPuTTY
                 cbGMinimize.Checked = Settings.Default.minimize;
                 if (Settings.Default.password.Trim() != "")
                 {
-                    Settings.Default.password = mainform.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
+                    Settings.Default.password = mainform.Cryptor.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
                     tbGPassword.Text = Settings.Default.password;
                     tbGConfirm.Text = Settings.Default.password;
                     Settings.Default.cryptkey = Settings.Default.password;
@@ -461,7 +461,7 @@ namespace AutoPuTTY
                 if (Settings.Default.password != tbGPassword.Text)
                 {
                     Settings.Default.password = tbGPassword.Text;
-                    mainform.XmlHelper.XmlConfigSet("password", mainform.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+                    mainform.XmlHelper.XmlConfigSet("password", mainform.Cryptor.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
 
                     string[] bwArgs = {"recrypt", Settings.Default.password};
                     bwProgress.RunWorkerAsync(bwArgs);
@@ -501,13 +501,13 @@ namespace AutoPuTTY
                     switch (childnode.Name)
                     {
                         case "Host":
-                            _host = mainform.Decrypt(childnode.InnerText);
+                            _host = mainform.Cryptor.Decrypt(childnode.InnerText);
                             break;
                         case "User":
-                            _user = mainform.Decrypt(childnode.InnerText);
+                            _user = mainform.Cryptor.Decrypt(childnode.InnerText);
                             break;
                         case "Password":
-                            _pass = mainform.Decrypt(childnode.InnerText);
+                            _pass = mainform.Cryptor.Decrypt(childnode.InnerText);
                             break;
                         case "Type":
                             Int32.TryParse(childnode.InnerText, out _type);
@@ -523,19 +523,19 @@ namespace AutoPuTTY
                 if (_host != "")
                 {
                     XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = mainform.Encrypt(_host, newpass);
+                    host.InnerText = mainform.Cryptor.Encrypt(_host, newpass);
                     newserver.AppendChild(host);
                 }
                 if (_user != "")
                 {
                     XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = mainform.Encrypt(_user, newpass);
+                    user.InnerText = mainform.Cryptor.Encrypt(_user, newpass);
                     newserver.AppendChild(user);
                 }
                 if (_pass != "")
                 {
                     XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = mainform.Encrypt(_pass, newpass);
+                    pass.InnerText = mainform.Cryptor.Encrypt(_pass, newpass);
                     newserver.AppendChild(pass);
                 }
                 if (_type > 0)
@@ -622,19 +622,19 @@ namespace AutoPuTTY
                     if (_host != "")
                     {
                         XmlElement host = xmldoc.CreateElement("Host");
-                        host.InnerText = mainform.Encrypt(_host);
+                        host.InnerText = mainform.Cryptor.Encrypt(_host);
                         newserver.AppendChild(host);
                     }
                     if (_user != "")
                     {
                         XmlElement user = xmldoc.CreateElement("User");
-                        user.InnerText = mainform.Encrypt(_user);
+                        user.InnerText = mainform.Cryptor.Encrypt(_user);
                         newserver.AppendChild(user);
                     }
                     if(_pass != "")
                     {
                         XmlElement pass = xmldoc.CreateElement("Password");
-                        pass.InnerText = mainform.Encrypt(_pass);
+                        pass.InnerText = mainform.Cryptor.Encrypt(_pass);
                         newserver.AppendChild(pass);
                     }
                     if (_type > 0)

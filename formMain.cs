@@ -44,12 +44,16 @@ namespace AutoPuTTY
         private string keysearch = "";
 
         private xmlHelper xmlHelper;
-
         internal xmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
+
+        private cryptHelper cryptor;
+        internal cryptHelper Cryptor { get => cryptor; set => cryptor = value; }
 
         public formMain(bool full)
         {
             XmlHelper = new xmlHelper();
+            Cryptor = new cryptHelper();
+
 #if DEBUG
             DateTime time = DateTime.Now;
 #endif
@@ -297,10 +301,6 @@ namespace AutoPuTTY
             }
         }
 
-        
-
-        
-
         private void lbList_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
@@ -335,9 +335,9 @@ namespace AutoPuTTY
             ArrayList server = xmlHelper.XmlGetServer(lbList.SelectedItem.ToString());
 
             tbName.Text = (string) server[0];
-            tbHost.Text = Decrypt((string) server[1]);
-            tbUser.Text = Decrypt((string) server[2]);
-            tbPass.Text = Decrypt((string) server[3]);
+            tbHost.Text = Cryptor.Decrypt((string) server[1]);
+            tbUser.Text = Cryptor.Decrypt((string) server[2]);
+            tbPass.Text = Cryptor.Decrypt((string) server[3]);
             cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(server[4])]);
             lUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
 
@@ -445,9 +445,9 @@ namespace AutoPuTTY
 
                     string winscpprot = "sftp://";
 
-                    string _host = Decrypt(server[1].ToString());
-                    string _user = Decrypt(server[2].ToString());
-                    string _pass = Decrypt(server[3].ToString());
+                    string _host = Cryptor.Decrypt(server[1].ToString());
+                    string _user = Cryptor.Decrypt(server[2].ToString());
+                    string _pass = Cryptor.Decrypt(server[3].ToString());
                     string _type = type == "-1" ? server[4].ToString() : type;
                     string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
                     string[] ps = { "/", "\\\\" };
@@ -839,19 +839,19 @@ namespace AutoPuTTY
             if (tbHost.Text.Trim() != "")
             {
                 XmlElement host = xmldoc.CreateElement("Host");
-                host.InnerText = Encrypt(tbHost.Text.Trim());
+                host.InnerText = Cryptor.Encrypt(tbHost.Text.Trim());
                 newserver.AppendChild(host);
             }
             if (tbUser.Text != "")
             {
                 XmlElement user = xmldoc.CreateElement("User");
-                user.InnerText = Encrypt(tbUser.Text);
+                user.InnerText = Cryptor.Encrypt(tbUser.Text);
                 newserver.AppendChild(user);
             }
             if (tbPass.Text != "")
             {
                 XmlElement pass = xmldoc.CreateElement("Password");
-                pass.InnerText = Encrypt(tbPass.Text);
+                pass.InnerText = Cryptor.Encrypt(tbPass.Text);
                 newserver.AppendChild(pass);
             }
             if (cbType.SelectedIndex > 0)
@@ -906,19 +906,19 @@ namespace AutoPuTTY
                 if (tbHost.Text.Trim() != "")
                 {
                     XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = Encrypt(tbHost.Text.Trim());
+                    host.InnerText = Cryptor.Encrypt(tbHost.Text.Trim());
                     newserver.AppendChild(host);
                 }
                 if (tbUser.Text != "")
                 {
                     XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = Encrypt(tbUser.Text);
+                    user.InnerText = Cryptor.Encrypt(tbUser.Text);
                     newserver.AppendChild(user);
                 }
                 if (tbPass.Text != "")
                 {
                     XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = Encrypt(tbPass.Text);
+                    pass.InnerText = Cryptor.Encrypt(tbPass.Text);
                     newserver.AppendChild(pass);
                 }
                 if (cbType.SelectedIndex > 0)
@@ -1052,92 +1052,6 @@ namespace AutoPuTTY
         private void miClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        public string Encrypt(string toEncrypt)
-        {
-            byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            byte[] keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(Settings.Default.cryptkey));
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            hashmd5.Clear();
-            tdes.Clear();
-
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-        }
-
-        public string Encrypt(string toEncrypt, string key)
-        {
-            if (toEncrypt == "") return "";
-
-            byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            byte[] keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            hashmd5.Clear();
-            tdes.Clear();
-
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-        }
-
-        public string Decrypt(string toDecrypt)
-        {
-            if (toDecrypt == "") return "";
-
-            byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            byte[] keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(Settings.Default.cryptkey));
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            hashmd5.Clear();
-            tdes.Clear();
-
-            return Encoding.UTF8.GetString(resultArray);
-        }
-
-        public string Decrypt(string toDecrypt, string key)
-        {
-            if (toDecrypt == "") return "";
-
-            byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            byte[] keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            hashmd5.Clear();
-            tdes.Clear();
-
-            return Encoding.UTF8.GetString(resultArray);
         }
 
         private void TooglePassword(bool state)

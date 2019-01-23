@@ -90,6 +90,7 @@
     <Compile Include="popupAbout.Designer.cs">
       <DependentUpon>popupAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\cryptHelper.cs" />
     <Compile Include="Utils\FusionTrackBar.cs">
       <SubType>Component</SubType>
     </Compile>
