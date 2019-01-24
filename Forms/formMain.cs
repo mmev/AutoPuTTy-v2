@@ -454,6 +454,7 @@ namespace AutoPuTTY
                 int selectedNodeIndex = tView.SelectedNode.Index;
                 updateTreeView();
                 tView.SelectedNode = tView.Nodes[selectedNodeIndex];
+                tView_NodeMouseClick(this, new TreeNodeMouseClickEventArgs(tView.Nodes[selectedNodeIndex], MouseButtons.Left, 1, 1, 1));
             }
         }
 
