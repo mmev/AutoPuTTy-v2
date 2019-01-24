@@ -11,6 +11,8 @@ namespace AutoPuTTY
 {
     public partial class formOptions : Form
     {
+        #region Conts Init
+
         public formMain mainform;
         public popupImport importpopup;
         public popupRecrypt recryptpopup;
@@ -19,6 +21,10 @@ namespace AutoPuTTY
         public bool importempty;
         public object locker = new object();
         public string importreplace = "";
+
+        #endregion
+
+        #region Element Loading
 
         public formOptions(formMain form)
         {
@@ -72,6 +78,10 @@ namespace AutoPuTTY
             firstread = false;
         }
 
+        #endregion
+
+        #region Button Events
+
         public void bPuTTYPath_Click(string type)
         {
             bPuTTYPath_Click(new object(), new EventArgs());
@@ -92,90 +102,6 @@ namespace AutoPuTTY
             else return;
         }
 
-        private void tbPuTTY_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttypath = tbPuTTYPath.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("putty", Settings.Default.puttypath);
-        }
-
-        private void cbPuTTYExecute_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttyexecute = cbPuTTYExecute.Checked;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyexecute", Settings.Default.puttyexecute.ToString());
-            
-            if (Settings.Default.puttyexecute)
-            {
-                tbPuTTYExecute.Enabled = true;
-                bPuTTYExecute.Enabled = true;
-            }
-            else
-            {
-                tbPuTTYExecute.Enabled = false;
-                bPuTTYExecute.Enabled = false;
-            }
-        }
-
-        private void tbPuTTYExecute_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttycommand = tbPuTTYExecute.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttycommand", Settings.Default.puttycommand);
-        }
-
-        private void cbPuTTYKey_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttykey = cbPuTTYKey.Checked;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykey", Settings.Default.puttykey.ToString());
-
-            if (Settings.Default.puttykey)
-            {
-                tbPuTTYKey.Enabled = true;
-                bPuTTYKey.Enabled = true;
-            }
-            else
-            {
-                tbPuTTYKey.Enabled = false;
-                bPuTTYKey.Enabled = false;
-            }
-        }
-
-        private void bPuTTYExecute_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select commands file";
-            browseFile.Filter = "TXT File (*.txt)|*.txt";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                tbPuTTYExecute.Text = browseFile.FileName;
-            }
-            else return;
-        }
-
-        private void tbPuTTYKey_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttykeyfile = tbPuTTYKey.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykeyfile", Settings.Default.puttykeyfile);
-        }
-
-        private void bPuTTYKey_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select private key file";
-            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                tbPuTTYKey.Text = browseFile.FileName;
-            }
-            else return;
-        }
-
-        private void cbPuTTYXforward_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.puttyforward = cbPuTTYForward.Checked;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyforward", Settings.Default.puttyforward.ToString());
-        }
-        
         public void bRDPath_Click(string type)
         {
             bRDPath_Click(new object(), new EventArgs());
@@ -196,16 +122,148 @@ namespace AutoPuTTY
             else return;
         }
 
-        private void tbRD_TextChanged(object sender, EventArgs e)
+        public void bVNCPath_Click(string type)
         {
-            Settings.Default.rdpath = tbRDPath.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("remotedesktop", Settings.Default.rdpath);
+            bVNCPath_Click(new object(), new EventArgs());
+            mainform.Connect(type);
         }
 
-        private void tbRDKeep_TextChanged(object sender, EventArgs e)
+        public void bVNCPath_Click(object sender, EventArgs e)
         {
-            Settings.Default.rdfilespath = tbRDKeep.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdfilespath", Settings.Default.rdfilespath);
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select VNC Viewer executable";
+            browseFile.Filter = "EXE File (*.exe)|*.exe";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
+                tbVNCPath.Text = browseFile.FileName;
+            }
+            else return;
+        }
+
+        private void bVNCKeep_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.Description = "Select .vnc files path";
+            DialogResult result = folderBrowserDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                tbVNCKeep.Text = folderBrowserDialog.SelectedPath;
+            }
+            else return;
+        }
+
+        public void bWSCPPath_Click(string type)
+        {
+            bWSCPPath_Click(new object(), new EventArgs());
+            mainform.Connect(type);
+        }
+
+        public void bWSCPPath_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select WinSCP executable";
+            browseFile.Filter = "EXE File (*.exe)|*.exe";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
+                tbWSCPPath.Text = browseFile.FileName;
+            }
+            else return;
+        }
+
+        private void bWSCPKey_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select private key file";
+            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                tbWSCPKey.Text = browseFile.FileName;
+            }
+            else return;
+        }
+
+        private void bPassword_Click(object sender, EventArgs e)
+        {
+            if (tbGPassword.Text.Trim() == "")
+            {
+                MessageBox.Show(this, "Password can't be empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tbGPassword.Text = "";
+                tbGConfirm.Text = "";
+            }
+            else if (tbGConfirm.Text != tbGPassword.Text)
+            {
+                MessageBox.Show(this, "Password confirmation doesn't match", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tbGConfirm.Text = "";
+            }
+            else
+            {
+                if (Settings.Default.password != tbGPassword.Text)
+                {
+                    Settings.Default.password = tbGPassword.Text;
+                    mainform.XmlHelper.XmlConfigSet("password", mainform.Cryptor.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+
+                    string[] bwArgs = { "recrypt", Settings.Default.password };
+                    bwProgress.RunWorkerAsync(bwArgs);
+                    recryptpopup = new popupRecrypt(this);
+                    recryptpopup.Text = "Applying" + recryptpopup.Text;
+                    recryptpopup.ShowDialog(this);
+
+                    Settings.Default.cryptkey = Settings.Default.password;
+                }
+                bGPassword.Enabled = false;
+            }
+        }
+
+        private void bGImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select server list";
+            browseFile.Filter = "TXT File (*.txt)|*.txt";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                string file = browseFile.FileName;
+                if (File.Exists(file))
+                {
+                    importpopup = new popupImport(this);
+                    object[] bwArgs = { "import", file };
+                    bwProgress.RunWorkerAsync(bwArgs);
+                    importpopup.ShowDialog(this);
+                    return;
+                }
+            }
+        }
+
+        private void bPuTTYExecute_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select commands file";
+            browseFile.Filter = "TXT File (*.txt)|*.txt";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                tbPuTTYExecute.Text = browseFile.FileName;
+            }
+            else return;
+        }
+
+        private void bPuTTYKey_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog();
+            browseFile.Title = "Select private key file";
+            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                tbPuTTYKey.Text = browseFile.FileName;
+            }
+            else return;
         }
 
         private void bRDKeep_Click(object sender, EventArgs e)
@@ -219,6 +277,140 @@ namespace AutoPuTTY
                 tbRDKeep.Text = folderBrowserDialog.SelectedPath;
             }
             else return;
+        }
+
+
+        #endregion
+
+        #region TextBox Events
+
+        private void tbPuTTY_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttypath = tbPuTTYPath.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("putty", Settings.Default.puttypath);
+        }
+
+        private void tbPuTTYExecute_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttycommand = tbPuTTYExecute.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttycommand", Settings.Default.puttycommand);
+        }
+
+        private void tbPuTTYKey_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttykeyfile = tbPuTTYKey.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykeyfile", Settings.Default.puttykeyfile);
+        }
+
+        private void tbRD_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.rdpath = tbRDPath.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("remotedesktop", Settings.Default.rdpath);
+        }
+
+        private void tbRDKeep_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.rdfilespath = tbRDKeep.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("rdfilespath", Settings.Default.rdfilespath);
+        }
+
+        private void tbVNCPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.vncpath = tbVNCPath.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vnc", Settings.Default.vncpath);
+        }
+
+        private void tbVNCKeep_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.vncfilespath = tbVNCKeep.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("vncfilespath", Settings.Default.vncfilespath);
+        }
+
+        private void tbWSCPPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.winscppath = tbWSCPPath.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscp", Settings.Default.winscppath);
+        }
+
+        private void tbWSCPKey_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.winscpkeyfile = tbWSCPKey.Text;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscpkeyfile", Settings.Default.winscpkeyfile);
+        }
+
+        private void tbPassword_TextChanged(object sender, EventArgs e)
+        {
+            if (tbGPassword.Text == "" || tbGConfirm.Text == "") bGPassword.Enabled = false;
+            else bGPassword.Enabled = true;
+        }
+
+        private void tbPassword_GotFocus(object sender, EventArgs e)
+        {
+            AcceptButton = bGPassword;
+        }
+
+        private void tbPassword_LostFocus(object sender, EventArgs e)
+        {
+            AcceptButton = null;
+        }
+
+        private void tbConfirm_TextChanged(object sender, EventArgs e)
+        {
+            tbPassword_TextChanged(this, e);
+        }
+
+        private void tbConfirm_GotFocus(object sender, EventArgs e)
+        {
+            tbPassword_GotFocus(this, e);
+        }
+
+        private void tbConfirm_LostFocus(object sender, EventArgs e)
+        {
+            tbPassword_LostFocus(this, e);
+        }
+
+        #endregion
+
+        #region CheckBox Events
+
+        private void cbPuTTYExecute_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttyexecute = cbPuTTYExecute.Checked;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyexecute", Settings.Default.puttyexecute.ToString());
+
+            if (Settings.Default.puttyexecute)
+            {
+                tbPuTTYExecute.Enabled = true;
+                bPuTTYExecute.Enabled = true;
+            }
+            else
+            {
+                tbPuTTYExecute.Enabled = false;
+                bPuTTYExecute.Enabled = false;
+            }
+        }
+
+        private void cbPuTTYKey_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttykey = cbPuTTYKey.Checked;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttykey", Settings.Default.puttykey.ToString());
+
+            if (Settings.Default.puttykey)
+            {
+                tbPuTTYKey.Enabled = true;
+                bPuTTYKey.Enabled = true;
+            }
+            else
+            {
+                tbPuTTYKey.Enabled = false;
+                bPuTTYKey.Enabled = false;
+            }
+        }
+
+        private void cbPuTTYXforward_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.puttyforward = cbPuTTYForward.Checked;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("puttyforward", Settings.Default.puttyforward.ToString());
         }
 
         private void cbRDAdmin_CheckedChanged(object sender, EventArgs e)
@@ -261,32 +453,6 @@ namespace AutoPuTTY
             cbRDSize_SelectedIndexChanged(sender, e);
         }
 
-        public void bVNCPath_Click(string type)
-        {
-            bVNCPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
-        }
-
-        public void bVNCPath_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select VNC Viewer executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
-                tbVNCPath.Text = browseFile.FileName;
-            }
-            else return;
-        }
-
-        private void tbVNCPath_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.vncpath = tbVNCPath.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("vnc", Settings.Default.vncpath);
-        }
-
         private void cbVNCFullscreen_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.vncfullscreen = cbVNCFullscreen.Checked;
@@ -297,70 +463,6 @@ namespace AutoPuTTY
         {
             Settings.Default.vncviewonly = cbVNCViewonly.Checked;
             if (!firstread) mainform.XmlHelper.XmlConfigSet("vncviewonly", Settings.Default.vncviewonly.ToString());
-        }
-
-        private void tbVNCKeep_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.vncfilespath = tbVNCKeep.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("vncfilespath", Settings.Default.vncfilespath);
-        }
-
-        private void bVNCKeep_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.Description = "Select .vnc files path";
-            DialogResult result = folderBrowserDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                tbVNCKeep.Text = folderBrowserDialog.SelectedPath;
-            }
-            else return;
-        }
-
-        private void tbWSCPPath_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.winscppath = tbWSCPPath.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscp", Settings.Default.winscppath);
-        }
-
-        public void bWSCPPath_Click(string type)
-        {
-            bWSCPPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
-        }
-
-        public void bWSCPPath_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select WinSCP executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
-                tbWSCPPath.Text = browseFile.FileName;
-            }
-            else return;
-        }
-
-        private void tbWSCPKey_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.winscpkeyfile = tbWSCPKey.Text;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("winscpkeyfile", Settings.Default.winscpkeyfile);
-        }
-
-        private void bWSCPKey_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select private key file";
-            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                tbWSCPKey.Text = browseFile.FileName;
-            }
-            else return;
         }
 
         private void cbWSCPKey_CheckedChanged(object sender, EventArgs e)
@@ -405,14 +507,6 @@ namespace AutoPuTTY
 
         }
 
-        private void slMulti_Scroll(object sender, EventArgs e)
-        {
-            if (!cbGMulti.Checked) return;
-            Settings.Default.multicolumnwidth = slGMulti.Value;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
-            mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
-        }
-
         private void cbGPassword_CheckedChanged(object sender, EventArgs e)
         {
             if (cbGPassword.Checked)
@@ -424,7 +518,7 @@ namespace AutoPuTTY
             {
                 if (Settings.Default.password != "")
                 {
-                    string[] bwArgs = {"recrypt", Settings.Default.ocryptkey};
+                    string[] bwArgs = { "recrypt", Settings.Default.ocryptkey };
                     bwProgress.RunWorkerAsync(bwArgs);
                     recryptpopup = new popupRecrypt(this);
                     recryptpopup.Text = "Removing" + recryptpopup.Text;
@@ -443,43 +537,96 @@ namespace AutoPuTTY
             }
         }
 
-        private void bPassword_Click(object sender, EventArgs e)
+        private void cbGReplace_CheckedChanged(object sender, EventArgs e)
         {
-            if (tbGPassword.Text.Trim() == "")
-            {
-                MessageBox.Show(this, "Password can't be empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                tbGPassword.Text = "";
-                tbGConfirm.Text = "";
-            }
-            else if (tbGConfirm.Text != tbGPassword.Text)
-            {
-                MessageBox.Show(this, "Password confirmation doesn't match", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                tbGConfirm.Text = "";
-            }
-            else
-            {
-                if (Settings.Default.password != tbGPassword.Text)
-                {
-                    Settings.Default.password = tbGPassword.Text;
-                    mainform.XmlHelper.XmlConfigSet("password", mainform.Cryptor.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+            if (cbGReplace.Checked) cbGSkip.Checked = false;
+        }
 
-                    string[] bwArgs = {"recrypt", Settings.Default.password};
-                    bwProgress.RunWorkerAsync(bwArgs);
-                    recryptpopup = new popupRecrypt(this);
-                    recryptpopup.Text = "Applying" + recryptpopup.Text;
-                    recryptpopup.ShowDialog(this);
+        private void cbGSkip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbGSkip.Checked) cbGReplace.Checked = false;
+        }
 
-                    Settings.Default.cryptkey = Settings.Default.password;
-                }
-                bGPassword.Enabled = false;
+        private void cbGMinimize_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.minimize = cbGMinimize.Checked;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("minimize", Settings.Default.minimize.ToString());
+            mainform.notifyIcon.Visible = Settings.Default.minimize;
+        }
+
+        #endregion
+
+        #region Other Events
+
+        private void liGImport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("List format:\r\n\r\nName     Hostname[:port]     [[Domain\\]username]     [Password]     [Type]\r\n\r\n- One server per line.\r\n- Use a tab as separator.\r\n- Only \"Name\" and \"Hostname\" are required.\r\n- \"Type\" is a numerical value, use the following correspondence:\r\n    0 = PuTTY\r\n    1 = Remote Desktop\r\n    2 = VNC\r\n    3 = WinSCP (SCP)\r\n    4 = WinSCP (SFTP)\r\n    5 = WinSCP (FTP)\r\n- If no \"Type\" is given it'll be set as \"PuTTY\" by default.", "Import list");
+        }
+
+        private void bwProgress_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            object[] args = (object[])e.Argument;
+            switch ((string)args[0])
+            {
+                case "import":
+                    ImportList((string)args[1]);
+                    break;
+                case "recrypt":
+                    RecryptList((string)args[1]);
+                    break;
+            }
+            e.Result = args[0];
+        }
+
+        private void bwProgress_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            string[] args = (string[])e.UserState;
+            switch (args[0])
+            {
+                case "import":
+                    args[0] = e.ProgressPercentage.ToString();
+                    importpopup.ImportProgress(args);
+                    break;
+                case "recrypt":
+                    args[0] = e.ProgressPercentage.ToString();
+                    recryptpopup.RecryptProgress(args);
+                    break;
             }
         }
 
+        private void bwProgress_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            switch ((string)e.Result)
+            {
+                case "import":
+                    importpopup.ImportComplete();
+                    mainform.lbList.SelectedItems.Clear();
+                    if (mainform.lbList.Items.Count > 0) mainform.lbList.SelectedIndex = 0;
+                    break;
+                case "recrypt":
+                    recryptpopup.RecryptComplete();
+                    break;
+            }
+        }
+
+        private void slMulti_Scroll(object sender, EventArgs e)
+        {
+            if (!cbGMulti.Checked) return;
+            Settings.Default.multicolumnwidth = slGMulti.Value;
+            if (!firstread) mainform.XmlHelper.XmlConfigSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
+            mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
+        }
+
+        #endregion
+
+        #region Methods
+
         private void RecryptList(string newpass)
         {
-#if DEBUG
+            #if DEBUG
             DateTime time = DateTime.Now;
-#endif
+            #endif
+
             importcancel = false;
             int count = 0;
 
@@ -489,84 +636,86 @@ namespace AutoPuTTY
 
             XmlNodeList xmlnodes = xmldoc.SelectNodes("/List/Server");
             if (xmlnodes != null) foreach (XmlNode xmlnode in xmlnodes)
-            {
-                count++;
-                string _host = "";
-                string _user = "";
-                string _pass = "";
-                int _type = 0;
-
-                foreach (XmlElement childnode in xmlnode.ChildNodes)
                 {
-                    switch (childnode.Name)
+                    count++;
+                    string _host = "";
+                    string _user = "";
+                    string _pass = "";
+                    int _type = 0;
+
+                    foreach (XmlElement childnode in xmlnode.ChildNodes)
                     {
-                        case "Host":
-                            _host = mainform.Cryptor.Decrypt(childnode.InnerText);
-                            break;
-                        case "User":
-                            _user = mainform.Cryptor.Decrypt(childnode.InnerText);
-                            break;
-                        case "Password":
-                            _pass = mainform.Cryptor.Decrypt(childnode.InnerText);
-                            break;
-                        case "Type":
-                            Int32.TryParse(childnode.InnerText, out _type);
-                            break;
+                        switch (childnode.Name)
+                        {
+                            case "Host":
+                                _host = mainform.Cryptor.Decrypt(childnode.InnerText);
+                                break;
+                            case "User":
+                                _user = mainform.Cryptor.Decrypt(childnode.InnerText);
+                                break;
+                            case "Password":
+                                _pass = mainform.Cryptor.Decrypt(childnode.InnerText);
+                                break;
+                            case "Type":
+                                Int32.TryParse(childnode.InnerText, out _type);
+                                break;
+                        }
                     }
-                }
 
-                XmlElement newserver = xmldoc.CreateElement("Server");
-                XmlAttribute name = xmldoc.CreateAttribute("Name");
-                name.Value = xmlnode.Attributes[0].Value;
-                newserver.SetAttributeNode(name);
+                    XmlElement newserver = xmldoc.CreateElement("Server");
+                    XmlAttribute name = xmldoc.CreateAttribute("Name");
+                    name.Value = xmlnode.Attributes[0].Value;
+                    newserver.SetAttributeNode(name);
 
-                if (_host != "")
-                {
-                    XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = mainform.Cryptor.Encrypt(_host, newpass);
-                    newserver.AppendChild(host);
-                }
-                if (_user != "")
-                {
-                    XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = mainform.Cryptor.Encrypt(_user, newpass);
-                    newserver.AppendChild(user);
-                }
-                if (_pass != "")
-                {
-                    XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = mainform.Cryptor.Encrypt(_pass, newpass);
-                    newserver.AppendChild(pass);
-                }
-                if (_type > 0)
-                {
-                    XmlElement type = xmldoc.CreateElement("Type");
-                    type.InnerText = _type.ToString();
-                    newserver.AppendChild(type);
-                }
-
-                //XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
-                XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
-                if (xmldoc.DocumentElement != null)
+                    if (_host != "")
                     {
-                    if (xmlnodename != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnodename[0]);
-                }
+                        XmlElement host = xmldoc.CreateElement("Host");
+                        host.InnerText = mainform.Cryptor.Encrypt(_host, newpass);
+                        newserver.AppendChild(host);
+                    }
+                    if (_user != "")
+                    {
+                        XmlElement user = xmldoc.CreateElement("User");
+                        user.InnerText = mainform.Cryptor.Encrypt(_user, newpass);
+                        newserver.AppendChild(user);
+                    }
+                    if (_pass != "")
+                    {
+                        XmlElement pass = xmldoc.CreateElement("Password");
+                        pass.InnerText = mainform.Cryptor.Encrypt(_pass, newpass);
+                        newserver.AppendChild(pass);
+                    }
+                    if (_type > 0)
+                    {
+                        XmlElement type = xmldoc.CreateElement("Type");
+                        type.InnerText = _type.ToString();
+                        newserver.AppendChild(type);
+                    }
 
-                string[] args = new string[] { "recrypt", count + " / " + mainform.lbList.Items.Count };
-                bwProgress.ReportProgress(((int)((double)count / (double)mainform.lbList.Items.Count * 100)), args);
-            }
+                    //XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
+                    XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
+                    if (xmldoc.DocumentElement != null)
+                    {
+                        if (xmlnodename != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnodename[0]);
+                    }
+
+                    string[] args = new string[] { "recrypt", count + " / " + mainform.lbList.Items.Count };
+                    bwProgress.ReportProgress(((int)((double)count / (double)mainform.lbList.Items.Count * 100)), args);
+                }
 
             xmldoc.Save(file);
-#if DEBUG
+
+            #if DEBUG
             Debug.WriteLine("Encryption duration :" + (DateTime.Now - time));
-#endif
+            #endif
         }
 
         private void ImportList(string f)
         {
-#if DEBUG
+            #if DEBUG
             DateTime time = DateTime.Now;
-#endif
+            #endif
+
             importcancel = false;
             importempty = false;
             string line;
@@ -631,7 +780,7 @@ namespace AutoPuTTY
                         user.InnerText = mainform.Cryptor.Encrypt(_user);
                         newserver.AppendChild(user);
                     }
-                    if(_pass != "")
+                    if (_pass != "")
                     {
                         XmlElement pass = xmldoc.CreateElement("Password");
                         pass.InnerText = mainform.Cryptor.Encrypt(_pass);
@@ -690,9 +839,9 @@ namespace AutoPuTTY
                 bwProgress.ReportProgress(((int)((double)c_total / (double)lines.Count * 100)), args);
             }
             xmldoc.Save(file);
-#if DEBUG
+            #if DEBUG
             Debug.WriteLine("Import duration :" + (DateTime.Now - time));
-#endif
+            #endif
             if (!importcancel && (c_add + c_replace + c_skip) < 1) importempty = true;
         }
 
@@ -704,123 +853,6 @@ namespace AutoPuTTY
             return false;
         }
 
-        private void tbPassword_TextChanged(object sender, EventArgs e)
-        {
-            if (tbGPassword.Text == "" || tbGConfirm.Text == "") bGPassword.Enabled = false;
-            else bGPassword.Enabled = true;
-        }
-
-        private void tbPassword_GotFocus(object sender, EventArgs e)
-        {
-            AcceptButton = bGPassword;
-        }
-
-        private void tbPassword_LostFocus(object sender, EventArgs e)
-        {
-            AcceptButton = null;
-        }
-
-        private void tbConfirm_TextChanged(object sender, EventArgs e)
-        {
-            tbPassword_TextChanged(this, e);
-        }
-
-        private void tbConfirm_GotFocus(object sender, EventArgs e)
-        {
-            tbPassword_GotFocus(this, e);
-        }
-
-        private void tbConfirm_LostFocus(object sender, EventArgs e)
-        {
-            tbPassword_LostFocus(this, e);
-        }
-
-        private void bGImport_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select server list";
-            browseFile.Filter = "TXT File (*.txt)|*.txt";
-
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                string file = browseFile.FileName;
-                if (File.Exists(file))
-                {
-                    importpopup = new popupImport(this);
-                    object[] bwArgs = { "import", file };
-                    bwProgress.RunWorkerAsync(bwArgs);
-                    importpopup.ShowDialog(this);
-                    return;
-                }
-            }
-        }
-
-        private void cbGReplace_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbGReplace.Checked) cbGSkip.Checked = false;
-        }
-
-        private void cbGSkip_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbGSkip.Checked) cbGReplace.Checked = false;
-        }
-
-        private void liGImport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("List format:\r\n\r\nName     Hostname[:port]     [[Domain\\]username]     [Password]     [Type]\r\n\r\n- One server per line.\r\n- Use a tab as separator.\r\n- Only \"Name\" and \"Hostname\" are required.\r\n- \"Type\" is a numerical value, use the following correspondence:\r\n    0 = PuTTY\r\n    1 = Remote Desktop\r\n    2 = VNC\r\n    3 = WinSCP (SCP)\r\n    4 = WinSCP (SFTP)\r\n    5 = WinSCP (FTP)\r\n- If no \"Type\" is given it'll be set as \"PuTTY\" by default.", "Import list");
-        }
-
-        private void cbGMinimize_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.minimize = cbGMinimize.Checked;
-            if (!firstread) mainform.XmlHelper.XmlConfigSet("minimize", Settings.Default.minimize.ToString());
-            mainform.notifyIcon.Visible = Settings.Default.minimize;
-        }
-
-        private void bwProgress_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            object[] args = (object[])e.Argument;
-            switch ((string)args[0])
-            {
-                case "import":
-                    ImportList((string)args[1]);
-                    break;
-                case "recrypt":
-                    RecryptList((string)args[1]);
-                    break;
-            }
-            e.Result = args[0];
-        }
-
-        private void bwProgress_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            string[] args = (string[])e.UserState;
-            switch (args[0])
-            {
-                case "import":
-                    args[0] = e.ProgressPercentage.ToString();
-                    importpopup.ImportProgress(args);
-                    break;
-                case "recrypt":
-                    args[0] = e.ProgressPercentage.ToString();
-                    recryptpopup.RecryptProgress(args);
-                    break;
-            }
-        }
-
-        private void bwProgress_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            switch ((string)e.Result)
-            {
-                case "import":
-                    importpopup.ImportComplete();
-                    mainform.lbList.SelectedItems.Clear();
-                    if (mainform.lbList.Items.Count > 0) mainform.lbList.SelectedIndex = 0;
-                    break;
-                case "recrypt":
-                    recryptpopup.RecryptComplete();
-                    break;
-            }
-        }
+        #endregion
     }
 }

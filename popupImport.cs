@@ -6,8 +6,14 @@ namespace AutoPuTTY
 {
     public partial class popupImport : Form
     {
+        #region Const Init
+
         public formOptions optionsform;
         private readonly int oheight;
+
+        #endregion
+
+        #region Element Init
 
         public popupImport(formOptions form)
         {
@@ -16,6 +22,10 @@ namespace AutoPuTTY
 
             oheight = Height;
         }
+
+        #endregion
+
+        #region Element Events
 
         private void formClosing(object sender, FormClosingEventArgs e)
         {
@@ -52,6 +62,10 @@ namespace AutoPuTTY
                 Monitor.Pulse(optionsform.locker);
             }
         }
+
+        #endregion
+
+        #region Methods
 
         private void SwitchDuplicateWarning(bool s)
         {
@@ -126,5 +140,7 @@ namespace AutoPuTTY
             if (optionsform.importempty) SwitchEmptyWarning("No entry found in file");
             else SwitchDuplicateWarning(false);
         }
+
+        #endregion
     }
 }

@@ -6,6 +6,8 @@ namespace AutoPuTTY
 {
     public partial class popupPassword : Form
     {
+        #region Conts Init
+
         public bool auth;
         public string cpassword = "";
         private readonly string password = "";
@@ -13,11 +15,19 @@ namespace AutoPuTTY
 
         readonly formMain mainform = new formMain(false);
 
+        #endregion
+
+        #region Element Init
+
         public popupPassword(string xmlpassword)
         {
             InitializeComponent();
             password = xmlpassword;
         }
+
+        #endregion
+
+        #region Element Events
 
         private void bOK_Click(object sender, EventArgs e)
         {
@@ -53,5 +63,7 @@ namespace AutoPuTTY
         {
             if (!auth && cpassword == "") Application.Exit();
         }
+
+        #endregion
     }
 }

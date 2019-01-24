@@ -5,13 +5,23 @@ namespace AutoPuTTY
 {
     public partial class popupRecrypt : Form
     {
+        #region Conts Init
+
         public formOptions optionsform;
+
+        #endregion
+
+        #region Elements Init
 
         public popupRecrypt(formOptions form)
         {
             optionsform = form;
             InitializeComponent();
         }
+
+        #endregion
+
+        #region Elements Events
 
         private void formClosing(object sender, FormClosingEventArgs e)
         {
@@ -24,6 +34,10 @@ namespace AutoPuTTY
             optionsform.bwProgress.CancelAsync();
         }
 
+        #endregion
+
+        #region Methods
+
         public void RecryptProgress(string[] args)
         {
             pbProgress.Value = Convert.ToInt16(args[0]);
@@ -35,5 +49,7 @@ namespace AutoPuTTY
             Text = "Processing complete";
             bOK.Enabled = true;
         }
+
+        #endregion
     }
 }
