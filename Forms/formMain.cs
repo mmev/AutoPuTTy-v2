@@ -54,6 +54,8 @@ namespace AutoPuTTY
         private string laststate = "normal";
         private string keysearch = "";
 
+        private ArrayList groupList = new ArrayList();
+
         private xmlHelper xmlHelper;
         internal xmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
 
@@ -91,7 +93,7 @@ namespace AutoPuTTY
                 try
                 {
                     Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
-                    xmlHelper.XmlCreate();
+                    xmlHelper.create();
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -100,7 +102,7 @@ namespace AutoPuTTY
                         try
                         {
                             Settings.Default.cfgpath = userpath + "\\" + Settings.Default.cfgfilepath;
-                            xmlHelper.XmlCreate();
+                            xmlHelper.create();
                         }
                         catch (UnauthorizedAccessException)
                         {
@@ -120,30 +122,30 @@ namespace AutoPuTTY
                 cbType.Items.Add(type);
             }
             cbType.SelectedIndex = 0;
-            if (XmlHelper.XmlConfigGet("password") != "") Settings.Default.password = XmlHelper.XmlConfigGet("password");
-            if (XmlHelper.XmlConfigGet("multicolumnwidth") != "") Settings.Default.multicolumnwidth = Convert.ToInt32(XmlHelper.XmlConfigGet("multicolumnwidth"));
-            if (XmlHelper.XmlConfigGet("multicolumn").ToLower() == "true") Settings.Default.multicolumn = true;
-            if (XmlHelper.XmlConfigGet("minimize").ToLower() == "false") Settings.Default.minimize = false;
-            if (XmlHelper.XmlConfigGet("putty") != "") Settings.Default.puttypath = XmlHelper.XmlConfigGet("putty");
-            if (XmlHelper.XmlConfigGet("puttyexecute").ToLower() == "true") Settings.Default.puttyexecute = true;
-            if (XmlHelper.XmlConfigGet("puttycommand") != "") Settings.Default.puttycommand = XmlHelper.XmlConfigGet("puttycommand");
-            if (XmlHelper.XmlConfigGet("puttykey").ToLower() == "true") Settings.Default.puttykey = true;
-            if (XmlHelper.XmlConfigGet("puttykeyfile") != "") Settings.Default.puttykeyfile = XmlHelper.XmlConfigGet("puttykeyfile");
-            if (XmlHelper.XmlConfigGet("puttyforward").ToLower() == "true") Settings.Default.puttyforward = true;
-            if (XmlHelper.XmlConfigGet("remotedesktop") != "") Settings.Default.rdpath = XmlHelper.XmlConfigGet("remotedesktop");
-            if (XmlHelper.XmlConfigGet("rdfilespath") != "") Settings.Default.rdfilespath = XmlHelper.XmlConfigGet("rdfilespath");
-            if (XmlHelper.XmlConfigGet("rdadmin").ToLower() == "true") Settings.Default.rdadmin = true;
-            if (XmlHelper.XmlConfigGet("rddrives").ToLower() == "true") Settings.Default.rddrives = true;
-            if (XmlHelper.XmlConfigGet("rdspan").ToLower() == "true") Settings.Default.rdspan = true;
-            if (XmlHelper.XmlConfigGet("rdsize") != "") Settings.Default.rdsize = XmlHelper.XmlConfigGet("rdsize");
-            if (XmlHelper.XmlConfigGet("vnc") != "") Settings.Default.vncpath = XmlHelper.XmlConfigGet("vnc");
-            if (XmlHelper.XmlConfigGet("vncfilespath") != "") Settings.Default.vncfilespath = XmlHelper.XmlConfigGet("vncfilespath");
-            if (XmlHelper.XmlConfigGet("vncfullscreen").ToLower() == "true") Settings.Default.vncfullscreen = true;
-            if (XmlHelper.XmlConfigGet("vncviewonly").ToLower() == "true") Settings.Default.vncviewonly = true;
-            if (XmlHelper.XmlConfigGet("winscp") != "") Settings.Default.winscppath = XmlHelper.XmlConfigGet("winscp");
-            if (XmlHelper.XmlConfigGet("winscpkey").ToLower() == "true") Settings.Default.winscpkey = true;
-            if (XmlHelper.XmlConfigGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlHelper.XmlConfigGet("winscpkeyfile");
-            if (XmlHelper.XmlConfigGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
+            if (XmlHelper.configGet("password") != "") Settings.Default.password = XmlHelper.configGet("password");
+            if (XmlHelper.configGet("multicolumnwidth") != "") Settings.Default.multicolumnwidth = Convert.ToInt32(XmlHelper.configGet("multicolumnwidth"));
+            if (XmlHelper.configGet("multicolumn").ToLower() == "true") Settings.Default.multicolumn = true;
+            if (XmlHelper.configGet("minimize").ToLower() == "false") Settings.Default.minimize = false;
+            if (XmlHelper.configGet("putty") != "") Settings.Default.puttypath = XmlHelper.configGet("putty");
+            if (XmlHelper.configGet("puttyexecute").ToLower() == "true") Settings.Default.puttyexecute = true;
+            if (XmlHelper.configGet("puttycommand") != "") Settings.Default.puttycommand = XmlHelper.configGet("puttycommand");
+            if (XmlHelper.configGet("puttykey").ToLower() == "true") Settings.Default.puttykey = true;
+            if (XmlHelper.configGet("puttykeyfile") != "") Settings.Default.puttykeyfile = XmlHelper.configGet("puttykeyfile");
+            if (XmlHelper.configGet("puttyforward").ToLower() == "true") Settings.Default.puttyforward = true;
+            if (XmlHelper.configGet("remotedesktop") != "") Settings.Default.rdpath = XmlHelper.configGet("remotedesktop");
+            if (XmlHelper.configGet("rdfilespath") != "") Settings.Default.rdfilespath = XmlHelper.configGet("rdfilespath");
+            if (XmlHelper.configGet("rdadmin").ToLower() == "true") Settings.Default.rdadmin = true;
+            if (XmlHelper.configGet("rddrives").ToLower() == "true") Settings.Default.rddrives = true;
+            if (XmlHelper.configGet("rdspan").ToLower() == "true") Settings.Default.rdspan = true;
+            if (XmlHelper.configGet("rdsize") != "") Settings.Default.rdsize = XmlHelper.configGet("rdsize");
+            if (XmlHelper.configGet("vnc") != "") Settings.Default.vncpath = XmlHelper.configGet("vnc");
+            if (XmlHelper.configGet("vncfilespath") != "") Settings.Default.vncfilespath = XmlHelper.configGet("vncfilespath");
+            if (XmlHelper.configGet("vncfullscreen").ToLower() == "true") Settings.Default.vncfullscreen = true;
+            if (XmlHelper.configGet("vncviewonly").ToLower() == "true") Settings.Default.vncviewonly = true;
+            if (XmlHelper.configGet("winscp") != "") Settings.Default.winscppath = XmlHelper.configGet("winscp");
+            if (XmlHelper.configGet("winscpkey").ToLower() == "true") Settings.Default.winscpkey = true;
+            if (XmlHelper.configGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlHelper.configGet("winscpkeyfile");
+            if (XmlHelper.configGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
 
             optionsform = new formOptions(this);
 
@@ -190,15 +192,21 @@ namespace AutoPuTTY
             cmList.MenuItems.Add(deletemenu);
 
             //XmlHelper.XmlToList(lbList);
-            
-            //if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
-            //BeginInvoke(new InvokeDelegate(lbList.Focus));
+
+            groupList = xmlHelper.getGroups();
+
+            foreach (string[] group in groupList)
+            {
+                string currentGroupName = group[0];
+
+                tView.Nodes.Add(currentGroupName);
+            }
 
             AutoSize = false;
             MinimumSize = Size;
-#if DEBUG
+            #if DEBUG
             Debug.WriteLine("StartUp Time :" + (DateTime.Now - time));
-#endif
+            #endif
         }
 
         #endregion
@@ -219,19 +227,19 @@ namespace AutoPuTTY
             if (tbServerHost.Text.Trim() != "")
             {
                 XmlElement host = xmldoc.CreateElement("Host");
-                host.InnerText = Cryptor.Encrypt(tbServerHost.Text.Trim());
+                host.InnerText = cryptHelper.Encrypt(tbServerHost.Text.Trim());
                 newserver.AppendChild(host);
             }
             if (tbServerUser.Text != "")
             {
                 XmlElement user = xmldoc.CreateElement("User");
-                user.InnerText = Cryptor.Encrypt(tbServerUser.Text);
+                user.InnerText = cryptHelper.Encrypt(tbServerUser.Text);
                 newserver.AppendChild(user);
             }
             if (tbServerPass.Text != "")
             {
                 XmlElement pass = xmldoc.CreateElement("Password");
-                pass.InnerText = Cryptor.Encrypt(tbServerPass.Text);
+                pass.InnerText = cryptHelper.Encrypt(tbServerPass.Text);
                 newserver.AppendChild(pass);
             }
             if (cbType.SelectedIndex > 0)
@@ -241,7 +249,7 @@ namespace AutoPuTTY
                 newserver.AppendChild(type);
             }
 
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.ParseXpathString(tView.SelectedNode.Text) + "]");
+            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.parseXpathString(tView.SelectedNode.Text) + "]");
             if (xmldoc.DocumentElement != null)
             {
                 if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
@@ -286,19 +294,19 @@ namespace AutoPuTTY
                 if (tbServerHost.Text.Trim() != "")
                 {
                     XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = Cryptor.Encrypt(tbServerHost.Text.Trim());
+                    host.InnerText = cryptHelper.Encrypt(tbServerHost.Text.Trim());
                     newserver.AppendChild(host);
                 }
                 if (tbServerUser.Text != "")
                 {
                     XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = Cryptor.Encrypt(tbServerUser.Text);
+                    user.InnerText = cryptHelper.Encrypt(tbServerUser.Text);
                     newserver.AppendChild(user);
                 }
                 if (tbServerPass.Text != "")
                 {
                     XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = Cryptor.Encrypt(tbServerPass.Text);
+                    pass.InnerText = cryptHelper.Encrypt(tbServerPass.Text);
                     newserver.AppendChild(pass);
                 }
                 if (cbType.SelectedIndex > 0)
@@ -401,12 +409,10 @@ namespace AutoPuTTY
         {
             TooglePassword(bServerEye, tbServerPass, !tbServerPass.UseSystemPasswordChar);
         }
-
         private void bEye_MouseEnter(object sender, EventArgs e)
         {
             bServerEye.Image = ImageOpacity.Set(bServerEye.Image, (float)0.50);
         }
-
         private void bEye_MouseLeave(object sender, EventArgs e)
         {
             bServerEye.Image = (tbServerPass.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
@@ -418,19 +424,48 @@ namespace AutoPuTTY
             optionsform.ShowDialog(this);
         }
 
+        /*
+         * NEW EVENTS
+         */
+
         private void bGroupEye_Click(object sender, EventArgs e)
         {
             TooglePassword(bGroupEye, tbGroupDefaultPassword, !tbGroupDefaultPassword.UseSystemPasswordChar);
         }
-
         private void bGroupEye_MouseEnter(object sender, EventArgs e)
         {
             bGroupEye.Image = (tbGroupDefaultPassword.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
         }
-
         private void bGroupEye_MouseLeave(object sender, EventArgs e)
         {
             bGroupEye.Image = (tbGroupDefaultPassword.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
+        }
+
+        // Creating new group by click
+        private void bGroupAdd_Click(object sender, EventArgs e)
+        {
+            if (tbGroupName.Text.Trim() != "")
+            {
+                string groupName = tbGroupName.Text.Trim();
+                string groupDefaultHost = tbGroupDefaultHost.Text.Trim();
+                string groupDefaultPort = tbGroupDefaultPort.Text.Trim();
+                string groupDefaultUsername = tbGroupDefaultUsername.Text.Trim();
+                string groupDefaultPassword = tbGroupDefaultPassword.Text.Trim();
+
+                xmlHelper.createGroup(groupName, groupDefaultHost, groupDefaultPort, groupDefaultUsername, groupDefaultPassword);
+
+                TreeNode newNode = tView.Nodes.Add(groupName);
+                tView.Focus();
+                tView.SelectedNode = newNode;
+                newNode.EnsureVisible();
+
+                bGroupModify.Enabled = false;
+                bGroupAdd.Enabled = false;
+                bGroupDelete.Enabled = true;
+            }
+            else {
+                otherHelper.Error("Enter group name and try again.");
+            }
         }
 
         #endregion
@@ -559,6 +594,18 @@ namespace AutoPuTTY
             {
                 e.SuppressKeyPress = true;
             }
+        }
+
+        /*
+         * NEW EVENTS
+         */
+
+        private void tbGroupName_TextChanged(object sender, EventArgs e)
+        {
+            if (tbGroupName.Text.Trim() != "")
+                bGroupAdd.Enabled = true;
+            else
+                bGroupAdd.Enabled = false;
         }
 
         #endregion

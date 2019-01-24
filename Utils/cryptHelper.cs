@@ -8,7 +8,7 @@ namespace AutoPuTTY.Utils
 {
     class cryptHelper
     {
-        public string Encrypt(string toEncrypt)
+        public static string Encrypt(string toEncrypt)
         {
             byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
             MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
@@ -50,7 +50,7 @@ namespace AutoPuTTY.Utils
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public string Decrypt(string toDecrypt)
+        public static string Decrypt(string toDecrypt)
         {
             if (toDecrypt == "") return "";
 

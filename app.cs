@@ -31,7 +31,7 @@ namespace AutoPuTTY
                 Application.SetCompatibleTextRenderingDefault(false);
 
                 formMain mainform = new formMain(false);
-                string password = mainform.XmlHelper.XmlConfigGet("password");
+                string password = mainform.XmlHelper.configGet("password");
 
                 if (password.Trim() != "")
                 {

@@ -192,6 +192,7 @@ namespace AutoPuTTY
             this.bGroupAdd.TabIndex = 40;
             this.bGroupAdd.UseCompatibleTextRendering = true;
             this.bGroupAdd.UseVisualStyleBackColor = true;
+            this.bGroupAdd.Click += new System.EventHandler(this.bGroupAdd_Click);
             // 
             // bGroupModify
             // 
@@ -346,6 +347,7 @@ namespace AutoPuTTY
             this.tbGroupName.Name = "tbGroupName";
             this.tbGroupName.Size = new System.Drawing.Size(126, 20);
             this.tbGroupName.TabIndex = 24;
+            this.tbGroupName.TextChanged += new System.EventHandler(this.tbGroupName_TextChanged);
             // 
             // lGroupName
             // 
