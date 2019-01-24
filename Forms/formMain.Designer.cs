@@ -32,6 +32,26 @@ namespace AutoPuTTY
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.tbServerPass = new System.Windows.Forms.TextBox();
             this.pConfig = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.bGroupDelete = new System.Windows.Forms.Button();
+            this.bGroupAdd = new System.Windows.Forms.Button();
+            this.bGroupModify = new System.Windows.Forms.Button();
+            this.bGroupEye = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbGroupDefaultPassword = new System.Windows.Forms.TextBox();
+            this.lGroupDefaultPassword = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbGroupDefaultUsername = new System.Windows.Forms.TextBox();
+            this.lGroupDefaultUsername = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbGroupDefaultPort = new System.Windows.Forms.TextBox();
+            this.lGroupDefaultPort = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbGroupDefaultHost = new System.Windows.Forms.TextBox();
+            this.lGroupDefaultHost = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tbGroupName = new System.Windows.Forms.TextBox();
+            this.lGroupName = new System.Windows.Forms.Label();
             this.bServerEye = new System.Windows.Forms.PictureBox();
             this.lServerSep5 = new System.Windows.Forms.Label();
             this.lServerSep4 = new System.Windows.Forms.Label();
@@ -64,35 +84,15 @@ namespace AutoPuTTY
             this.bClose = new System.Windows.Forms.PictureBox();
             this.tbFilter = new System.Windows.Forms.TextBox();
             this.lbListSep = new System.Windows.Forms.TableLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tbGroupName = new System.Windows.Forms.TextBox();
-            this.lGroupName = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbGroupDefaultHost = new System.Windows.Forms.TextBox();
-            this.lGroupDefaultHost = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbGroupDefaultPort = new System.Windows.Forms.TextBox();
-            this.lGroupDefaultPort = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbGroupDefaultUsername = new System.Windows.Forms.TextBox();
-            this.lGroupDefaultUsername = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbGroupDefaultPassword = new System.Windows.Forms.TextBox();
-            this.lGroupDefaultPassword = new System.Windows.Forms.Label();
-            this.bGroupDelete = new System.Windows.Forms.Button();
-            this.bGroupAdd = new System.Windows.Forms.Button();
-            this.bGroupModify = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
             this.tView = new System.Windows.Forms.TreeView();
             this.pConfig.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).BeginInit();
             this.tlMain.SuspendLayout();
             this.tlLeft.SuspendLayout();
             this.pFind.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bClose)).BeginInit();
             this.lbListSep.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tbServerPass
@@ -112,7 +112,7 @@ namespace AutoPuTTY
             this.pConfig.Controls.Add(this.bGroupDelete);
             this.pConfig.Controls.Add(this.bGroupAdd);
             this.pConfig.Controls.Add(this.bGroupModify);
-            this.pConfig.Controls.Add(this.pictureBox1);
+            this.pConfig.Controls.Add(this.bGroupEye);
             this.pConfig.Controls.Add(this.label6);
             this.pConfig.Controls.Add(this.tbGroupDefaultPassword);
             this.pConfig.Controls.Add(this.lGroupDefaultPassword);
@@ -153,6 +153,208 @@ namespace AutoPuTTY
             this.pConfig.Name = "pConfig";
             this.pConfig.Size = new System.Drawing.Size(130, 492);
             this.pConfig.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label7.Location = new System.Drawing.Point(2, 232);
+            this.label7.Margin = new System.Windows.Forms.Padding(0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(126, 2);
+            this.label7.TabIndex = 42;
+            // 
+            // bGroupDelete
+            // 
+            this.bGroupDelete.Enabled = false;
+            this.bGroupDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bGroupDelete.Image = global::AutoPuTTY.Properties.Resources.icondelete;
+            this.bGroupDelete.Location = new System.Drawing.Point(97, 200);
+            this.bGroupDelete.Margin = new System.Windows.Forms.Padding(0);
+            this.bGroupDelete.Name = "bGroupDelete";
+            this.bGroupDelete.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
+            this.bGroupDelete.Size = new System.Drawing.Size(32, 30);
+            this.bGroupDelete.TabIndex = 41;
+            this.bGroupDelete.UseCompatibleTextRendering = true;
+            this.bGroupDelete.UseVisualStyleBackColor = true;
+            // 
+            // bGroupAdd
+            // 
+            this.bGroupAdd.Enabled = false;
+            this.bGroupAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bGroupAdd.Image = global::AutoPuTTY.Properties.Resources.iconadd;
+            this.bGroupAdd.Location = new System.Drawing.Point(33, 200);
+            this.bGroupAdd.Margin = new System.Windows.Forms.Padding(0);
+            this.bGroupAdd.Name = "bGroupAdd";
+            this.bGroupAdd.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
+            this.bGroupAdd.Size = new System.Drawing.Size(64, 30);
+            this.bGroupAdd.TabIndex = 40;
+            this.bGroupAdd.UseCompatibleTextRendering = true;
+            this.bGroupAdd.UseVisualStyleBackColor = true;
+            // 
+            // bGroupModify
+            // 
+            this.bGroupModify.Enabled = false;
+            this.bGroupModify.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bGroupModify.Image = global::AutoPuTTY.Properties.Resources.iconmodify;
+            this.bGroupModify.Location = new System.Drawing.Point(1, 200);
+            this.bGroupModify.Margin = new System.Windows.Forms.Padding(0);
+            this.bGroupModify.Name = "bGroupModify";
+            this.bGroupModify.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
+            this.bGroupModify.Size = new System.Drawing.Size(32, 30);
+            this.bGroupModify.TabIndex = 39;
+            this.bGroupModify.UseCompatibleTextRendering = true;
+            this.bGroupModify.UseVisualStyleBackColor = true;
+            // 
+            // bGroupEye
+            // 
+            this.bGroupEye.BackColor = System.Drawing.Color.Transparent;
+            this.bGroupEye.Image = global::AutoPuTTY.Properties.Resources.iconeyeshow;
+            this.bGroupEye.Location = new System.Drawing.Point(106, 159);
+            this.bGroupEye.Margin = new System.Windows.Forms.Padding(0);
+            this.bGroupEye.Name = "bGroupEye";
+            this.bGroupEye.Size = new System.Drawing.Size(22, 15);
+            this.bGroupEye.TabIndex = 38;
+            this.bGroupEye.TabStop = false;
+            this.bGroupEye.Click += new System.EventHandler(this.bGroupEye_Click);
+            this.bGroupEye.MouseEnter += new System.EventHandler(this.bGroupEye_MouseEnter);
+            this.bGroupEye.MouseLeave += new System.EventHandler(this.bGroupEye_MouseLeave);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label6.Location = new System.Drawing.Point(2, 174);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(126, 2);
+            this.label6.TabIndex = 35;
+            // 
+            // tbGroupDefaultPassword
+            // 
+            this.tbGroupDefaultPassword.Location = new System.Drawing.Point(2, 177);
+            this.tbGroupDefaultPassword.Name = "tbGroupDefaultPassword";
+            this.tbGroupDefaultPassword.Size = new System.Drawing.Size(126, 20);
+            this.tbGroupDefaultPassword.TabIndex = 36;
+            this.tbGroupDefaultPassword.UseSystemPasswordChar = true;
+            // 
+            // lGroupDefaultPassword
+            // 
+            this.lGroupDefaultPassword.AutoSize = true;
+            this.lGroupDefaultPassword.Location = new System.Drawing.Point(3, 160);
+            this.lGroupDefaultPassword.Name = "lGroupDefaultPassword";
+            this.lGroupDefaultPassword.Size = new System.Drawing.Size(90, 13);
+            this.lGroupDefaultPassword.TabIndex = 34;
+            this.lGroupDefaultPassword.Text = "Default Password";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label4.Location = new System.Drawing.Point(2, 135);
+            this.label4.Margin = new System.Windows.Forms.Padding(0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(126, 2);
+            this.label4.TabIndex = 32;
+            // 
+            // tbGroupDefaultUsername
+            // 
+            this.tbGroupDefaultUsername.Location = new System.Drawing.Point(2, 138);
+            this.tbGroupDefaultUsername.Name = "tbGroupDefaultUsername";
+            this.tbGroupDefaultUsername.Size = new System.Drawing.Size(126, 20);
+            this.tbGroupDefaultUsername.TabIndex = 33;
+            // 
+            // lGroupDefaultUsername
+            // 
+            this.lGroupDefaultUsername.AutoSize = true;
+            this.lGroupDefaultUsername.Location = new System.Drawing.Point(3, 121);
+            this.lGroupDefaultUsername.Name = "lGroupDefaultUsername";
+            this.lGroupDefaultUsername.Size = new System.Drawing.Size(92, 13);
+            this.lGroupDefaultUsername.TabIndex = 31;
+            this.lGroupDefaultUsername.Text = "Default Username";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label5.Location = new System.Drawing.Point(2, 96);
+            this.label5.Margin = new System.Windows.Forms.Padding(0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(126, 2);
+            this.label5.TabIndex = 29;
+            // 
+            // tbGroupDefaultPort
+            // 
+            this.tbGroupDefaultPort.Location = new System.Drawing.Point(2, 99);
+            this.tbGroupDefaultPort.Name = "tbGroupDefaultPort";
+            this.tbGroupDefaultPort.Size = new System.Drawing.Size(126, 20);
+            this.tbGroupDefaultPort.TabIndex = 30;
+            // 
+            // lGroupDefaultPort
+            // 
+            this.lGroupDefaultPort.AutoSize = true;
+            this.lGroupDefaultPort.Location = new System.Drawing.Point(3, 82);
+            this.lGroupDefaultPort.Name = "lGroupDefaultPort";
+            this.lGroupDefaultPort.Size = new System.Drawing.Size(63, 13);
+            this.lGroupDefaultPort.TabIndex = 28;
+            this.lGroupDefaultPort.Text = "Default Port";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label3.Location = new System.Drawing.Point(2, 57);
+            this.label3.Margin = new System.Windows.Forms.Padding(0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(126, 2);
+            this.label3.TabIndex = 26;
+            // 
+            // tbGroupDefaultHost
+            // 
+            this.tbGroupDefaultHost.Location = new System.Drawing.Point(2, 60);
+            this.tbGroupDefaultHost.Name = "tbGroupDefaultHost";
+            this.tbGroupDefaultHost.Size = new System.Drawing.Size(126, 20);
+            this.tbGroupDefaultHost.TabIndex = 27;
+            // 
+            // lGroupDefaultHost
+            // 
+            this.lGroupDefaultHost.AutoSize = true;
+            this.lGroupDefaultHost.Location = new System.Drawing.Point(3, 43);
+            this.lGroupDefaultHost.Name = "lGroupDefaultHost";
+            this.lGroupDefaultHost.Size = new System.Drawing.Size(111, 13);
+            this.lGroupDefaultHost.TabIndex = 25;
+            this.lGroupDefaultHost.Text = "Default Hostname (IP)";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label2.Location = new System.Drawing.Point(2, 18);
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(126, 2);
+            this.label2.TabIndex = 23;
+            // 
+            // tbGroupName
+            // 
+            this.tbGroupName.Location = new System.Drawing.Point(2, 21);
+            this.tbGroupName.Name = "tbGroupName";
+            this.tbGroupName.Size = new System.Drawing.Size(126, 20);
+            this.tbGroupName.TabIndex = 24;
+            // 
+            // lGroupName
+            // 
+            this.lGroupName.AutoSize = true;
+            this.lGroupName.Location = new System.Drawing.Point(3, 4);
+            this.lGroupName.Name = "lGroupName";
+            this.lGroupName.Size = new System.Drawing.Size(67, 13);
+            this.lGroupName.TabIndex = 22;
+            this.lGroupName.Text = "Group Name";
             // 
             // bServerEye
             // 
@@ -507,205 +709,6 @@ namespace AutoPuTTY
             this.lbListSep.Size = new System.Drawing.Size(249, 467);
             this.lbListSep.TabIndex = 2;
             // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label2.Location = new System.Drawing.Point(2, 18);
-            this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 2);
-            this.label2.TabIndex = 23;
-            // 
-            // tbGroupName
-            // 
-            this.tbGroupName.Location = new System.Drawing.Point(2, 21);
-            this.tbGroupName.Name = "tbGroupName";
-            this.tbGroupName.Size = new System.Drawing.Size(126, 20);
-            this.tbGroupName.TabIndex = 24;
-            // 
-            // lGroupName
-            // 
-            this.lGroupName.AutoSize = true;
-            this.lGroupName.Location = new System.Drawing.Point(3, 4);
-            this.lGroupName.Name = "lGroupName";
-            this.lGroupName.Size = new System.Drawing.Size(67, 13);
-            this.lGroupName.TabIndex = 22;
-            this.lGroupName.Text = "Group Name";
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label3.Location = new System.Drawing.Point(2, 57);
-            this.label3.Margin = new System.Windows.Forms.Padding(0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 2);
-            this.label3.TabIndex = 26;
-            // 
-            // tbGroupDefaultHost
-            // 
-            this.tbGroupDefaultHost.Location = new System.Drawing.Point(2, 60);
-            this.tbGroupDefaultHost.Name = "tbGroupDefaultHost";
-            this.tbGroupDefaultHost.Size = new System.Drawing.Size(126, 20);
-            this.tbGroupDefaultHost.TabIndex = 27;
-            // 
-            // lGroupDefaultHost
-            // 
-            this.lGroupDefaultHost.AutoSize = true;
-            this.lGroupDefaultHost.Location = new System.Drawing.Point(3, 43);
-            this.lGroupDefaultHost.Name = "lGroupDefaultHost";
-            this.lGroupDefaultHost.Size = new System.Drawing.Size(111, 13);
-            this.lGroupDefaultHost.TabIndex = 25;
-            this.lGroupDefaultHost.Text = "Default Hostname (IP)";
-            // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(2, 96);
-            this.label5.Margin = new System.Windows.Forms.Padding(0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(126, 2);
-            this.label5.TabIndex = 29;
-            // 
-            // tbGroupDefaultPort
-            // 
-            this.tbGroupDefaultPort.Location = new System.Drawing.Point(2, 99);
-            this.tbGroupDefaultPort.Name = "tbGroupDefaultPort";
-            this.tbGroupDefaultPort.Size = new System.Drawing.Size(126, 20);
-            this.tbGroupDefaultPort.TabIndex = 30;
-            // 
-            // lGroupDefaultPort
-            // 
-            this.lGroupDefaultPort.AutoSize = true;
-            this.lGroupDefaultPort.Location = new System.Drawing.Point(3, 82);
-            this.lGroupDefaultPort.Name = "lGroupDefaultPort";
-            this.lGroupDefaultPort.Size = new System.Drawing.Size(63, 13);
-            this.lGroupDefaultPort.TabIndex = 28;
-            this.lGroupDefaultPort.Text = "Default Port";
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label4.Location = new System.Drawing.Point(2, 135);
-            this.label4.Margin = new System.Windows.Forms.Padding(0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(126, 2);
-            this.label4.TabIndex = 32;
-            // 
-            // tbGroupDefaultUsername
-            // 
-            this.tbGroupDefaultUsername.Location = new System.Drawing.Point(2, 138);
-            this.tbGroupDefaultUsername.Name = "tbGroupDefaultUsername";
-            this.tbGroupDefaultUsername.Size = new System.Drawing.Size(126, 20);
-            this.tbGroupDefaultUsername.TabIndex = 33;
-            // 
-            // lGroupDefaultUsername
-            // 
-            this.lGroupDefaultUsername.AutoSize = true;
-            this.lGroupDefaultUsername.Location = new System.Drawing.Point(3, 121);
-            this.lGroupDefaultUsername.Name = "lGroupDefaultUsername";
-            this.lGroupDefaultUsername.Size = new System.Drawing.Size(92, 13);
-            this.lGroupDefaultUsername.TabIndex = 31;
-            this.lGroupDefaultUsername.Text = "Default Username";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::AutoPuTTY.Properties.Resources.iconeyeshow;
-            this.pictureBox1.Location = new System.Drawing.Point(106, 159);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(22, 15);
-            this.pictureBox1.TabIndex = 38;
-            this.pictureBox1.TabStop = false;
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(2, 174);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(126, 2);
-            this.label6.TabIndex = 35;
-            // 
-            // tbGroupDefaultPassword
-            // 
-            this.tbGroupDefaultPassword.Location = new System.Drawing.Point(2, 177);
-            this.tbGroupDefaultPassword.Name = "tbGroupDefaultPassword";
-            this.tbGroupDefaultPassword.Size = new System.Drawing.Size(126, 20);
-            this.tbGroupDefaultPassword.TabIndex = 36;
-            this.tbGroupDefaultPassword.UseSystemPasswordChar = true;
-            // 
-            // lGroupDefaultPassword
-            // 
-            this.lGroupDefaultPassword.AutoSize = true;
-            this.lGroupDefaultPassword.Location = new System.Drawing.Point(3, 160);
-            this.lGroupDefaultPassword.Name = "lGroupDefaultPassword";
-            this.lGroupDefaultPassword.Size = new System.Drawing.Size(90, 13);
-            this.lGroupDefaultPassword.TabIndex = 34;
-            this.lGroupDefaultPassword.Text = "Default Password";
-            // 
-            // bGroupDelete
-            // 
-            this.bGroupDelete.Enabled = false;
-            this.bGroupDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bGroupDelete.Image = global::AutoPuTTY.Properties.Resources.icondelete;
-            this.bGroupDelete.Location = new System.Drawing.Point(97, 200);
-            this.bGroupDelete.Margin = new System.Windows.Forms.Padding(0);
-            this.bGroupDelete.Name = "bGroupDelete";
-            this.bGroupDelete.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
-            this.bGroupDelete.Size = new System.Drawing.Size(32, 30);
-            this.bGroupDelete.TabIndex = 41;
-            this.bGroupDelete.UseCompatibleTextRendering = true;
-            this.bGroupDelete.UseVisualStyleBackColor = true;
-            // 
-            // bGroupAdd
-            // 
-            this.bGroupAdd.Enabled = false;
-            this.bGroupAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bGroupAdd.Image = global::AutoPuTTY.Properties.Resources.iconadd;
-            this.bGroupAdd.Location = new System.Drawing.Point(33, 200);
-            this.bGroupAdd.Margin = new System.Windows.Forms.Padding(0);
-            this.bGroupAdd.Name = "bGroupAdd";
-            this.bGroupAdd.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
-            this.bGroupAdd.Size = new System.Drawing.Size(64, 30);
-            this.bGroupAdd.TabIndex = 40;
-            this.bGroupAdd.UseCompatibleTextRendering = true;
-            this.bGroupAdd.UseVisualStyleBackColor = true;
-            // 
-            // bGroupModify
-            // 
-            this.bGroupModify.Enabled = false;
-            this.bGroupModify.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bGroupModify.Image = global::AutoPuTTY.Properties.Resources.iconmodify;
-            this.bGroupModify.Location = new System.Drawing.Point(1, 200);
-            this.bGroupModify.Margin = new System.Windows.Forms.Padding(0);
-            this.bGroupModify.Name = "bGroupModify";
-            this.bGroupModify.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
-            this.bGroupModify.Size = new System.Drawing.Size(32, 30);
-            this.bGroupModify.TabIndex = 39;
-            this.bGroupModify.UseCompatibleTextRendering = true;
-            this.bGroupModify.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label7.Location = new System.Drawing.Point(2, 232);
-            this.label7.Margin = new System.Windows.Forms.Padding(0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(126, 2);
-            this.label7.TabIndex = 42;
-            // 
             // tView
             // 
             this.tView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -737,6 +740,7 @@ namespace AutoPuTTY
             this.Resize += new System.EventHandler(this.mainForm_Resize);
             this.pConfig.ResumeLayout(false);
             this.pConfig.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).EndInit();
             this.tlMain.ResumeLayout(false);
             this.tlLeft.ResumeLayout(false);
@@ -744,7 +748,6 @@ namespace AutoPuTTY
             this.pFind.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bClose)).EndInit();
             this.lbListSep.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -791,7 +794,7 @@ namespace AutoPuTTY
         private System.Windows.Forms.Button bGroupDelete;
         private System.Windows.Forms.Button bGroupAdd;
         private System.Windows.Forms.Button bGroupModify;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox bGroupEye;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbGroupDefaultPassword;
         private System.Windows.Forms.Label lGroupDefaultPassword;

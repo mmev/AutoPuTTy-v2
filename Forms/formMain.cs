@@ -399,7 +399,7 @@ namespace AutoPuTTY
 
         private void bEye_Click(object sender, EventArgs e)
         {
-            TooglePassword(!tbServerPass.UseSystemPasswordChar);
+            TooglePassword(bServerEye, tbServerPass, !tbServerPass.UseSystemPasswordChar);
         }
 
         private void bEye_MouseEnter(object sender, EventArgs e)
@@ -416,6 +416,21 @@ namespace AutoPuTTY
         {
             if (filtervisible) bClose_Click(sender, e);
             optionsform.ShowDialog(this);
+        }
+
+        private void bGroupEye_Click(object sender, EventArgs e)
+        {
+            TooglePassword(bGroupEye, tbGroupDefaultPassword, !tbGroupDefaultPassword.UseSystemPasswordChar);
+        }
+
+        private void bGroupEye_MouseEnter(object sender, EventArgs e)
+        {
+            bGroupEye.Image = (tbGroupDefaultPassword.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
+        }
+
+        private void bGroupEye_MouseLeave(object sender, EventArgs e)
+        {
+            bGroupEye.Image = (tbGroupDefaultPassword.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
         }
 
         #endregion
@@ -1122,17 +1137,17 @@ namespace AutoPuTTY
             //}
         }
 
-        private void TooglePassword(bool state)
+        private void TooglePassword(PictureBox bEye, TextBox tbPass, bool state)
         {
             if (state)
             {
-                bServerEye.Image = ImageOpacity.Set(Resources.iconeyeshow, (float)0.50);
-                tbServerPass.UseSystemPasswordChar = true;
+                bEye.Image = ImageOpacity.Set(Resources.iconeyeshow, (float)0.50);
+                tbPass.UseSystemPasswordChar = true;
             }
             else
             {
-                bServerEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
-                tbServerPass.UseSystemPasswordChar = false;
+                bEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
+                tbPass.UseSystemPasswordChar = false;
             }
         }
 
