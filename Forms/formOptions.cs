@@ -495,13 +495,13 @@ namespace AutoPuTTY
 
             if (Settings.Default.multicolumn)
             {
-                mainform.lbList.MultiColumn = true;
+                //mainform.lbList.MultiColumn = true;
                 slGMulti.Enabled = true;
                 slMulti_Scroll(this, e);
             }
             else
             {
-                mainform.lbList.MultiColumn = false;
+                //mainform.lbList.MultiColumn = false;
                 slGMulti.Enabled = false;
             }
 
@@ -600,8 +600,8 @@ namespace AutoPuTTY
             {
                 case "import":
                     importpopup.ImportComplete();
-                    mainform.lbList.SelectedItems.Clear();
-                    if (mainform.lbList.Items.Count > 0) mainform.lbList.SelectedIndex = 0;
+                    //mainform.lbList.SelectedItems.Clear();
+                    //if (mainform.lbList.Items.Count > 0) mainform.lbList.SelectedIndex = 0;
                     break;
                 case "recrypt":
                     recryptpopup.RecryptComplete();
@@ -614,7 +614,7 @@ namespace AutoPuTTY
             if (!cbGMulti.Checked) return;
             Settings.Default.multicolumnwidth = slGMulti.Value;
             if (!firstread) mainform.XmlHelper.XmlConfigSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
-            mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
+            //mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
         }
 
         #endregion
@@ -699,8 +699,8 @@ namespace AutoPuTTY
                         if (xmlnodename != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnodename[0]);
                     }
 
-                    string[] args = new string[] { "recrypt", count + " / " + mainform.lbList.Items.Count };
-                    bwProgress.ReportProgress(((int)((double)count / (double)mainform.lbList.Items.Count * 100)), args);
+                    string[] args = new string[] { "recrypt", count + " / " + mainform.tView.Nodes.Count };
+                    bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.Nodes.Count * 100)), args);
                 }
 
             xmldoc.Save(file);
@@ -793,7 +793,7 @@ namespace AutoPuTTY
                         newserver.AppendChild(type);
                     }
 
-                    if (mainform.lbList.Items.Contains(_name)) //duplicate
+                    if (mainform.tView.Nodes.Find(_name, true) != null) //duplicate
                     {
                         if (cbGSkip.Checked) //skip
                         {
@@ -808,16 +808,16 @@ namespace AutoPuTTY
                                 {
                                     if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
                                 }
-                                if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate
-                                {
-                                    mainform.lbList.Items.Remove(_name);
-                                    mainform.lbList.Items.Add(_name);
-                                }));
-                                else
-                                {
-                                    mainform.lbList.Items.Remove(_name);
-                                    mainform.lbList.Items.Add(_name);
-                                }
+                                //if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate
+                                //{
+                                //    mainform.lbList.Items.Remove(_name);
+                                //    mainform.lbList.Items.Add(_name);
+                                //}));
+                                //else
+                                //{
+                                //    mainform.lbList.Items.Remove(_name);
+                                //    mainform.lbList.Items.Add(_name);
+                                //}
                                 c_replace++;
                             }
                             else //cancel or skip
@@ -830,8 +830,8 @@ namespace AutoPuTTY
                     else //add
                     {
                         if (xmldoc.DocumentElement != null) xmldoc.DocumentElement.InsertAfter(newserver, xmldoc.DocumentElement.LastChild);
-                        if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate { mainform.lbList.Items.Add(_name); }));
-                        else mainform.lbList.Items.Add(_name);
+                        //if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate { mainform.lbList.Items.Add(_name); }));
+                        //else mainform.lbList.Items.Add(_name);
                         c_add++;
                     }
                 }

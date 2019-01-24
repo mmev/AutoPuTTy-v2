@@ -160,7 +160,7 @@ namespace AutoPuTTY
             MenuItem connectmenu = new MenuItem();
             connectmenu.Index = i;
             connectmenu.Text = "Connect";
-            connectmenu.Click += lbList_DoubleClick;
+            //connectmenu.Click += lbList_DoubleClick;
             cmList.MenuItems.Add(connectmenu);
             i++;
             MenuItem sepmenu1 = new MenuItem();
@@ -189,9 +189,10 @@ namespace AutoPuTTY
             deletemenu.Click += mDelete_Click;
             cmList.MenuItems.Add(deletemenu);
 
-            XmlHelper.XmlToList(lbList);
-            if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
-            BeginInvoke(new InvokeDelegate(lbList.Focus));
+            //XmlHelper.XmlToList(lbList);
+            
+            //if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
+            //BeginInvoke(new InvokeDelegate(lbList.Focus));
 
             AutoSize = false;
             MinimumSize = Size;
@@ -212,25 +213,25 @@ namespace AutoPuTTY
 
             XmlElement newserver = xmldoc.CreateElement("Server");
             XmlAttribute name = xmldoc.CreateAttribute("Name");
-            name.Value = tbName.Text.Trim();
+            name.Value = tbServerName.Text.Trim();
             newserver.SetAttributeNode(name);
 
-            if (tbHost.Text.Trim() != "")
+            if (tbServerHost.Text.Trim() != "")
             {
                 XmlElement host = xmldoc.CreateElement("Host");
-                host.InnerText = Cryptor.Encrypt(tbHost.Text.Trim());
+                host.InnerText = Cryptor.Encrypt(tbServerHost.Text.Trim());
                 newserver.AppendChild(host);
             }
-            if (tbUser.Text != "")
+            if (tbServerUser.Text != "")
             {
                 XmlElement user = xmldoc.CreateElement("User");
-                user.InnerText = Cryptor.Encrypt(tbUser.Text);
+                user.InnerText = Cryptor.Encrypt(tbServerUser.Text);
                 newserver.AppendChild(user);
             }
-            if (tbPass.Text != "")
+            if (tbServerPass.Text != "")
             {
                 XmlElement pass = xmldoc.CreateElement("Password");
-                pass.InnerText = Cryptor.Encrypt(tbPass.Text);
+                pass.InnerText = Cryptor.Encrypt(tbServerPass.Text);
                 newserver.AppendChild(pass);
             }
             if (cbType.SelectedIndex > 0)
@@ -240,7 +241,7 @@ namespace AutoPuTTY
                 newserver.AppendChild(type);
             }
 
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()) + "]");
+            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.ParseXpathString(tView.SelectedNode.Text) + "]");
             if (xmldoc.DocumentElement != null)
             {
                 if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
@@ -256,22 +257,22 @@ namespace AutoPuTTY
             }
 
             remove = true;
-            lbList.Items.RemoveAt(lbList.Items.IndexOf(lbList.SelectedItem));
+            //tView.Items.RemoveAt(lbList.Items.IndexOf(lbList.SelectedItem));
             remove = false;
-            tbName.Text = tbName.Text.Trim();
-            lbList.Items.Add(tbName.Text);
-            lbList.SelectedItems.Clear();
-            lbList.SelectedItem = tbName.Text;
-            bModify.Enabled = false;
-            bAdd.Enabled = false;
-            BeginInvoke(new InvokeDelegate(lbList.Focus));
+            tbServerName.Text = tbServerName.Text.Trim();
+            //lbList.Items.Add(tbServerName.Text);
+            //lbList.SelectedItems.Clear();
+            //lbList.SelectedItem = tbServerName.Text;
+            bServerModify.Enabled = false;
+            bServerAdd.Enabled = false;
+            //BeginInvoke(new InvokeDelegate(lbList.Focus));
 
             if (filtervisible) tbFilter_Changed(new object(), new EventArgs());
         }
 
         private void bAdd_Click(object sender, EventArgs e)
         {
-            if (tbName.Text.Trim() != "" && tbHost.Text.Trim() != "")
+            if (tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
             {
                 string file = Settings.Default.cfgpath;
                 XmlDocument xmldoc = new XmlDocument();
@@ -279,25 +280,25 @@ namespace AutoPuTTY
 
                 XmlElement newserver = xmldoc.CreateElement("Server");
                 XmlAttribute name = xmldoc.CreateAttribute("Name");
-                name.Value = tbName.Text.Trim();
+                name.Value = tbServerName.Text.Trim();
                 newserver.SetAttributeNode(name);
 
-                if (tbHost.Text.Trim() != "")
+                if (tbServerHost.Text.Trim() != "")
                 {
                     XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = Cryptor.Encrypt(tbHost.Text.Trim());
+                    host.InnerText = Cryptor.Encrypt(tbServerHost.Text.Trim());
                     newserver.AppendChild(host);
                 }
-                if (tbUser.Text != "")
+                if (tbServerUser.Text != "")
                 {
                     XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = Cryptor.Encrypt(tbUser.Text);
+                    user.InnerText = Cryptor.Encrypt(tbServerUser.Text);
                     newserver.AppendChild(user);
                 }
-                if (tbPass.Text != "")
+                if (tbServerPass.Text != "")
                 {
                     XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = Cryptor.Encrypt(tbPass.Text);
+                    pass.InnerText = Cryptor.Encrypt(tbServerPass.Text);
                     newserver.AppendChild(pass);
                 }
                 if (cbType.SelectedIndex > 0)
@@ -318,14 +319,14 @@ namespace AutoPuTTY
                     otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
                 }
 
-                tbName.Text = tbName.Text.Trim();
-                lbList.Items.Add(tbName.Text);
-                lbList.SelectedItems.Clear();
-                lbList.SelectedItem = tbName.Text;
-                bModify.Enabled = false;
-                bAdd.Enabled = false;
-                bDelete.Enabled = true;
-                BeginInvoke(new InvokeDelegate(lbList.Focus));
+                tbServerName.Text = tbServerName.Text.Trim();
+                //lbList.Items.Add(tbServerName.Text);
+                //lbList.SelectedItems.Clear();
+                //lbList.SelectedItem = tbServerName.Text;
+                bServerModify.Enabled = false;
+                bServerAdd.Enabled = false;
+                bServerDelete.Enabled = true;
+                //BeginInvoke(new InvokeDelegate(lbList.Focus));
             }
             else
             {
@@ -337,45 +338,45 @@ namespace AutoPuTTY
 
         private void mDelete_Click(object sender, EventArgs e)
         {
-            if (lbList.SelectedItems.Count > 0)
-            {
-                ArrayList _items = new ArrayList();
-                string confirmtxt = "Are you sure you want to delete the selected item ?";
-                if (lbList.SelectedItems.Count > 1) confirmtxt = "Are you sure you want to delete the " + lbList.SelectedItems.Count + " selected items ?";
-                if (MessageBox.Show(confirmtxt, "Delete confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    remove = true;
-                    while (lbList.SelectedItems.Count > 0)
-                    {
-                        _items.Add("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()));
-                        lbList.Items.Remove(lbList.SelectedItem);
-                    }
-                    remove = false;
-                    if (_items.Count > 0) XmlHelper.XmlDropNode(_items);
-                    tbName_TextChanged(this, e);
-                }
-            }
+            //if (lbList.SelectedItems.Count > 0)
+            //{
+            //    ArrayList _items = new ArrayList();
+            //    string confirmtxt = "Are you sure you want to delete the selected item ?";
+            //    if (lbList.SelectedItems.Count > 1) confirmtxt = "Are you sure you want to delete the " + lbList.SelectedItems.Count + " selected items ?";
+            //    if (MessageBox.Show(confirmtxt, "Delete confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            //    {
+            //        remove = true;
+            //        while (lbList.SelectedItems.Count > 0)
+            //        {
+            //            _items.Add("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()));
+            //            lbList.Items.Remove(lbList.SelectedItem);
+            //        }
+            //        remove = false;
+            //        if (_items.Count > 0) XmlHelper.XmlDropNode(_items);
+            //        tbName_TextChanged(this, e);
+            //    }
+            //}
         }
 
         private void bDelete_Click(object sender, EventArgs e)
         {
-            if (lbList.SelectedItems.Count > 0)
-            {
-                XmlHelper.XmlDropNode("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItems[0].ToString()));
-                remove = true;
-                lbList.Items.Remove(lbList.SelectedItems[0].ToString());
-                remove = false;
-                lbList.SelectedItems.Clear();
-                tbName_TextChanged(this, e);
-            }
+            //if (lbList.SelectedItems.Count > 0)
+            //{
+            //    XmlHelper.XmlDropNode("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItems[0].ToString()));
+            //    remove = true;
+            //    lbList.Items.Remove(lbList.SelectedItems[0].ToString());
+            //    remove = false;
+            //    lbList.SelectedItems.Clear();
+            //    tbName_TextChanged(this, e);
+            //}
         }
 
         private void bClose_Click(object sender, EventArgs e)
         {
-            FindSwitch(false);
-            if (tbFilter.Text == "") return;
-            XmlHelper.XmlToList(lbList);
-            if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
+            //FindSwitch(false);
+            //if (tbFilter.Text == "") return;
+            //XmlHelper.XmlToList(lbList);
+            //if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
         }
 
         // "search" form change close button image on mouse hover
@@ -398,17 +399,17 @@ namespace AutoPuTTY
 
         private void bEye_Click(object sender, EventArgs e)
         {
-            TooglePassword(!tbPass.UseSystemPasswordChar);
+            TooglePassword(!tbServerPass.UseSystemPasswordChar);
         }
 
         private void bEye_MouseEnter(object sender, EventArgs e)
         {
-            bEye.Image = ImageOpacity.Set(bEye.Image, (float)0.50);
+            bServerEye.Image = ImageOpacity.Set(bServerEye.Image, (float)0.50);
         }
 
         private void bEye_MouseLeave(object sender, EventArgs e)
         {
-            bEye.Image = (tbPass.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
+            bServerEye.Image = (tbServerPass.UseSystemPasswordChar ? Resources.iconeyeshow : Resources.iconeyehide);
         }
 
         private void bOptions_Click(object sender, EventArgs e)
@@ -423,17 +424,17 @@ namespace AutoPuTTY
 
         protected void lbList_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Apps) lbList_ContextMenu(true);
+            //if (e.KeyCode == Keys.Apps) lbList_ContextMenu(true);
             if (e.KeyCode == Keys.Delete) mDelete_Click(sender, e);
             if (e.KeyCode == Keys.A && e.Control)
             {
-                for (int i = 0; i < lbList.Items.Count; i++)
-                {
-                    //change index for the first item only
-                    if (i > 0) selectall = true;
-                    lbList.SetSelected(i, true);
-                }
-                selectall = false;
+                //for (int i = 0; i < lbList.Items.Count; i++)
+                //{
+                //    //change index for the first item only
+                //    if (i > 0) selectall = true;
+                //    lbList.SetSelected(i, true);
+                //}
+                //selectall = false;
             }
         }
 
@@ -457,20 +458,20 @@ namespace AutoPuTTY
                 {
                     keysearch = e.KeyChar.ToString();
                 }
-                if (lbList.FindString(keysearch) >= 0)
-                {
-                    lbList.SelectedIndex = -1;
-                    lbList.SelectedIndex = lbList.FindString(keysearch);
-                }
-                else
-                {
-                    keysearch = e.KeyChar.ToString();
-                    if (lbList.FindString(keysearch) >= 0)
-                    {
-                        lbList.SelectedIndex = -1;
-                        lbList.SelectedIndex = lbList.FindString(keysearch);
-                    }
-                }
+                //if (lbList.FindString(keysearch) >= 0)
+                //{
+                //    lbList.SelectedIndex = -1;
+                //    lbList.SelectedIndex = lbList.FindString(keysearch);
+                //}
+                //else
+                //{
+                //    keysearch = e.KeyChar.ToString();
+                //    if (lbList.FindString(keysearch) >= 0)
+                //    {
+                //        lbList.SelectedIndex = -1;
+                //        lbList.SelectedIndex = lbList.FindString(keysearch);
+                //    }
+                //}
             }
 
             oldunixtime = unixtime;
@@ -480,29 +481,29 @@ namespace AutoPuTTY
         {
             if (indexchanged) return;
             //modify an existing item
-            if (lbList.SelectedItem != null && tbName.Text.Trim() != "" && tbHost.Text.Trim() != "")
-            {
-                //changed name
-                if (tbName.Text != lbList.SelectedItem.ToString())
-                {
-                    //if new name doesn't exist in list, modify or add
-                    bModify.Enabled = xmlHelper.XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
-                    bAdd.Enabled = xmlHelper.XmlGetServer(tbName.Text.Trim()).Count > 0 ? false : true;
-                }
-                //changed other stuff
-                else
-                {
-                    bModify.Enabled = true;
-                    bAdd.Enabled = false;
-                }
-            }
-            //create new item
-            else
-            {
-                bModify.Enabled = false;
-                if (tbName.Text.Trim() != "" && tbHost.Text.Trim() != "" && xmlHelper.XmlGetServer(tbName.Text.Trim()).Count < 1) bAdd.Enabled = true;
-                else bAdd.Enabled = false;
-            }
+            //if (lbList.SelectedItem != null && tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
+            //{
+            //    //changed name
+            //    if (tbServerName.Text != lbList.SelectedItem.ToString())
+            //    {
+            //        //if new name doesn't exist in list, modify or add
+            //        bServerModify.Enabled = xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count > 0 ? false : true;
+            //        bServerAdd.Enabled = xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count > 0 ? false : true;
+            //    }
+            //    //changed other stuff
+            //    else
+            //    {
+            //        bServerModify.Enabled = true;
+            //        bServerAdd.Enabled = false;
+            //    }
+            //}
+            ////create new item
+            //else
+            //{
+            //    bServerModify.Enabled = false;
+            //    if (tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "" && xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count < 1) bServerAdd.Enabled = true;
+            //    else bServerAdd.Enabled = false;
+            //}
         }
 
         private void tbHost_TextChanged(object sender, EventArgs e)
@@ -523,7 +524,7 @@ namespace AutoPuTTY
         // update "search"
         private void tbFilter_Changed(object sender, EventArgs e)
         {
-            if (filtervisible) lbList_Filter(tbFilter.Text);
+            //if (filtervisible) lbList_Filter(tbFilter.Text);
         }
 
         // close "search" form when pressing ESC
@@ -549,159 +550,159 @@ namespace AutoPuTTY
 
         #region ListBox Events
 
-        private void lbList_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
-        {
-            if (e.Index < 0) return;
-            // Draw the background of the ListBox control for each item.
-            e.DrawBackground();
-            // Define the default color of the brush as black.
-            Brush myBrush = Brushes.Black;
+        //private void lbList_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        //{
+        //    if (e.Index < 0) return;
+        //    // Draw the background of the ListBox control for each item.
+        //    e.DrawBackground();
+        //    // Define the default color of the brush as black.
+        //    Brush myBrush = Brushes.Black;
 
-            // Draw the current item text based on the current Font 
-            // and the custom brush settings.
-            Rectangle bounds = e.Bounds;
-            if (bounds.X < 1) bounds.X = 1;
-            //MessageBox.Show(this, bounds.Top.ToString());
+        //    // Draw the current item text based on the current Font 
+        //    // and the custom brush settings.
+        //    Rectangle bounds = e.Bounds;
+        //    if (bounds.X < 1) bounds.X = 1;
+        //    //MessageBox.Show(this, bounds.Top.ToString());
 
-            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) myBrush = Brushes.White;
-            e.Graphics.DrawString(lbList.Items[e.Index].ToString(), e.Font, myBrush, bounds, StringFormat.GenericDefault);
+        //    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) myBrush = Brushes.White;
+        //    e.Graphics.DrawString(lbList.Items[e.Index].ToString(), e.Font, myBrush, bounds, StringFormat.GenericDefault);
 
-            // If the ListBox has focus, draw a focus rectangle around the selected item.
-            e.DrawFocusRectangle();
-        }
+        //    // If the ListBox has focus, draw a focus rectangle around the selected item.
+        //    e.DrawFocusRectangle();
+        //}
 
-        public void lbList_IndexChanged(object sender, EventArgs e)
-        {
-            if (filter || selectall) return;
-            if (remove || lbList.SelectedItem == null)
-            {
-                if (bDelete.Enabled) bDelete.Enabled = false;
-                return;
-            }
-            indexchanged = true;
+        //public void lbList_IndexChanged(object sender, EventArgs e)
+        //{
+        //    if (filter || selectall) return;
+        //    if (remove || lbList.SelectedItem == null)
+        //    {
+        //        if (bServerDelete.Enabled) bServerDelete.Enabled = false;
+        //        return;
+        //    }
+        //    indexchanged = true;
 
-            ArrayList server = xmlHelper.XmlGetServer(lbList.SelectedItem.ToString());
+        //    ArrayList server = xmlHelper.XmlGetServer(lbList.SelectedItem.ToString());
 
-            tbName.Text = (string)server[0];
-            tbHost.Text = Cryptor.Decrypt((string)server[1]);
-            tbUser.Text = Cryptor.Decrypt((string)server[2]);
-            tbPass.Text = Cryptor.Decrypt((string)server[3]);
-            cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(server[4])]);
-            lUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
+        //    tbServerName.Text = (string)server[0];
+        //    tbServerHost.Text = Cryptor.Decrypt((string)server[1]);
+        //    tbServerUser.Text = Cryptor.Decrypt((string)server[2]);
+        //    tbServerPass.Text = Cryptor.Decrypt((string)server[3]);
+        //    cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(server[4])]);
+        //    lServerUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
 
-            if (bAdd.Enabled) bAdd.Enabled = false;
-            if (bModify.Enabled) bModify.Enabled = false;
-            if (!bDelete.Enabled) bDelete.Enabled = true;
+        //    if (bServerAdd.Enabled) bServerAdd.Enabled = false;
+        //    if (bServerModify.Enabled) bServerModify.Enabled = false;
+        //    if (!bServerDelete.Enabled) bServerDelete.Enabled = true;
 
-            indexchanged = false;
-        }
+        //    indexchanged = false;
+        //}
 
-        private void lbList_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right) return;
-            lbList_ContextMenu();
-        }
+        //private void lbList_MouseClick(object sender, MouseEventArgs e)
+        //{
+        //    if (e.Button != MouseButtons.Right) return;
+        //    lbList_ContextMenu();
+        //}
 
-        private void lbList_ContextMenu_Enable(bool status)
-        {
-            for (int i = 0; i < cmList.MenuItems.Count; i++)
-            {
-                cmList.MenuItems[i].Enabled = status;
-            }
-        }
+        //private void lbList_ContextMenu_Enable(bool status)
+        //{
+        //    for (int i = 0; i < cmList.MenuItems.Count; i++)
+        //    {
+        //        cmList.MenuItems[i].Enabled = status;
+        //    }
+        //}
 
-        private void lbList_ContextMenu()
-        {
-            lbList_ContextMenu(false);
-        }
+        //private void lbList_ContextMenu()
+        //{
+        //    lbList_ContextMenu(false);
+        //}
 
-        private void lbList_ContextMenu(bool keyboard)
-        {
-            if (lbList.Items.Count > 0)
-            {
-                if (keyboard && lbList.SelectedItems.Count > 0)
-                {
-                    lbList_ContextMenu_Enable(true);
-                }
-                else
-                {
-                    int rightindex = lbList.IndexFromPoint(lbList.PointToClient(MousePosition));
-                    if (rightindex >= 0)
-                    {
-                        lbList_ContextMenu_Enable(true);
-                        if (lbList.GetSelected(rightindex))
-                        {
-                            lbList.SelectedIndex = rightindex;
-                        }
-                        else
-                        {
-                            lbList.SelectedIndex = -1;
-                            lbList.SelectedIndex = rightindex;
-                        }
-                    }
-                    else
-                    {
-                        lbList_ContextMenu_Enable(false);
-                    }
-                }
-            }
-            else lbList_ContextMenu_Enable(false);
+        //private void lbList_ContextMenu(bool keyboard)
+        //{
+        //    if (lbList.Items.Count > 0)
+        //    {
+        //        if (keyboard && lbList.SelectedItems.Count > 0)
+        //        {
+        //            lbList_ContextMenu_Enable(true);
+        //        }
+        //        else
+        //        {
+        //            int rightindex = lbList.IndexFromPoint(lbList.PointToClient(MousePosition));
+        //            if (rightindex >= 0)
+        //            {
+        //                lbList_ContextMenu_Enable(true);
+        //                if (lbList.GetSelected(rightindex))
+        //                {
+        //                    lbList.SelectedIndex = rightindex;
+        //                }
+        //                else
+        //                {
+        //                    lbList.SelectedIndex = -1;
+        //                    lbList.SelectedIndex = rightindex;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                lbList_ContextMenu_Enable(false);
+        //            }
+        //        }
+        //    }
+        //    else lbList_ContextMenu_Enable(false);
 
-            IntPtr hWnd = Process.GetCurrentProcess().MainWindowHandle;
-            ShowWindowAsync(hWnd, 5); // SW_SHOW
+        //    IntPtr hWnd = Process.GetCurrentProcess().MainWindowHandle;
+        //    ShowWindowAsync(hWnd, 5); // SW_SHOW
 
-            int loop = 0;
-            while (!Visible)
-            {
-                loop++;
-                Thread.Sleep(100);
-                Show();
-                if (loop > 10)
-                {
-                    //let's crash
-                    MessageBox.Show("Something bad happened");
-                    break;
-                }
-            }
-            cmList.Show(this, PointToClient(MousePosition));
-        }
+        //    int loop = 0;
+        //    while (!Visible)
+        //    {
+        //        loop++;
+        //        Thread.Sleep(100);
+        //        Show();
+        //        if (loop > 10)
+        //        {
+        //            //let's crash
+        //            MessageBox.Show("Something bad happened");
+        //            break;
+        //        }
+        //    }
+        //    cmList.Show(this, PointToClient(MousePosition));
+        //}
 
-        private void lbList_DoubleClick(object sender, EventArgs e)
-        {
-            Connect("-1");
-        }
+        //private void lbList_DoubleClick(object sender, EventArgs e)
+        //{
+        //    Connect("-1");
+        //}
 
-        public void lbList_Filter(string s)
-        {
-            filter = true;
-            XmlHelper.XmlToList(lbList);
-            ListBox.ObjectCollection itemslist = new ListBox.ObjectCollection(lbList);
-            itemslist.AddRange(lbList.Items);
-            lbList.Items.Clear();
+        //public void lbList_Filter(string s)
+        //{
+        //    filter = true;
+        //    XmlHelper.XmlToList(lbList);
+        //    ListBox.ObjectCollection itemslist = new ListBox.ObjectCollection(lbList);
+        //    itemslist.AddRange(lbList.Items);
+        //    lbList.Items.Clear();
 
-            foreach (string item in itemslist)
-            {
-                string _item = item;
-                if (!cbCase.Checked)
-                {
-                    s = s.ToLower();
-                    _item = _item.ToLower();
-                }
+        //    foreach (string item in itemslist)
+        //    {
+        //        string _item = item;
+        //        if (!cbCase.Checked)
+        //        {
+        //            s = s.ToLower();
+        //            _item = _item.ToLower();
+        //        }
 
-                /*if (!filterpopup.cbWhole.Checked)
-                {*/
-                if (_item.IndexOf(s) >= 0 || s == "") lbList.Items.Add(item);
-                /*}
-                else
-                {
-                    if (_item == s || s == "") lbList.Items.Add(item);
-                }*/
-            }
+        //        /*if (!filterpopup.cbWhole.Checked)
+        //        {*/
+        //        if (_item.IndexOf(s) >= 0 || s == "") lbList.Items.Add(item);
+        //        /*}
+        //        else
+        //        {
+        //            if (_item == s || s == "") lbList.Items.Add(item);
+        //        }*/
+        //    }
 
-            filter = false;
-            lbList.SelectedIndex = lbList.Items.Count > 0 ? 0 : -1;
-            if (lbList.Items.Count < 1) lbList_IndexChanged(new object(), new EventArgs());
-        }
+        //    filter = false;
+        //    lbList.SelectedIndex = lbList.Items.Count > 0 ? 0 : -1;
+        //    if (lbList.Items.Count < 1) lbList_IndexChanged(new object(), new EventArgs());
+        //}
 
         #endregion
 
@@ -749,7 +750,7 @@ namespace AutoPuTTY
 
         private void cbType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
+            lServerUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
             tbName_TextChanged(this, e);
         }
 
@@ -822,316 +823,316 @@ namespace AutoPuTTY
         {
             Debug.WriteLine("Connect : type - " + type + " " + (type != "-1" ? types[Convert.ToInt16(type)] : ""));
 
-            // browsing files with OpenFileDialog() fucks with CurrentDirectory, lets fix it
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //// browsing files with OpenFileDialog() fucks with CurrentDirectory, lets fix it
+            //Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            if (lbList.SelectedItems == null) return;
+            //if (lbList.SelectedItems == null) return;
 
-            if (lbList.SelectedItems.Count > 0)
-            {
-                if (lbList.SelectedItems.Count > 5)
-                {
-                    if (MessageBox.Show(this, "Are you sure you want to connect to the " + lbList.SelectedItems.Count + " selected items ?", "Connection confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
-                }
+            //if (lbList.SelectedItems.Count > 0)
+            //{
+            //    if (lbList.SelectedItems.Count > 5)
+            //    {
+            //        if (MessageBox.Show(this, "Are you sure you want to connect to the " + lbList.SelectedItems.Count + " selected items ?", "Connection confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+            //    }
 
-                foreach (object item in lbList.SelectedItems)
-                {
-                    ArrayList server = xmlHelper.XmlGetServer(item.ToString());
+            //    foreach (object item in lbList.SelectedItems)
+            //    {
+            //        ArrayList server = xmlHelper.XmlGetServer(item.ToString());
 
-                    string winscpprot = "sftp://";
+            //        string winscpprot = "sftp://";
 
-                    string _host = Cryptor.Decrypt(server[1].ToString());
-                    string _user = Cryptor.Decrypt(server[2].ToString());
-                    string _pass = Cryptor.Decrypt(server[3].ToString());
-                    string _type = type == "-1" ? server[4].ToString() : type;
-                    string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
-                    string[] ps = { "/", "\\\\" };
-                    string[] pr = { "\\", "\\" };
+            //        string _host = Cryptor.Decrypt(server[1].ToString());
+            //        string _user = Cryptor.Decrypt(server[2].ToString());
+            //        string _pass = Cryptor.Decrypt(server[3].ToString());
+            //        string _type = type == "-1" ? server[4].ToString() : type;
+            //        string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
+            //        string[] ps = { "/", "\\\\" };
+            //        string[] pr = { "\\", "\\" };
 
-                    switch (_type)
-                    {
-                        case "1": //RDP
-                            string[] rdpextractpath = ExtractFilePath(Settings.Default.rdpath);
-                            string rdpath = rdpextractpath[0];
-                            string rdpargs = rdpextractpath[1];
+            //        switch (_type)
+            //        {
+            //            case "1": //RDP
+            //                string[] rdpextractpath = ExtractFilePath(Settings.Default.rdpath);
+            //                string rdpath = rdpextractpath[0];
+            //                string rdpargs = rdpextractpath[1];
 
-                            if (File.Exists(rdpath))
-                            {
-                                Mstscpw mstscpw = new Mstscpw();
-                                string rdppass = mstscpw.encryptpw(_pass);
+            //                if (File.Exists(rdpath))
+            //                {
+            //                    Mstscpw mstscpw = new Mstscpw();
+            //                    string rdppass = mstscpw.encryptpw(_pass);
 
-                                ArrayList arraylist = new ArrayList();
-                                string[] size = Settings.Default.rdsize.Split('x');
+            //                    ArrayList arraylist = new ArrayList();
+            //                    string[] size = Settings.Default.rdsize.Split('x');
 
-                                string rdpout = "";
-                                if (Settings.Default.rdfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
-                                {
-                                    rdpout = OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
+            //                    string rdpout = "";
+            //                    if (Settings.Default.rdfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
+            //                    {
+            //                        rdpout = OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
 
-                                    try
-                                    {
-                                        Directory.CreateDirectory(rdpout);
-                                    }
-                                    catch
-                                    {
-                                        MessageBox.Show(this, "Output path for generated \".rdp\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                        rdpout = "";
-                                    }
-                                }
+            //                        try
+            //                        {
+            //                            Directory.CreateDirectory(rdpout);
+            //                        }
+            //                        catch
+            //                        {
+            //                            MessageBox.Show(this, "Output path for generated \".rdp\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //                            rdpout = "";
+            //                        }
+            //                    }
 
-                                foreach (string width in size)
-                                {
-                                    int num;
-                                    if (Int32.TryParse(width.Trim(), out num)) arraylist.Add(width.Trim());
-                                }
+            //                    foreach (string width in size)
+            //                    {
+            //                        int num;
+            //                        if (Int32.TryParse(width.Trim(), out num)) arraylist.Add(width.Trim());
+            //                    }
 
-                                TextWriter rdpfile = new StreamWriter(rdpout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".rdp");
-                                if (Settings.Default.rdsize == "Full screen") rdpfile.WriteLine("screen mode id:i:2");
-                                else rdpfile.WriteLine("screen mode id:i:1");
-                                if (arraylist.Count == 2)
-                                {
-                                    rdpfile.WriteLine("desktopwidth:i:" + arraylist[0]);
-                                    rdpfile.WriteLine("desktopheight:i:" + arraylist[1]);
-                                }
-                                if (_host != "") rdpfile.WriteLine("full address:s:" + _host);
-                                if (_user != "")
-                                {
-                                    rdpfile.WriteLine("username:s:" + _user);
-                                    if (_pass != "") rdpfile.WriteLine("password 51:b:" + rdppass);
-                                }
-                                if (Settings.Default.rddrives) rdpfile.WriteLine("redirectdrives:i:1");
-                                if (Settings.Default.rdadmin) rdpfile.WriteLine("administrative session:i:1");
-                                if (Settings.Default.rdspan) rdpfile.WriteLine("use multimon:i:1");
-                                rdpfile.Close();
+            //                    TextWriter rdpfile = new StreamWriter(rdpout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".rdp");
+            //                    if (Settings.Default.rdsize == "Full screen") rdpfile.WriteLine("screen mode id:i:2");
+            //                    else rdpfile.WriteLine("screen mode id:i:1");
+            //                    if (arraylist.Count == 2)
+            //                    {
+            //                        rdpfile.WriteLine("desktopwidth:i:" + arraylist[0]);
+            //                        rdpfile.WriteLine("desktopheight:i:" + arraylist[1]);
+            //                    }
+            //                    if (_host != "") rdpfile.WriteLine("full address:s:" + _host);
+            //                    if (_user != "")
+            //                    {
+            //                        rdpfile.WriteLine("username:s:" + _user);
+            //                        if (_pass != "") rdpfile.WriteLine("password 51:b:" + rdppass);
+            //                    }
+            //                    if (Settings.Default.rddrives) rdpfile.WriteLine("redirectdrives:i:1");
+            //                    if (Settings.Default.rdadmin) rdpfile.WriteLine("administrative session:i:1");
+            //                    if (Settings.Default.rdspan) rdpfile.WriteLine("use multimon:i:1");
+            //                    rdpfile.Close();
 
-                                Process myProc = new Process();
-                                myProc.StartInfo.FileName = rdpath;
-                                myProc.StartInfo.Arguments = "\"" + rdpout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".rdp\"";
-                                if (rdpargs != "") myProc.StartInfo.Arguments += " " + rdpargs;
-                                //MessageBox.Show(myProc.StartInfo.FileName + myProc.StartInfo.FileName.IndexOf('"').ToString() + File.Exists(myProc.StartInfo.FileName).ToString());
-                                try
-                                {
-                                    myProc.Start();
-                                }
-                                catch (System.ComponentModel.Win32Exception)
-                                {
-                                    //user canceled
-                                }
-                            }
-                            else
-                            {
-                                if (MessageBox.Show(this, "Could not find file \"" + rdpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bRDPath_Click(type);
-                            }
-                            break;
-                        case "2": //VNC
-                            string[] vncextractpath = ExtractFilePath(Settings.Default.vncpath);
-                            string vncpath = vncextractpath[0];
-                            string vncargs = vncextractpath[1];
+            //                    Process myProc = new Process();
+            //                    myProc.StartInfo.FileName = rdpath;
+            //                    myProc.StartInfo.Arguments = "\"" + rdpout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".rdp\"";
+            //                    if (rdpargs != "") myProc.StartInfo.Arguments += " " + rdpargs;
+            //                    //MessageBox.Show(myProc.StartInfo.FileName + myProc.StartInfo.FileName.IndexOf('"').ToString() + File.Exists(myProc.StartInfo.FileName).ToString());
+            //                    try
+            //                    {
+            //                        myProc.Start();
+            //                    }
+            //                    catch (System.ComponentModel.Win32Exception)
+            //                    {
+            //                        //user canceled
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    if (MessageBox.Show(this, "Could not find file \"" + rdpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bRDPath_Click(type);
+            //                }
+            //                break;
+            //            case "2": //VNC
+            //                string[] vncextractpath = ExtractFilePath(Settings.Default.vncpath);
+            //                string vncpath = vncextractpath[0];
+            //                string vncargs = vncextractpath[1];
 
-                            if (File.Exists(vncpath))
-                            {
-                                string host;
-                                string port;
-                                string[] hostport = _host.Split(':');
-                                int split = hostport.Length;
+            //                if (File.Exists(vncpath))
+            //                {
+            //                    string host;
+            //                    string port;
+            //                    string[] hostport = _host.Split(':');
+            //                    int split = hostport.Length;
 
-                                if (split == 2)
-                                {
-                                    host = hostport[0];
-                                    port = hostport[1];
-                                }
-                                else
-                                {
-                                    host = _host;
-                                    port = "5900";
-                                }
+            //                    if (split == 2)
+            //                    {
+            //                        host = hostport[0];
+            //                        port = hostport[1];
+            //                    }
+            //                    else
+            //                    {
+            //                        host = _host;
+            //                        port = "5900";
+            //                    }
 
-                                string vncout = "";
+            //                    string vncout = "";
 
-                                if (Settings.Default.vncfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
-                                {
-                                    vncout = OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
+            //                    if (Settings.Default.vncfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
+            //                    {
+            //                        vncout = OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
 
-                                    try
-                                    {
-                                        Directory.CreateDirectory(vncout);
-                                    }
-                                    catch
-                                    {
-                                        MessageBox.Show(this, "Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                        vncout = "";
-                                    }
-                                }
+            //                        try
+            //                        {
+            //                            Directory.CreateDirectory(vncout);
+            //                        }
+            //                        catch
+            //                        {
+            //                            MessageBox.Show(this, "Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //                            vncout = "";
+            //                        }
+            //                    }
 
-                                TextWriter vncfile = new StreamWriter(vncout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".vnc");
-                                vncfile.WriteLine("[Connection]");
-                                if (host != "") vncfile.WriteLine("host=" + host.Trim());
-                                if (port != "") vncfile.WriteLine("port=" + port.Trim());
-                                if (_user != "") vncfile.WriteLine("username=" + _user);
-                                if (_pass != "") vncfile.WriteLine("password=" + cryptVNC.EncryptPassword(_pass));
-                                vncfile.WriteLine("[Options]");
-                                if (Settings.Default.vncfullscreen) vncfile.WriteLine("fullscreen=1");
-                                if (Settings.Default.vncviewonly)
-                                {
-                                    vncfile.WriteLine("viewonly=1"); //ultravnc
-                                    vncfile.WriteLine("sendptrevents=0"); //realvnc
-                                    vncfile.WriteLine("sendkeyevents=0"); //realvnc
-                                    vncfile.WriteLine("sendcuttext=0"); //realvnc
-                                    vncfile.WriteLine("acceptcuttext=0"); //realvnc
-                                    vncfile.WriteLine("sharefiles=0"); //realvnc
-                                }
+            //                    TextWriter vncfile = new StreamWriter(vncout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".vnc");
+            //                    vncfile.WriteLine("[Connection]");
+            //                    if (host != "") vncfile.WriteLine("host=" + host.Trim());
+            //                    if (port != "") vncfile.WriteLine("port=" + port.Trim());
+            //                    if (_user != "") vncfile.WriteLine("username=" + _user);
+            //                    if (_pass != "") vncfile.WriteLine("password=" + cryptVNC.EncryptPassword(_pass));
+            //                    vncfile.WriteLine("[Options]");
+            //                    if (Settings.Default.vncfullscreen) vncfile.WriteLine("fullscreen=1");
+            //                    if (Settings.Default.vncviewonly)
+            //                    {
+            //                        vncfile.WriteLine("viewonly=1"); //ultravnc
+            //                        vncfile.WriteLine("sendptrevents=0"); //realvnc
+            //                        vncfile.WriteLine("sendkeyevents=0"); //realvnc
+            //                        vncfile.WriteLine("sendcuttext=0"); //realvnc
+            //                        vncfile.WriteLine("acceptcuttext=0"); //realvnc
+            //                        vncfile.WriteLine("sharefiles=0"); //realvnc
+            //                    }
 
-                                if (_pass != "" && _pass.Length > 8) vncfile.WriteLine("protocol3.3=1"); // fuckin vnc 4.0 auth
-                                vncfile.Close();
+            //                    if (_pass != "" && _pass.Length > 8) vncfile.WriteLine("protocol3.3=1"); // fuckin vnc 4.0 auth
+            //                    vncfile.Close();
 
-                                Process myProc = new Process();
-                                myProc.StartInfo.FileName = Settings.Default.vncpath;
-                                myProc.StartInfo.Arguments = "-config \"" + vncout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".vnc\"";
-                                if (vncargs != "") myProc.StartInfo.Arguments += " " + vncargs;
-                                try
-                                {
-                                    myProc.Start();
-                                }
-                                catch (System.ComponentModel.Win32Exception)
-                                {
-                                    //user canceled
-                                }
-                            }
-                            else
-                            {
-                                if (MessageBox.Show(this, "Could not find file \"" + vncpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bVNCPath_Click(type);
-                            }
-                            break;
-                        case "3": //WinSCP (SCP)
-                            winscpprot = "scp://";
-                            goto case "4";
-                        case "4": //WinSCP (SFTP)
-                            string[] winscpextractpath = ExtractFilePath(Settings.Default.winscppath);
-                            string winscppath = winscpextractpath[0];
-                            string winscpargs = winscpextractpath[1];
+            //                    Process myProc = new Process();
+            //                    myProc.StartInfo.FileName = Settings.Default.vncpath;
+            //                    myProc.StartInfo.Arguments = "-config \"" + vncout + OtherHelper.ReplaceU(f, server[0].ToString()) + ".vnc\"";
+            //                    if (vncargs != "") myProc.StartInfo.Arguments += " " + vncargs;
+            //                    try
+            //                    {
+            //                        myProc.Start();
+            //                    }
+            //                    catch (System.ComponentModel.Win32Exception)
+            //                    {
+            //                        //user canceled
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    if (MessageBox.Show(this, "Could not find file \"" + vncpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bVNCPath_Click(type);
+            //                }
+            //                break;
+            //            case "3": //WinSCP (SCP)
+            //                winscpprot = "scp://";
+            //                goto case "4";
+            //            case "4": //WinSCP (SFTP)
+            //                string[] winscpextractpath = ExtractFilePath(Settings.Default.winscppath);
+            //                string winscppath = winscpextractpath[0];
+            //                string winscpargs = winscpextractpath[1];
 
-                            if (File.Exists(winscppath))
-                            {
-                                string host;
-                                string port;
-                                string[] hostport = _host.Split(':');
-                                int split = hostport.Length;
+            //                if (File.Exists(winscppath))
+            //                {
+            //                    string host;
+            //                    string port;
+            //                    string[] hostport = _host.Split(':');
+            //                    int split = hostport.Length;
 
-                                if (split == 2)
-                                {
-                                    host = hostport[0];
-                                    port = hostport[1];
-                                }
-                                else
-                                {
-                                    host = _host;
-                                    port = "";
-                                }
+            //                    if (split == 2)
+            //                    {
+            //                        host = hostport[0];
+            //                        port = hostport[1];
+            //                    }
+            //                    else
+            //                    {
+            //                        host = _host;
+            //                        port = "";
+            //                    }
 
-                                Process myProc = new Process();
-                                myProc.StartInfo.FileName = Settings.Default.winscppath;
-                                myProc.StartInfo.Arguments = winscpprot;
-                                if (_user != "")
-                                {
-                                    string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
-                                    _user = OtherHelper.ReplaceU(s, _user);
-                                    _pass = OtherHelper.ReplaceU(s, _pass);
-                                    myProc.StartInfo.Arguments += _user;
-                                    if (_pass != "") myProc.StartInfo.Arguments += ":" + _pass;
-                                    myProc.StartInfo.Arguments += "@";
-                                }
-                                if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host);
-                                if (port != "") myProc.StartInfo.Arguments += ":" + port;
-                                if (winscpprot == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
-                                if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
-                                Debug.WriteLine(myProc.StartInfo.Arguments);
-                                if (winscpargs != "") myProc.StartInfo.Arguments += " " + winscpargs;
-                                try
-                                {
-                                    myProc.Start();
-                                }
-                                catch (System.ComponentModel.Win32Exception)
-                                {
-                                    //user canceled
-                                }
-                            }
-                            else
-                            {
-                                if (MessageBox.Show(this, "Could not find file \"" + winscppath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bWSCPPath_Click(type);
-                            }
-                            break;
-                        case "5": //WinSCP (FTP)
-                            winscpprot = "ftp://";
-                            goto case "4";
-                        default: //PuTTY
-                            string[] puttyextractpath = ExtractFilePath(Settings.Default.puttypath);
-                            string puttypath = puttyextractpath[0];
-                            string puttyargs = puttyextractpath[1];
-                            // for some reason you only have escape \ if it's followed by "
-                            // will "fix" up to 3 \ in a password like \\\", then screw you with your maniac passwords
-                            string[] passs = { "\"", "\\\\\"", "\\\\\\\\\"", "\\\\\\\\\\\\\"", };
-                            string[] passr = { "\\\"", "\\\\\\\"", "\\\\\\\\\\\"", "\\\\\\\\\\\\\\\"", };
+            //                    Process myProc = new Process();
+            //                    myProc.StartInfo.FileName = Settings.Default.winscppath;
+            //                    myProc.StartInfo.Arguments = winscpprot;
+            //                    if (_user != "")
+            //                    {
+            //                        string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
+            //                        _user = OtherHelper.ReplaceU(s, _user);
+            //                        _pass = OtherHelper.ReplaceU(s, _pass);
+            //                        myProc.StartInfo.Arguments += _user;
+            //                        if (_pass != "") myProc.StartInfo.Arguments += ":" + _pass;
+            //                        myProc.StartInfo.Arguments += "@";
+            //                    }
+            //                    if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host);
+            //                    if (port != "") myProc.StartInfo.Arguments += ":" + port;
+            //                    if (winscpprot == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
+            //                    if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
+            //                    Debug.WriteLine(myProc.StartInfo.Arguments);
+            //                    if (winscpargs != "") myProc.StartInfo.Arguments += " " + winscpargs;
+            //                    try
+            //                    {
+            //                        myProc.Start();
+            //                    }
+            //                    catch (System.ComponentModel.Win32Exception)
+            //                    {
+            //                        //user canceled
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    if (MessageBox.Show(this, "Could not find file \"" + winscppath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bWSCPPath_Click(type);
+            //                }
+            //                break;
+            //            case "5": //WinSCP (FTP)
+            //                winscpprot = "ftp://";
+            //                goto case "4";
+            //            default: //PuTTY
+            //                string[] puttyextractpath = ExtractFilePath(Settings.Default.puttypath);
+            //                string puttypath = puttyextractpath[0];
+            //                string puttyargs = puttyextractpath[1];
+            //                // for some reason you only have escape \ if it's followed by "
+            //                // will "fix" up to 3 \ in a password like \\\", then screw you with your maniac passwords
+            //                string[] passs = { "\"", "\\\\\"", "\\\\\\\\\"", "\\\\\\\\\\\\\"", };
+            //                string[] passr = { "\\\"", "\\\\\\\"", "\\\\\\\\\\\"", "\\\\\\\\\\\\\\\"", };
 
-                            if (File.Exists(puttypath))
-                            {
-                                string host;
-                                string port;
-                                string[] hostport = _host.Split(':');
-                                int split = hostport.Length;
+            //                if (File.Exists(puttypath))
+            //                {
+            //                    string host;
+            //                    string port;
+            //                    string[] hostport = _host.Split(':');
+            //                    int split = hostport.Length;
 
-                                if (split == 2)
-                                {
-                                    host = hostport[0];
-                                    port = hostport[1];
-                                }
-                                else
-                                {
-                                    host = _host;
-                                    port = "";
-                                }
+            //                    if (split == 2)
+            //                    {
+            //                        host = hostport[0];
+            //                        port = hostport[1];
+            //                    }
+            //                    else
+            //                    {
+            //                        host = _host;
+            //                        port = "";
+            //                    }
 
-                                Process myProc = new Process();
-                                myProc.StartInfo.FileName = Settings.Default.puttypath;
-                                myProc.StartInfo.Arguments = "-ssh ";
-                                if (_user != "") myProc.StartInfo.Arguments += _user + "@";
-                                if (host != "") myProc.StartInfo.Arguments += host;
-                                if (port != "") myProc.StartInfo.Arguments += " " + port;
-                                if (_user != "" && _pass != "") myProc.StartInfo.Arguments += " -pw \"" + OtherHelper.ReplaceA(passs, passr, _pass) + "\"";
-                                if (Settings.Default.puttyexecute && Settings.Default.puttycommand != "") myProc.StartInfo.Arguments += " -m \"" + Settings.Default.puttycommand + "\"";
-                                if (Settings.Default.puttykey && Settings.Default.puttykeyfile != "") myProc.StartInfo.Arguments += " -i \"" + Settings.Default.puttykeyfile + "\"";
-                                if (Settings.Default.puttyforward) myProc.StartInfo.Arguments += " -X";
-                                //MessageBox.Show(this, myProc.StartInfo.Arguments);
-                                if (puttyargs != "") myProc.StartInfo.Arguments += " " + puttyargs;
-                                try
-                                {
-                                    myProc.Start();
-                                }
-                                catch (System.ComponentModel.Win32Exception)
-                                {
-                                    //user canceled
-                                }
-                            }
-                            else
-                            {
-                                if (MessageBox.Show(this, "Could not find file \"" + puttypath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bPuTTYPath_Click(type);
-                            }
-                            break;
-                    }
-                }
-            }
+            //                    Process myProc = new Process();
+            //                    myProc.StartInfo.FileName = Settings.Default.puttypath;
+            //                    myProc.StartInfo.Arguments = "-ssh ";
+            //                    if (_user != "") myProc.StartInfo.Arguments += _user + "@";
+            //                    if (host != "") myProc.StartInfo.Arguments += host;
+            //                    if (port != "") myProc.StartInfo.Arguments += " " + port;
+            //                    if (_user != "" && _pass != "") myProc.StartInfo.Arguments += " -pw \"" + OtherHelper.ReplaceA(passs, passr, _pass) + "\"";
+            //                    if (Settings.Default.puttyexecute && Settings.Default.puttycommand != "") myProc.StartInfo.Arguments += " -m \"" + Settings.Default.puttycommand + "\"";
+            //                    if (Settings.Default.puttykey && Settings.Default.puttykeyfile != "") myProc.StartInfo.Arguments += " -i \"" + Settings.Default.puttykeyfile + "\"";
+            //                    if (Settings.Default.puttyforward) myProc.StartInfo.Arguments += " -X";
+            //                    //MessageBox.Show(this, myProc.StartInfo.Arguments);
+            //                    if (puttyargs != "") myProc.StartInfo.Arguments += " " + puttyargs;
+            //                    try
+            //                    {
+            //                        myProc.Start();
+            //                    }
+            //                    catch (System.ComponentModel.Win32Exception)
+            //                    {
+            //                        //user canceled
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    if (MessageBox.Show(this, "Could not find file \"" + puttypath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bPuTTYPath_Click(type);
+            //                }
+            //                break;
+            //        }
+            //    }
+            //}
         }
 
         private void TooglePassword(bool state)
         {
             if (state)
             {
-                bEye.Image = ImageOpacity.Set(Resources.iconeyeshow, (float)0.50);
-                tbPass.UseSystemPasswordChar = true;
+                bServerEye.Image = ImageOpacity.Set(Resources.iconeyeshow, (float)0.50);
+                tbServerPass.UseSystemPasswordChar = true;
             }
             else
             {
-                bEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
-                tbPass.UseSystemPasswordChar = false;
+                bServerEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
+                tbServerPass.UseSystemPasswordChar = false;
             }
         }
 
