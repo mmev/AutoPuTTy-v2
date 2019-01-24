@@ -84,45 +84,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="popupAbout.cs">
+    <Compile Include="Forms\Popups\popupAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="popupAbout.Designer.cs">
+    <Compile Include="Forms\Popups\popupAbout.Designer.cs">
       <DependentUpon>popupAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\cryptHelper.cs" />
     <Compile Include="Utils\FusionTrackBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="popupRecrypt.cs">
+    <Compile Include="Forms\Popups\popupRecrypt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="popupRecrypt.Designer.cs">
+    <Compile Include="Forms\Popups\popupRecrypt.Designer.cs">
       <DependentUpon>popupRecrypt.cs</DependentUpon>
     </Compile>
-    <Compile Include="popupImport.cs">
+    <Compile Include="Forms\Popups\popupImport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="popupImport.Designer.cs">
+    <Compile Include="Forms\Popups\popupImport.Designer.cs">
       <DependentUpon>popupImport.cs</DependentUpon>
     </Compile>
-    <Compile Include="formOptions.cs">
+    <Compile Include="Forms\formOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formOptions.Designer.cs">
+    <Compile Include="Forms\formOptions.Designer.cs">
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\cryptDPAPI.cs" />
-    <Compile Include="popupPassword.cs">
+    <Compile Include="Forms\Popups\popupPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="popupPassword.Designer.cs">
+    <Compile Include="Forms\Popups\popupPassword.Designer.cs">
       <DependentUpon>popupPassword.cs</DependentUpon>
     </Compile>
-    <Compile Include="formMain.cs">
+    <Compile Include="Forms\formMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formMain.Designer.cs">
+    <Compile Include="Forms\formMain.Designer.cs">
       <DependentUpon>formMain.cs</DependentUpon>
     </Compile>
     <Compile Include="app.cs" />
@@ -130,27 +130,27 @@
     <Compile Include="Utils\ImageOpacity.cs" />
     <Compile Include="Utils\otherHelper.cs" />
     <Compile Include="Utils\xmlHelper.cs" />
-    <EmbeddedResource Include="popupAbout.resx">
+    <EmbeddedResource Include="Forms\Popups\popupAbout.resx">
       <DependentUpon>popupAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="popupRecrypt.resx">
+    <EmbeddedResource Include="Forms\Popups\popupRecrypt.resx">
       <DependentUpon>popupRecrypt.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="formOptions.resx">
+    <EmbeddedResource Include="Forms\formOptions.resx">
       <DependentUpon>formOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="formMain.resx">
+    <EmbeddedResource Include="Forms\formMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="popupPassword.resx">
+    <EmbeddedResource Include="Forms\Popups\popupPassword.resx">
       <SubType>Designer</SubType>
       <DependentUpon>popupPassword.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="popupImport.resx">
+    <EmbeddedResource Include="Forms\Popups\popupImport.resx">
       <SubType>Designer</SubType>
       <DependentUpon>popupImport.cs</DependentUpon>
     </EmbeddedResource>
