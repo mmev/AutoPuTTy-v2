@@ -217,7 +217,7 @@ namespace AutoPuTTY.Utils
          * NEW METHODS
          */
 
-        //Method creating group in XML Config
+        // Creating group in XML Config
         public void createGroup(string groupName, string defaultHost, string defaultPort,
             string defaultUsername, string defaultPassword)
         {
@@ -269,7 +269,7 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        //Method get ALL groups
+        // Get ALL groups from configuration
         public ArrayList getGroups()
         {
             if (!File.Exists(Settings.Default.cfgpath))
@@ -324,7 +324,7 @@ namespace AutoPuTTY.Utils
             return groups;
         }
 
-        //Method get default group info
+        // Get default group info
         public ArrayList getGroupDefaultInfo(string groupName)
         {
             XmlDocument xmldoc = new XmlDocument();
@@ -365,12 +365,13 @@ namespace AutoPuTTY.Utils
                         
                     }
                 }
-                else return new ArrayList(new string[] { "", "", "", "", "", "" });
+                else return new ArrayList();
             }
             groups.Add(new string[] { groupDefaulHostname, groupDefaultPort, groupDefaultUsername, groupDefaultPassword });
             return groups;
         }
 
+        // Delete group by GroupName
         public void deleteGroup(string groupName)
         {
             XmlDocument xmldoc = new XmlDocument();
@@ -389,6 +390,63 @@ namespace AutoPuTTY.Utils
             {
                 otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
+        }
+
+        // Modify group data, search by GroupName
+        public void modifyGroup(string groupName, string newGroupName, string defaultHost, string defaultPort,
+            string defaultUsername, string defaultPassword)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlElement newgroup = xmldoc.CreateElement("Group");
+            XmlAttribute name = xmldoc.CreateAttribute("GroupName");
+            name.Value = newGroupName;
+            newgroup.SetAttributeNode(name);
+
+            if (defaultHost != "")
+            {
+                XmlElement host = xmldoc.CreateElement("DefaultHost");
+                host.InnerText = cryptHelper.Encrypt(defaultHost);
+                newgroup.AppendChild(host);
+            }
+
+            if (defaultPort != "")
+            {
+                XmlElement host = xmldoc.CreateElement("DefaultPort");
+                host.InnerText = cryptHelper.Encrypt(defaultPort);
+                newgroup.AppendChild(host);
+            }
+
+            if (defaultUsername != "")
+            {
+                XmlElement host = xmldoc.CreateElement("DefaultUsername");
+                host.InnerText = cryptHelper.Encrypt(defaultUsername);
+                newgroup.AppendChild(host);
+            }
+
+            if (defaultPassword != "")
+            {
+                XmlElement host = xmldoc.CreateElement("DefaultPassword");
+                host.InnerText = cryptHelper.Encrypt(defaultPassword);
+                newgroup.AppendChild(host);
+            }
+
+            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@GroupName='" + groupName + "']");
+            if (xmldoc.DocumentElement != null)
+            {
+                if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newgroup, xmlnode[0]);
+            }
+
+            try
+            {
+                xmldoc.Save(Settings.Default.cfgpath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+            }
+
         }
     }
 }

@@ -193,14 +193,7 @@ namespace AutoPuTTY
 
             //XmlHelper.XmlToList(lbList);
 
-            groupList = xmlHelper.getGroups();
-
-            foreach (string[] group in groupList)
-            {
-                string currentGroupName = group[0];
-
-                tView.Nodes.Add(currentGroupName);
-            }
+            updateTreeView();
 
             AutoSize = false;
             MinimumSize = Size;
@@ -215,54 +208,7 @@ namespace AutoPuTTY
 
         private void bModify_Click(object sender, EventArgs e)
         {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            XmlElement newserver = xmldoc.CreateElement("Server");
-            XmlAttribute name = xmldoc.CreateAttribute("Name");
-            name.Value = tbServerName.Text.Trim();
-            newserver.SetAttributeNode(name);
-
-            if (tbServerHost.Text.Trim() != "")
-            {
-                XmlElement host = xmldoc.CreateElement("Host");
-                host.InnerText = cryptHelper.Encrypt(tbServerHost.Text.Trim());
-                newserver.AppendChild(host);
-            }
-            if (tbServerUser.Text != "")
-            {
-                XmlElement user = xmldoc.CreateElement("User");
-                user.InnerText = cryptHelper.Encrypt(tbServerUser.Text);
-                newserver.AppendChild(user);
-            }
-            if (tbServerPass.Text != "")
-            {
-                XmlElement pass = xmldoc.CreateElement("Password");
-                pass.InnerText = cryptHelper.Encrypt(tbServerPass.Text);
-                newserver.AppendChild(pass);
-            }
-            if (cbType.SelectedIndex > 0)
-            {
-                XmlElement type = xmldoc.CreateElement("Type");
-                type.InnerText = Array.IndexOf(types, cbType.Text).ToString();
-                newserver.AppendChild(type);
-            }
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + xmlHelper.parseXpathString(tView.SelectedNode.Text) + "]");
-            if (xmldoc.DocumentElement != null)
-            {
-                if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
-            }
-
-            try
-            {
-                xmldoc.Save(file);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-            }
+            
 
             remove = true;
             //tView.Items.RemoveAt(lbList.Items.IndexOf(lbList.SelectedItem));
@@ -484,6 +430,28 @@ namespace AutoPuTTY
             }
         }
 
+        // Modify group by click
+        private void bGroupModify_Click(object sender, EventArgs e)
+        {
+            if (tView.SelectedNode != null)
+            {
+                string groupName = tView.SelectedNode.Text;
+
+                string newGroupName = tbGroupName.Text;
+                string newGroupDefaultHost = tbGroupDefaultHost.Text;
+                string newGroupDefaultPort = tbGroupDefaultPort.Text;
+                string newGroupDefaultUsername = tbGroupDefaultUsername.Text;
+                string newGroupDefaultPassword = tbGroupDefaultPassword.Text;
+
+                xmlHelper.modifyGroup(groupName, newGroupName, newGroupDefaultHost, newGroupDefaultPort,
+                    newGroupDefaultUsername, newGroupDefaultPassword);
+
+                int selectedNodeIndex = tView.SelectedNode.Index;
+                updateTreeView();
+                tView.SelectedNode = tView.Nodes[selectedNodeIndex];
+            }
+        }
+
         #endregion
 
         #region TextBox Events
@@ -618,10 +586,49 @@ namespace AutoPuTTY
 
         private void tbGroupName_TextChanged(object sender, EventArgs e)
         {
-            if (tbGroupName.Text.Trim() != "")
-                bGroupAdd.Enabled = true;
+            //modify an existing item
+            if (tView.SelectedNode != null && tbGroupName.Text.Trim() != "")
+            {
+                //changed name
+                if (tbGroupName.Text.Trim() != tView.SelectedNode.Text.Trim())
+                {
+                    //if new name doesn't exist in list, modify or add
+                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count > 0 ? false : true;
+                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count > 0 ? false : true;
+                }
+                //changed other stuff
+                else
+                {
+                    bGroupModify.Enabled = true;
+                    bGroupAdd.Enabled = false;
+                }
+            }
+            //create new item
             else
-                bGroupAdd.Enabled = false;
+            {
+                bGroupModify.Enabled = false;
+                if (tbGroupName.Text.Trim() != "")
+                    bGroupAdd.Enabled = true;
+                else
+                    bGroupAdd.Enabled = false;
+            }
+        }
+
+        private void tbGroupDefaultHost_TextChanged(object sender, EventArgs e)
+        {
+            tbGroupName_TextChanged(this, e);
+        }
+        private void tbGroupDefaultPort_TextChanged(object sender, EventArgs e)
+        {
+            tbGroupName_TextChanged(this, e);
+        }
+        private void tbGroupDefaultUsername_TextChanged(object sender, EventArgs e)
+        {
+            tbGroupName_TextChanged(this, e);
+        }
+        private void tbGroupDefaultPassword_TextChanged(object sender, EventArgs e)
+        {
+            tbGroupName_TextChanged(this, e);
         }
 
         #endregion
@@ -1247,11 +1254,26 @@ namespace AutoPuTTY
             if (status && filtervisible && tbFilter.Text != "") tbFilter.SelectAll();
         }
 
+        private void updateTreeView()
+        {
+            tView.Nodes.Clear();
+
+            groupList = xmlHelper.getGroups();
+
+            foreach (string[] group in groupList)
+            {
+                string currentGroupName = group[0];
+
+                tView.Nodes.Add(currentGroupName);
+            }
+        }
+
         #endregion
 
         #region Nested type: InvokeDelegate
 
         private delegate bool InvokeDelegate();
+
 
 
         #endregion

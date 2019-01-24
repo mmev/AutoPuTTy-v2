@@ -208,6 +208,7 @@ namespace AutoPuTTY
             this.bGroupModify.TabIndex = 39;
             this.bGroupModify.UseCompatibleTextRendering = true;
             this.bGroupModify.UseVisualStyleBackColor = true;
+            this.bGroupModify.Click += new System.EventHandler(this.bGroupModify_Click);
             // 
             // bGroupEye
             // 
@@ -240,6 +241,7 @@ namespace AutoPuTTY
             this.tbGroupDefaultPassword.Size = new System.Drawing.Size(126, 20);
             this.tbGroupDefaultPassword.TabIndex = 36;
             this.tbGroupDefaultPassword.UseSystemPasswordChar = true;
+            this.tbGroupDefaultPassword.TextChanged += new System.EventHandler(this.tbGroupDefaultPassword_TextChanged);
             // 
             // lGroupDefaultPassword
             // 
@@ -267,6 +269,7 @@ namespace AutoPuTTY
             this.tbGroupDefaultUsername.Name = "tbGroupDefaultUsername";
             this.tbGroupDefaultUsername.Size = new System.Drawing.Size(126, 20);
             this.tbGroupDefaultUsername.TabIndex = 33;
+            this.tbGroupDefaultUsername.TextChanged += new System.EventHandler(this.tbGroupDefaultUsername_TextChanged);
             // 
             // lGroupDefaultUsername
             // 
@@ -294,6 +297,7 @@ namespace AutoPuTTY
             this.tbGroupDefaultPort.Name = "tbGroupDefaultPort";
             this.tbGroupDefaultPort.Size = new System.Drawing.Size(126, 20);
             this.tbGroupDefaultPort.TabIndex = 30;
+            this.tbGroupDefaultPort.TextChanged += new System.EventHandler(this.tbGroupDefaultPort_TextChanged);
             // 
             // lGroupDefaultPort
             // 
@@ -321,6 +325,7 @@ namespace AutoPuTTY
             this.tbGroupDefaultHost.Name = "tbGroupDefaultHost";
             this.tbGroupDefaultHost.Size = new System.Drawing.Size(126, 20);
             this.tbGroupDefaultHost.TabIndex = 27;
+            this.tbGroupDefaultHost.TextChanged += new System.EventHandler(this.tbGroupDefaultHost_TextChanged);
             // 
             // lGroupDefaultHost
             // 
