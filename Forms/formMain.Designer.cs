@@ -178,6 +178,7 @@ namespace AutoPuTTY
             this.bGroupDelete.TabIndex = 41;
             this.bGroupDelete.UseCompatibleTextRendering = true;
             this.bGroupDelete.UseVisualStyleBackColor = true;
+            this.bGroupDelete.Click += new System.EventHandler(this.bGroupDelete_Click);
             // 
             // bGroupAdd
             // 
@@ -724,6 +725,7 @@ namespace AutoPuTTY
             this.tView.ShowLines = false;
             this.tView.Size = new System.Drawing.Size(248, 467);
             this.tView.TabIndex = 0;
+            this.tView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseClick);
             // 
             // formMain
             // 

@@ -269,6 +269,7 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        //Method get ALL groups
         public ArrayList getGroups()
         {
             if (!File.Exists(Settings.Default.cfgpath))
@@ -321,6 +322,73 @@ namespace AutoPuTTY.Utils
             }
 
             return groups;
+        }
+
+        //Method get default group info
+        public ArrayList getGroupDefaultInfo(string groupName)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            ArrayList groups = new ArrayList();
+
+            string groupDefaulHostname = "";
+            string groupDefaultPort = "";
+            string groupDefaultUsername = "";
+            string groupDefaultPassword = "";
+
+            XmlNodeList groupNodes = xmldoc.SelectNodes("//*[@GroupName='" + groupName + "']");
+            if (groupNodes != null)
+            {
+                if (groupNodes.Count > 0)
+                {
+                    foreach (XmlElement groupNode in groupNodes[0].ChildNodes)
+                    {
+                        
+
+                        switch (groupNode.Name)
+                        {
+                            case "DefaultHost":
+                                groupDefaulHostname = cryptHelper.Decrypt(groupNode.InnerText);
+                                break;
+                            case "DefaultPort":
+                                groupDefaultPort = cryptHelper.Decrypt(groupNode.InnerText);
+                                break;
+                            case "DefaultUsername":
+                                groupDefaultUsername = cryptHelper.Decrypt(groupNode.InnerText);
+                                break;
+                            case "DefaultPassword":
+                                groupDefaultPassword = cryptHelper.Decrypt(groupNode.InnerText);
+                                break;
+                        }
+
+                        
+                    }
+                }
+                else return new ArrayList(new string[] { "", "", "", "", "", "" });
+            }
+            groups.Add(new string[] { groupDefaulHostname, groupDefaultPort, groupDefaultUsername, groupDefaultPassword });
+            return groups;
+        }
+
+        public void deleteGroup(string groupName)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlNodeList groupNodes = xmldoc.SelectNodes("//*[@GroupName='" + groupName + "']");
+
+            if (groupNodes.Count > 0)
+                if (xmldoc != null) xmldoc.DocumentElement.RemoveChild(groupNodes[0]);
+
+            try
+            {
+                xmldoc.Save(Settings.Default.cfgpath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+            }
         }
     }
 }

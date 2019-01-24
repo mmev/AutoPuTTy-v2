@@ -468,6 +468,22 @@ namespace AutoPuTTY
             }
         }
 
+        // Deleting group by click
+        private void bGroupDelete_Click(object sender, EventArgs e)
+        {
+            if (tView.SelectedNode != null)
+            {
+                xmlHelper.deleteGroup(tView.SelectedNode.Text);
+                tView.Nodes.Remove(tView.SelectedNode);
+
+                bGroupDelete.Enabled = false;
+                bGroupAdd.Enabled = false;
+                bGroupModify.Enabled = false;
+
+                tView_NodeMouseClick(null, new TreeNodeMouseClickEventArgs(tView.SelectedNode, MouseButtons.Left, 1, 1, 1));
+            }
+        }
+
         #endregion
 
         #region TextBox Events
@@ -765,6 +781,25 @@ namespace AutoPuTTY
         //    lbList.SelectedIndex = lbList.Items.Count > 0 ? 0 : -1;
         //    if (lbList.Items.Count < 1) lbList_IndexChanged(new object(), new EventArgs());
         //}
+
+        #endregion
+
+        #region TreeView Events
+
+        private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            ArrayList groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
+            string[] groupInfos = (string[])groupInfo[0];
+
+            tbGroupName.Text = e.Node.Text;
+            tbGroupDefaultHost.Text = groupInfos[0];
+            tbGroupDefaultPort.Text = groupInfos[1];
+            tbGroupDefaultUsername.Text = groupInfos[2];
+            tbGroupDefaultPassword.Text = groupInfos[3];
+
+            bGroupAdd.Enabled = false;
+            bGroupDelete.Enabled = true;
+        }
 
         #endregion
 
@@ -1217,6 +1252,7 @@ namespace AutoPuTTY
         #region Nested type: InvokeDelegate
 
         private delegate bool InvokeDelegate();
+
 
         #endregion
     }
