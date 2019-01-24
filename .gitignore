@@ -2,3 +2,5 @@
 \.vs/AutoPuTTY/v15/
 
 obj/Debug/
+bin/
+obj/
