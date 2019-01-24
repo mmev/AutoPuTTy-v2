@@ -65,6 +65,11 @@ namespace AutoPuTTY
         private otherHelper otherHelper;
         internal otherHelper OtherHelper { get => otherHelper; set => otherHelper = value; }
 
+        string placeholderServerHost = "";
+        string placeholderServerPort = "";
+        string placeholderServerUsername = "";
+        string placeholderServerPassword = "";
+
         #endregion
 
         #region Element Loading
@@ -631,6 +636,47 @@ namespace AutoPuTTY
             tbGroupName_TextChanged(this, e);
         }
 
+        private void tbServerHost_Enter(object sender, EventArgs e)
+        {
+            tbServerHost.ForeColor = Color.Black;
+            tbServerHost.Text = "";
+        }
+        private void tbServerHost_Leave(object sender, EventArgs e)
+        {
+            tbServerHost.ForeColor = Color.Gray;
+            tbServerHost.Text = placeholderServerHost;
+        }
+        private void textBox1_Enter(object sender, EventArgs e)
+        {
+            textBox1.ForeColor = Color.Black;
+            textBox1.Text = "";
+        }
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            textBox1.ForeColor = Color.Gray;
+            textBox1.Text = placeholderServerPort;
+        }
+        private void tbServerUser_Enter(object sender, EventArgs e)
+        {
+            tbServerUser.ForeColor = Color.Black;
+            tbServerUser.Text = "";
+        }
+        private void tbServerUser_Leave(object sender, EventArgs e)
+        {
+            tbServerUser.ForeColor = Color.Gray;
+            tbServerUser.Text = placeholderServerUsername;
+        }
+        private void tbServerPass_Enter(object sender, EventArgs e)
+        {
+            tbServerPass.ForeColor = Color.Black;
+            tbServerPass.Text = "";
+        }
+        private void tbServerPass_Leave(object sender, EventArgs e)
+        {
+
+            tbServerPass.Text = placeholderServerPassword;
+        }
+
         #endregion
 
         #region ListBox Events
@@ -806,6 +852,23 @@ namespace AutoPuTTY
 
             bGroupAdd.Enabled = false;
             bGroupDelete.Enabled = true;
+
+            tbServerHost.Enabled = true;
+            tbServerName.Enabled = true;
+            tbServerUser.Enabled = true;
+            textBox1.Enabled = true;
+            tbServerPass.Enabled = true;
+            cbType.Enabled = true;
+
+            setPlaceholderTextBox(tbServerHost, groupInfos[0]);
+            setPlaceholderTextBox(textBox1, groupInfos[1]);
+            setPlaceholderTextBox(tbServerUser, groupInfos[2]);
+            setPlaceholderTextBox(tbServerPass, groupInfos[3]);
+
+            placeholderServerHost = groupInfos[0];
+            placeholderServerPort = groupInfos[1];
+            placeholderServerUsername = groupInfos[2];
+            placeholderServerPassword = groupInfos[3];
         }
 
         #endregion
@@ -1268,6 +1331,12 @@ namespace AutoPuTTY
             }
         }
 
+        private void setPlaceholderTextBox(TextBox textBox, String text)
+        {
+            textBox.ForeColor = Color.Gray;
+            textBox.Text = text;
+        }
+
         #endregion
 
         #region Nested type: InvokeDelegate
@@ -1277,5 +1346,8 @@ namespace AutoPuTTY
 
 
         #endregion
+
+        
+        
     }
 }
