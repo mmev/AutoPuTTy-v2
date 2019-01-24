@@ -674,7 +674,7 @@ namespace AutoPuTTY
         }
         private void tbServerPass_Leave(object sender, EventArgs e)
         {
-
+            tbServerPass.ForeColor = Color.Gray;
             tbServerPass.Text = placeholderServerPassword;
         }
 
