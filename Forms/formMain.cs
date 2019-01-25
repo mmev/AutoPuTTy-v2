@@ -78,6 +78,8 @@ namespace AutoPuTTY
         bool placeholderModeUsername = true;
         bool placeholderModePassword = true;
 
+        string currentGroup = "";
+
         #endregion
 
         #region Element Loading
@@ -501,10 +503,36 @@ namespace AutoPuTTY
 
         private void tbName_TextChanged(object sender, EventArgs e)
         {
-            if (tbServerName.Text.Trim() != "")
-                bServerAdd.Enabled = true;
-            else
-                bServerAdd.Enabled = false;
+            if (currentGroup != "")
+            {
+
+                if (tView.SelectedNode != null && tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
+                {
+                    //changed name
+                    if (tbServerName.Text != tView.SelectedNode.Text)
+                    {
+                        //if new name doesn't exist in list, modify or add
+                        bServerModify.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) != null ? false : true;
+                        bServerAdd.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) != null ? false : true;
+                    }
+                    //changed other stuff
+                    else
+                    {
+                        bServerModify.Enabled = true;
+                        bServerAdd.Enabled = false;
+                    }
+                }
+                //create new item
+                else
+                {
+                    bServerModify.Enabled = false;
+
+                    if (tbServerName.Text.Trim() != "" && xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null)
+                        bServerAdd.Enabled = true;
+                    else
+                        bServerAdd.Enabled = false;
+                }
+            }
         }
 
         private void tbHost_TextChanged(object sender, EventArgs e)
@@ -918,12 +946,9 @@ namespace AutoPuTTY
             TreeNode parent = e.Node.Parent;
             TreeNode currentNode = e.Node;
 
-            Console.WriteLine(parent.Text + " " + currentNode.Text);
-
+            currentGroup = parent.Text;
 
             ServerElement currentServer = xmlHelper.getServerByName(parent.Text, currentNode.Text);
-
-            Console.WriteLine(currentServer.serverName + " " + currentServer.serverPort);
 
             placeholderMode = false;
 
