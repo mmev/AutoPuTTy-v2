@@ -90,6 +90,7 @@
     <Compile Include="Forms\Popups\popupAbout.Designer.cs">
       <DependentUpon>popupAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\connectionHelper.cs" />
     <Compile Include="Utils\cryptHelper.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
     <Compile Include="Utils\Datas\ServerElement.cs" />

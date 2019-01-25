@@ -602,7 +602,7 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        public ServerElement getServerByName(string groupName, string serverName)
+        public static ServerElement getServerByName(string groupName, string serverName)
         {
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(Settings.Default.cfgpath);
@@ -707,30 +707,30 @@ namespace AutoPuTTY.Utils
 
                         if (!foundedServerName.Equals(oldServerName)) continue;
 
-                        xmlElement.Attributes["Name"].Value = serverElement.serverName;
+                        xmlElement.Attributes["Name"].Value = serverElement.Name;
 
                         foreach (XmlElement subElements in xmlElement.ChildNodes)
                         {
                             switch (subElements.Name)
                             {
                                 case "Host":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverHost);
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Host);
                                     break;
 
                                 case "Port":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverPort);
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Port);
                                     break;
 
                                 case "Username":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverUsername);
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Username);
                                     break;
 
                                 case "Password":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverPassword);
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Password);
                                     break;
 
                                 case "Type":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverType);
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Type);
                                     break;
                             }
                         }

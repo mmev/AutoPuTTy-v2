@@ -29,7 +29,7 @@ namespace AutoPuTTY.Utils
             return writeAllow && !writeDeny;
         }
 
-        public  string ReplaceA(string[] s, string[] r, string str)
+        public static string ReplaceA(string[] s, string[] r, string str)
         {
             int i = 0;
             if (s.Length > 0 && r.Length > 0 && s.Length == r.Length)
@@ -43,7 +43,7 @@ namespace AutoPuTTY.Utils
             return str;
         }
 
-        public  string ReplaceU(string[] s, string str)
+        public static string ReplaceU(string[] s, string str)
         {
             int i = 0;
             if (s.Length > 0)

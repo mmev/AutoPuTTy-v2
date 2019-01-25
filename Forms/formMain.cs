@@ -40,33 +40,24 @@ namespace AutoPuTTY
         public const int WM_SYSCOMMAND = 0x112;
         public const int SW_RESTORE = 9;
 
-        public formOptions optionsform;
+        public static formOptions optionsform;
 
         public string[] types = { "PuTTY", "Remote Desktop", "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
         public string[] _types;
         private const int tbfilterw = 145;
-        private bool indexchanged;
-        private bool filter;
-        private bool selectall;
-        private bool remove;
-        private bool filtervisible;
-        private double unixtime;
-        private double oldunixtime;
+
         private string laststate = "normal";
-        private string keysearch = "";
 
         private ArrayList groupList = new ArrayList();
 
         private xmlHelper xmlHelper;
         internal xmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
 
-        private cryptHelper cryptor;
-        internal cryptHelper Cryptor { get => cryptor; set => cryptor = value; }
+        internal cryptHelper Cryptor { get; set; }
 
-        private otherHelper otherHelper;
-        internal otherHelper OtherHelper { get => otherHelper; set => otherHelper = value; }
+        internal otherHelper OtherHelper { get; set; }
 
-        string placeholderServerHost = "";
+        private string placeholderServerHost = "";
         string placeholderServerPort = "";
         string placeholderServerUsername = "";
         string placeholderServerPassword = "";
@@ -190,7 +181,7 @@ namespace AutoPuTTY
                 listmenu.Index = i;
                 listmenu.Text = type;
                 string _type = Array.IndexOf(types, type).ToString();
-                listmenu.Click += delegate { Connect(_type); }; 
+                listmenu.Click += delegate { connect(_type); }; 
                 cmList.MenuItems.Add(listmenu);
                 i++;
             }
@@ -422,16 +413,6 @@ namespace AutoPuTTY
 
         #region TextBox Events
 
-        protected void lbList_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        protected void lbList_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
         private void tbName_TextChanged(object sender, EventArgs e)
         {
             if (currentGroup != "")
@@ -442,8 +423,8 @@ namespace AutoPuTTY
                     if (tbServerName.Text != tView.SelectedNode.Text)
                     {
                         //if new name doesn't exist in list, modify or add
-                        bServerModify.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) != null ? false : true;
-                        bServerAdd.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) != null ? false : true;
+                        bServerModify.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
+                        bServerAdd.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
                     }
                     //changed other stuff
                     else
@@ -499,8 +480,8 @@ namespace AutoPuTTY
                 if (tbGroupName.Text.Trim() != tView.SelectedNode.Text.Trim())
                 {
                     //if new name doesn't exist in list, modify or add
-                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count > 0 ? false : true;
-                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count > 0 ? false : true;
+                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count <= 0;
+                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count <= 0;
                 }
                 //changed other stuff
                 else
@@ -656,8 +637,6 @@ namespace AutoPuTTY
 
         private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Console.WriteLine(123);
-
             if (e.Node.Parent == null)
             {
                 currentGroup = e.Node.Text;
@@ -719,12 +698,12 @@ namespace AutoPuTTY
             tbServerUser.ForeColor = Color.Black;
             tbServerPass.ForeColor = Color.Black;
 
-            tbServerName.Text = currentServer.serverName;
-            tbServerHost.Text = currentServer.serverHost;
-            textBox1.Text = currentServer.serverPort;
-            tbServerUser.Text = currentServer.serverUsername;
-            tbServerPass.Text = currentServer.serverPassword;
-            cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(currentServer.serverType)]);
+            tbServerName.Text = currentServer.Name;
+            tbServerHost.Text = currentServer.Host;
+            textBox1.Text = currentServer.Port;
+            tbServerUser.Text = currentServer.Username;
+            tbServerPass.Text = currentServer.Password;
+            cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(currentServer.Type)]);
 
             bServerDelete.Enabled = true;
 
@@ -737,7 +716,7 @@ namespace AutoPuTTY
 
         private void tView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Connect("-1");
+            connect("-1");
         }
 
         #endregion
@@ -778,7 +757,7 @@ namespace AutoPuTTY
             }
             else if (e.KeyCode == Keys.Enter && tView.SelectedNode != null && tView.SelectedNode.Parent != null)
             {
-                Connect("-1");
+                connect("-1");
             }
         }
 
@@ -824,321 +803,11 @@ namespace AutoPuTTY
                         break;
                 }
             }
-            if (m.Msg == NativeMethods.WM_SHOWME)
+            if (m.Msg == NativeMethods.WmShowMe)
             {
                 miRestore_Click(new object(), new EventArgs());
             }
             base.WndProc(ref m);
-        }
-
-        private static string[] ExtractFilePath(string path)
-        {
-            //extract file path and arguments
-            if (path.IndexOf("\"") == 0)
-            {
-                int s = path.Substring(1).IndexOf("\"");
-                if (s > 0) return new string[] { path.Substring(1, s), path.Substring(s + 2).Trim() };
-                return new string[] { path.Substring(1), "" };
-            }
-            else
-            {
-                int s = path.Substring(1).IndexOf(" ");
-                if (s > 0) return new string[] { path.Substring(0, s + 1), path.Substring(s + 2).Trim() };
-                return new string[] { path.Substring(0), "" };
-            }
-        }
-
-        public void Connect(string type)
-        {
-            // browsing files with OpenFileDialog() fucks with CurrentDirectory, lets fix it
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            if (tView.SelectedNode == null || tView.SelectedNode.Parent == null) return;
-
-            string currentGroup = tView.SelectedNode.Parent.Text;
-            string currentServer = tView.SelectedNode.Text;
-
-            ServerElement server = xmlHelper.getServerByName(currentGroup, currentServer);
-            if (server == null) return;
-
-            string winscpprot = "sftp://";
-
-            string _host = server.serverHost + ":" + server.serverPort;
-            string _user = server.serverUsername;
-            string _pass = server.serverPassword;
-            string _type = type == "-1" ? server.serverType : type;
-            string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
-            string[] ps = { "/", "\\\\" };
-            string[] pr = { "\\", "\\" };
-
-            switch (_type)
-            {
-                case "1": //RDP
-                    string[] rdpextractpath = ExtractFilePath(Settings.Default.rdpath);
-                    string rdpath = Environment.ExpandEnvironmentVariables(rdpextractpath[0]);
-                    string rdpargs = rdpextractpath[1];
-
-                    if (File.Exists(rdpath))
-                    {
-                        Mstscpw mstscpw = new Mstscpw();
-                        string rdppass = mstscpw.encryptpw(_pass);
-
-                        ArrayList arraylist = new ArrayList();
-                        string[] size = Settings.Default.rdsize.Split('x');
-
-                        string rdpout = "";
-                        if (Settings.Default.rdfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
-                        {
-                            rdpout = otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
-
-                            try
-                            {
-                                Directory.CreateDirectory(rdpout);
-                            }
-                            catch
-                            {
-                                MessageBox.Show(this, "Output path for generated \".rdp\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                rdpout = "";
-                            }
-                        }
-
-                        foreach (string width in size)
-                        {
-                            int num;
-                            if (Int32.TryParse(width.Trim(), out num)) arraylist.Add(width.Trim());
-                        }
-
-                        TextWriter rdpfile = new StreamWriter(rdpout + otherHelper.ReplaceU(f, server.serverName.ToString()) + ".rdp");
-                        if (Settings.Default.rdsize == "Full screen") rdpfile.WriteLine("screen mode id:i:2");
-                        else rdpfile.WriteLine("screen mode id:i:1");
-                        if (arraylist.Count == 2)
-                        {
-                            rdpfile.WriteLine("desktopwidth:i:" + arraylist[0]);
-                            rdpfile.WriteLine("desktopheight:i:" + arraylist[1]);
-                        }
-                        if (_host != "") rdpfile.WriteLine("full address:s:" + _host);
-                        if (_user != "")
-                        {
-                            rdpfile.WriteLine("username:s:" + _user);
-                            if (_pass != "") rdpfile.WriteLine("password 51:b:" + rdppass);
-                        }
-                        if (Settings.Default.rddrives) rdpfile.WriteLine("redirectdrives:i:1");
-                        if (Settings.Default.rdadmin) rdpfile.WriteLine("administrative session:i:1");
-                        if (Settings.Default.rdspan) rdpfile.WriteLine("use multimon:i:1");
-                        rdpfile.Close();
-
-                        Process myProc = new Process();
-                        myProc.StartInfo.FileName = rdpath;
-                        myProc.StartInfo.Arguments = "\"" + rdpout + otherHelper.ReplaceU(f, server.serverName.ToString()) + ".rdp\"";
-                        if (rdpargs != "") myProc.StartInfo.Arguments += " " + rdpargs;
-                        //MessageBox.Show(myProc.StartInfo.FileName + myProc.StartInfo.FileName.IndexOf('"').ToString() + File.Exists(myProc.StartInfo.FileName).ToString());
-                        try
-                        {
-                            myProc.Start();
-                        }
-                        catch (System.ComponentModel.Win32Exception)
-                        {
-                            //user canceled
-                        }
-                    }
-                    else
-                    {
-                        if (MessageBox.Show(this, "Could not find file \"" + rdpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bRDPath_Click(type);
-                    }
-                    break;
-                case "2": //VNC
-                    string[] vncextractpath = ExtractFilePath(Settings.Default.vncpath);
-                    string vncpath = vncextractpath[0];
-                    string vncargs = vncextractpath[1];
-
-                    if (File.Exists(vncpath))
-                    {
-                        string host;
-                        string port;
-                        string[] hostport = _host.Split(':');
-                        int split = hostport.Length;
-
-                        if (split == 2)
-                        {
-                            host = hostport[0];
-                            port = hostport[1];
-                        }
-                        else
-                        {
-                            host = _host;
-                            port = "5900";
-                        }
-
-                        string vncout = "";
-
-                        if (Settings.Default.vncfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
-                        {
-                            vncout = otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
-
-                            try
-                            {
-                                Directory.CreateDirectory(vncout);
-                            }
-                            catch
-                            {
-                                MessageBox.Show(this, "Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                vncout = "";
-                            }
-                        }
-
-                        TextWriter vncfile = new StreamWriter(vncout + otherHelper.ReplaceU(f, server.serverName.ToString()) + ".vnc");
-                        vncfile.WriteLine("[Connection]");
-                        if (host != "") vncfile.WriteLine("host=" + host.Trim());
-                        if (port != "") vncfile.WriteLine("port=" + port.Trim());
-                        if (_user != "") vncfile.WriteLine("username=" + _user);
-                        if (_pass != "") vncfile.WriteLine("password=" + cryptVNC.EncryptPassword(_pass));
-                        vncfile.WriteLine("[Options]");
-                        if (Settings.Default.vncfullscreen) vncfile.WriteLine("fullscreen=1");
-                        if (Settings.Default.vncviewonly)
-                        {
-                            vncfile.WriteLine("viewonly=1"); //ultravnc
-                            vncfile.WriteLine("sendptrevents=0"); //realvnc
-                            vncfile.WriteLine("sendkeyevents=0"); //realvnc
-                            vncfile.WriteLine("sendcuttext=0"); //realvnc
-                            vncfile.WriteLine("acceptcuttext=0"); //realvnc
-                            vncfile.WriteLine("sharefiles=0"); //realvnc
-                        }
-
-                        if (_pass != "" && _pass.Length > 8) vncfile.WriteLine("protocol3.3=1"); // fuckin vnc 4.0 auth
-                        vncfile.Close();
-
-                        Process myProc = new Process();
-                        myProc.StartInfo.FileName = Settings.Default.vncpath;
-                        myProc.StartInfo.Arguments = "-config \"" + vncout + otherHelper.ReplaceU(f, server.serverName.ToString()) + ".vnc\"";
-                        if (vncargs != "") myProc.StartInfo.Arguments += " " + vncargs;
-                        try
-                        {
-                            myProc.Start();
-                        }
-                        catch (System.ComponentModel.Win32Exception)
-                        {
-                            //user canceled
-                        }
-                    }
-                    else
-                    {
-                        if (MessageBox.Show(this, "Could not find file \"" + vncpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bVNCPath_Click(type);
-                    }
-                    break;
-                case "3": //WinSCP (SCP)
-                    winscpprot = "scp://";
-                    goto case "4";
-                case "4": //WinSCP (SFTP)
-                    string[] winscpextractpath = ExtractFilePath(Settings.Default.winscppath);
-                    string winscppath = winscpextractpath[0];
-                    string winscpargs = winscpextractpath[1];
-
-                    if (File.Exists(winscppath))
-                    {
-                        string host;
-                        string port;
-                        string[] hostport = _host.Split(':');
-                        int split = hostport.Length;
-
-                        if (split == 2)
-                        {
-                            host = hostport[0];
-                            port = hostport[1];
-                        }
-                        else
-                        {
-                            host = _host;
-                            port = "";
-                        }
-
-                        Process myProc = new Process();
-                        myProc.StartInfo.FileName = Settings.Default.winscppath;
-                        myProc.StartInfo.Arguments = winscpprot;
-                        if (_user != "")
-                        {
-                            string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
-                            _user = otherHelper.ReplaceU(s, _user);
-                            _pass = otherHelper.ReplaceU(s, _pass);
-                            myProc.StartInfo.Arguments += _user;
-                            if (_pass != "") myProc.StartInfo.Arguments += ":" + _pass;
-                            myProc.StartInfo.Arguments += "@";
-                        }
-                        if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host);
-                        if (port != "") myProc.StartInfo.Arguments += ":" + port;
-                        if (winscpprot == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
-                        if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
-                        if (winscpargs != "") myProc.StartInfo.Arguments += " " + winscpargs;
-                        try
-                        {
-                            myProc.Start();
-                        }
-                        catch (System.ComponentModel.Win32Exception)
-                        {
-                            //user canceled
-                        }
-                    }
-                    else
-                    {
-                        if (MessageBox.Show(this, "Could not find file \"" + winscppath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bWSCPPath_Click(type);
-                    }
-                    break;
-                case "5": //WinSCP (FTP)
-                    winscpprot = "ftp://";
-                    goto case "4";
-                default: //PuTTY
-                    string[] puttyextractpath = ExtractFilePath(Settings.Default.puttypath);
-                    string puttypath = puttyextractpath[0];
-                    string puttyargs = puttyextractpath[1];
-                    // for some reason you only have escape \ if it's followed by "
-                    // will "fix" up to 3 \ in a password like \\\", then screw you with your maniac passwords
-                    string[] passs = { "\"", "\\\\\"", "\\\\\\\\\"", "\\\\\\\\\\\\\"", };
-                    string[] passr = { "\\\"", "\\\\\\\"", "\\\\\\\\\\\"", "\\\\\\\\\\\\\\\"", };
-
-                    if (File.Exists(puttypath))
-                    {
-                        string host;
-                        string port;
-                        string[] hostport = _host.Split(':');
-                        int split = hostport.Length;
-
-                        if (split == 2)
-                        {
-                            host = hostport[0];
-                            port = hostport[1];
-                        }
-                        else
-                        {
-                            host = _host;
-                            port = "";
-                        }
-
-                        Process myProc = new Process();
-                        myProc.StartInfo.FileName = Settings.Default.puttypath;
-                        myProc.StartInfo.Arguments = "-ssh ";
-                        if (_user != "") myProc.StartInfo.Arguments += _user + "@";
-                        if (host != "") myProc.StartInfo.Arguments += host;
-                        if (port != "") myProc.StartInfo.Arguments += " " + port;
-                        if (_user != "" && _pass != "") myProc.StartInfo.Arguments += " -pw \"" + otherHelper.ReplaceA(passs, passr, _pass) + "\"";
-                        if (Settings.Default.puttyexecute && Settings.Default.puttycommand != "") myProc.StartInfo.Arguments += " -m \"" + Settings.Default.puttycommand + "\"";
-                        if (Settings.Default.puttykey && Settings.Default.puttykeyfile != "") myProc.StartInfo.Arguments += " -i \"" + Settings.Default.puttykeyfile + "\"";
-                        if (Settings.Default.puttyforward) myProc.StartInfo.Arguments += " -X";
-                        //MessageBox.Show(this, myProc.StartInfo.Arguments);
-                        if (puttyargs != "") myProc.StartInfo.Arguments += " " + puttyargs;
-                        try
-                        {
-                            myProc.Start();
-                        }
-                        catch (System.ComponentModel.Win32Exception)
-                        {
-                            //user canceled
-                        }
-                    }
-                    else
-                    {
-                        if (MessageBox.Show(this, "Could not find file \"" + puttypath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) optionsform.bPuTTYPath_Click(type);
-                    }
-                    break;
-            }
         }
 
         private void TooglePassword(PictureBox bEye, TextBox tbPass, bool state)
@@ -1170,7 +839,7 @@ namespace AutoPuTTY
                 {
                     foreach (ServerElement server in group.servers)
                     {
-                        string currentServerName = server.serverName;
+                        string currentServerName = server.Name;
                         groupNode.Nodes.Add(currentServerName);
 
                     }
@@ -1192,6 +861,11 @@ namespace AutoPuTTY
             tbGroupDefaultUsername.Enabled = state;
             tbGroupDefaultPassword.Enabled = state;
             tbGroupDefaultPort.Enabled = state;
+        }
+
+        public void connect(string type)
+        {
+            connectionHelper.startConnect(type, tView.SelectedNode);
         }
 
         #endregion

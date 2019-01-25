@@ -8,6 +8,8 @@ namespace AutoPuTTY.Utils
 {
     class cryptHelper
     {
+        //TODO: Добавить определение использования стандартного или кастомного пароля для шифрования
+
         public static string Encrypt(string toEncrypt)
         {
             byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);

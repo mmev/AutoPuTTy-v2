@@ -86,7 +86,7 @@ namespace AutoPuTTY
         public void bPuTTYPath_Click(string type)
         {
             bPuTTYPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
+            mainform.connect(type);
         }
 
         public void bPuTTYPath_Click(object sender, EventArgs e)
@@ -106,7 +106,7 @@ namespace AutoPuTTY
         public void bRDPath_Click(string type)
         {
             bRDPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
+            mainform.connect(type);
         }
 
         public void bRDPath_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace AutoPuTTY
         public void bVNCPath_Click(string type)
         {
             bVNCPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
+            mainform.connect(type);
         }
 
         public void bVNCPath_Click(object sender, EventArgs e)
@@ -159,7 +159,7 @@ namespace AutoPuTTY
         public void bWSCPPath_Click(string type)
         {
             bWSCPPath_Click(new object(), new EventArgs());
-            mainform.Connect(type);
+            mainform.connect(type);
         }
 
         public void bWSCPPath_Click(object sender, EventArgs e)

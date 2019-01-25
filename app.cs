@@ -12,8 +12,7 @@ namespace AutoPuTTY
         [DllImport("user32")]
         public static extern int RegisterWindowMessage(string message);
 
-        public const int HWND_BROADCAST = 0xffff;
-        public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        public static readonly int WmShowMe = RegisterWindowMessage("WM_SHOWME");
     }
 
     static class app
@@ -21,23 +20,23 @@ namespace AutoPuTTY
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static readonly Mutex mutex = new Mutex(true, "Local\\AutoPuTTY");
+        static readonly Mutex Mutex = new Mutex(true, "Local\\AutoPuTTY");
         [STAThread]
         static void Main()
         {
-            if (mutex.WaitOne(TimeSpan.Zero, true))
+            if (Mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                formMain mainform = new formMain(false);
-                string password = mainform.XmlHelper.configGet("password");
+                formMain formMain = new formMain(false);
+                string password = formMain.XmlHelper.configGet("password");
 
                 if (password.Trim() != "")
                 {
-                    popupPassword passwordopup = new popupPassword(password);
-                    Application.Run(passwordopup);
-                    if (!passwordopup.auth) return;
+                    popupPassword popupPassword = new popupPassword(password);
+                    Application.Run(popupPassword);
+                    if (!popupPassword.auth) return;
                 }
 
                 Application.Run(new formMain(true));
@@ -46,7 +45,7 @@ namespace AutoPuTTY
             {
                 // send our Win32 message to make the currently running instance
                 // jump on top of all the other windows
-                NativeMethods.PostMessage((IntPtr) NativeMethods.HWND_BROADCAST, NativeMethods.WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+                NativeMethods.PostMessage((IntPtr) 0xffff, NativeMethods.WmShowMe, IntPtr.Zero, IntPtr.Zero);
             }
         }
     }

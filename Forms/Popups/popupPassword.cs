@@ -6,6 +6,8 @@ namespace AutoPuTTY
 {
     public partial class popupPassword : Form
     {
+        //TODO: Переделать вход по паролю, добавить Secure
+
         #region Conts Init
 
         public bool auth;

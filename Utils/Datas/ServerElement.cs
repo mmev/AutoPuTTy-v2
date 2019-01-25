@@ -6,26 +6,30 @@ namespace AutoPuTTY.Utils.Datas
 {
     class ServerElement
     {
-        public string serverName;
+        public string Name;
 
-        public string serverHost;
-        public string serverPort;
-        public string serverUsername;
-        public string serverPassword;
+        public string Host;
+        public string Port;
+        public string Username;
+        public string Password;
 
-        public string serverType;
+        public string Type;
 
-        public ServerElement(string serverName, string serverHost, string serverPort, 
-            string serverUsername, string serverPassword, string serverType)
+        public string HostWithServer;
+
+        public ServerElement(string name, string host, string port, 
+            string username, string password, string type)
         {
-            this.serverName = serverName;
+            this.Name = name;
 
-            this.serverHost = serverHost;
-            this.serverPort = serverPort;
-            this.serverUsername = serverUsername;
-            this.serverPassword = serverPassword;
+            this.Host = host;
+            this.Port = port;
+            this.Username = username;
+            this.Password = password;
 
-            this.serverType = serverType;
+            this.Type = type;
+
+            this.HostWithServer = host + ":" + port;
         }
 
     }
