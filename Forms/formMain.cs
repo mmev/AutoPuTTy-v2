@@ -131,7 +131,6 @@ namespace AutoPuTTY
             if (!full) return;
             InitializeComponent();
 
-            FindSwitch(false);
             foreach (string type in _types)
             {
                 cbType.Items.Add(type);
@@ -212,9 +211,6 @@ namespace AutoPuTTY
 
             AutoSize = false;
             MinimumSize = Size;
-            #if DEBUG
-            Debug.WriteLine("StartUp Time :" + (DateTime.Now - time));
-            #endif
         }
 
         #endregion
@@ -321,32 +317,6 @@ namespace AutoPuTTY
             }
         }
 
-        private void bClose_Click(object sender, EventArgs e)
-        {
-            //FindSwitch(false);
-            //if (tbFilter.Text == "") return;
-            //XmlHelper.XmlToList(lbList);
-            //if (lbList.Items.Count > 0) lbList.SelectedIndex = 0;
-        }
-
-        // "search" form change close button image on mouse hover
-        private void bClose_MouseEnter(object sender, EventArgs e)
-        {
-            bClose.Image = Resources.closeh;
-        }
-
-        // "search" form change close button image on mouse leave
-        private void bClose_MouseLeave(object sender, EventArgs e)
-        {
-            bClose.Image = Resources.close;
-        }
-
-        // "search" form change close button image on mouse down
-        private void bClose_MouseDown(object sender, MouseEventArgs e)
-        {
-            bClose.Image = Resources.closed;
-        }
-
         private void bEye_Click(object sender, EventArgs e)
         {
             TooglePassword(bServerEye, tbServerPass, !tbServerPass.UseSystemPasswordChar);
@@ -362,7 +332,6 @@ namespace AutoPuTTY
 
         private void bOptions_Click(object sender, EventArgs e)
         {
-            if (filtervisible) bClose_Click(sender, e);
             optionsform.ShowDialog(this);
         }
 
@@ -510,16 +479,10 @@ namespace AutoPuTTY
 
         private void tbName_TextChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("exec");
-
             if (currentGroup != "")
             {
-                Console.WriteLine("exec1");
-
-                if (tView.SelectedNode != null && tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
+                if (tView.SelectedNode != null && tbServerName.Text.Trim() != "")
                 {
-                    Console.WriteLine("exec2");
-
                     //changed name
                     if (tbServerName.Text != tView.SelectedNode.Text)
                     {
@@ -530,7 +493,6 @@ namespace AutoPuTTY
                     //changed other stuff
                     else
                     {
-                        Console.WriteLine("exec4");
                         bServerModify.Enabled = true;
                         bServerAdd.Enabled = false;
                     }
@@ -538,7 +500,6 @@ namespace AutoPuTTY
                 //create new item
                 else
                 {
-                Console.WriteLine("exec3");
                     bServerModify.Enabled = false;
 
                     if (tbServerName.Text.Trim() != "" && xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null)
@@ -569,31 +530,6 @@ namespace AutoPuTTY
             tbName_TextChanged(null, e);
         }
 
-
-        // update "search"
-        private void tbFilter_Changed(object sender, EventArgs e)
-        {
-            //if (filtervisible) lbList_Filter(tbFilter.Text);
-        }
-
-        // close "search" form when pressing ESC
-        private void tbFilter_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)27)
-            {
-                e.Handled = true;
-                bClose_Click(sender, e);
-            }
-        }
-
-        // prevent the beep sound when pressing ctrl + F in the search input
-        private void tbFilter_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F && e.Control)
-            {
-                e.SuppressKeyPress = true;
-            }
-        }
 
         /*
          * NEW EVENTS
@@ -761,164 +697,6 @@ namespace AutoPuTTY
 
         #endregion
 
-        #region ListBox Events
-
-        //private void lbList_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
-        //{
-        //    if (e.Index < 0) return;
-        //    // Draw the background of the ListBox control for each item.
-        //    e.DrawBackground();
-        //    // Define the default color of the brush as black.
-        //    Brush myBrush = Brushes.Black;
-
-        //    // Draw the current item text based on the current Font 
-        //    // and the custom brush settings.
-        //    Rectangle bounds = e.Bounds;
-        //    if (bounds.X < 1) bounds.X = 1;
-        //    //MessageBox.Show(this, bounds.Top.ToString());
-
-        //    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) myBrush = Brushes.White;
-        //    e.Graphics.DrawString(lbList.Items[e.Index].ToString(), e.Font, myBrush, bounds, StringFormat.GenericDefault);
-
-        //    // If the ListBox has focus, draw a focus rectangle around the selected item.
-        //    e.DrawFocusRectangle();
-        //}
-
-        //public void lbList_IndexChanged(object sender, EventArgs e)
-        //{
-        //    if (filter || selectall) return;
-        //    if (remove || lbList.SelectedItem == null)
-        //    {
-        //        if (bServerDelete.Enabled) bServerDelete.Enabled = false;
-        //        return;
-        //    }
-        //    indexchanged = true;
-
-        //    ArrayList server = xmlHelper.XmlGetServer(lbList.SelectedItem.ToString());
-
-        //    tbServerName.Text = (string)server[0];
-        //    tbServerHost.Text = Cryptor.Decrypt((string)server[1]);
-        //    tbServerUser.Text = Cryptor.Decrypt((string)server[2]);
-        //    tbServerPass.Text = Cryptor.Decrypt((string)server[3]);
-        //    cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(server[4])]);
-        //    lServerUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
-
-        //    if (bServerAdd.Enabled) bServerAdd.Enabled = false;
-        //    if (bServerModify.Enabled) bServerModify.Enabled = false;
-        //    if (!bServerDelete.Enabled) bServerDelete.Enabled = true;
-
-        //    indexchanged = false;
-        //}
-
-        //private void lbList_MouseClick(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button != MouseButtons.Right) return;
-        //    lbList_ContextMenu();
-        //}
-
-        //private void lbList_ContextMenu_Enable(bool status)
-        //{
-        //    for (int i = 0; i < cmList.MenuItems.Count; i++)
-        //    {
-        //        cmList.MenuItems[i].Enabled = status;
-        //    }
-        //}
-
-        //private void lbList_ContextMenu()
-        //{
-        //    lbList_ContextMenu(false);
-        //}
-
-        //private void lbList_ContextMenu(bool keyboard)
-        //{
-        //    if (lbList.Items.Count > 0)
-        //    {
-        //        if (keyboard && lbList.SelectedItems.Count > 0)
-        //        {
-        //            lbList_ContextMenu_Enable(true);
-        //        }
-        //        else
-        //        {
-        //            int rightindex = lbList.IndexFromPoint(lbList.PointToClient(MousePosition));
-        //            if (rightindex >= 0)
-        //            {
-        //                lbList_ContextMenu_Enable(true);
-        //                if (lbList.GetSelected(rightindex))
-        //                {
-        //                    lbList.SelectedIndex = rightindex;
-        //                }
-        //                else
-        //                {
-        //                    lbList.SelectedIndex = -1;
-        //                    lbList.SelectedIndex = rightindex;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                lbList_ContextMenu_Enable(false);
-        //            }
-        //        }
-        //    }
-        //    else lbList_ContextMenu_Enable(false);
-
-        //    IntPtr hWnd = Process.GetCurrentProcess().MainWindowHandle;
-        //    ShowWindowAsync(hWnd, 5); // SW_SHOW
-
-        //    int loop = 0;
-        //    while (!Visible)
-        //    {
-        //        loop++;
-        //        Thread.Sleep(100);
-        //        Show();
-        //        if (loop > 10)
-        //        {
-        //            //let's crash
-        //            MessageBox.Show("Something bad happened");
-        //            break;
-        //        }
-        //    }
-        //    cmList.Show(this, PointToClient(MousePosition));
-        //}
-
-        //private void lbList_DoubleClick(object sender, EventArgs e)
-        //{
-        //    Connect("-1");
-        //}
-
-        //public void lbList_Filter(string s)
-        //{
-        //    filter = true;
-        //    XmlHelper.XmlToList(lbList);
-        //    ListBox.ObjectCollection itemslist = new ListBox.ObjectCollection(lbList);
-        //    itemslist.AddRange(lbList.Items);
-        //    lbList.Items.Clear();
-
-        //    foreach (string item in itemslist)
-        //    {
-        //        string _item = item;
-        //        if (!cbCase.Checked)
-        //        {
-        //            s = s.ToLower();
-        //            _item = _item.ToLower();
-        //        }
-
-        //        /*if (!filterpopup.cbWhole.Checked)
-        //        {*/
-        //        if (_item.IndexOf(s) >= 0 || s == "") lbList.Items.Add(item);
-        //        /*}
-        //        else
-        //        {
-        //            if (_item == s || s == "") lbList.Items.Add(item);
-        //        }*/
-        //    }
-
-        //    filter = false;
-        //    lbList.SelectedIndex = lbList.Items.Count > 0 ? 0 : -1;
-        //    if (lbList.Items.Count < 1) lbList_IndexChanged(new object(), new EventArgs());
-        //}
-
-        #endregion
-
         #region TreeView Events
 
         private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -1020,8 +798,6 @@ namespace AutoPuTTY
             {
                 laststate = WindowState.ToString();
             }
-
-            tbFilter.Width = tlLeft.Width - tbFilter.Left < tbfilterw ? tlLeft.Width - tbFilter.Left : tbfilterw;
         }
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1039,13 +815,13 @@ namespace AutoPuTTY
 
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F && e.Control)
-            {
-                FindSwitch(true);
-            }
-            else if (e.KeyCode == Keys.O && e.Control)
+            if (e.KeyCode == Keys.O && e.Control)
             {
                 bOptions_Click(sender, e);
+            }
+            else if (e.KeyCode == Keys.Enter && tView.SelectedNode != null && tView.SelectedNode.Parent != null)
+            {
+                Connect("-1");
             }
         }
 
@@ -1071,11 +847,6 @@ namespace AutoPuTTY
         private void liOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             optionsform.ShowDialog(this);
-        }
-
-        private void cbCase_CheckedChanged(object sender, EventArgs e)
-        {
-            if (tbFilter.Text != "") tbFilter_Changed(sender, e);
         }
 
         #endregion
@@ -1122,8 +893,6 @@ namespace AutoPuTTY
 
         public void Connect(string type)
         {
-            Debug.WriteLine("Connect : type - " + type + " " + (type != "-1" ? types[Convert.ToInt16(type)] : ""));
-
             // browsing files with OpenFileDialog() fucks with CurrentDirectory, lets fix it
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -1341,7 +1110,6 @@ namespace AutoPuTTY
                         if (port != "") myProc.StartInfo.Arguments += ":" + port;
                         if (winscpprot == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
                         if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
-                        Debug.WriteLine(myProc.StartInfo.Arguments);
                         if (winscpargs != "") myProc.StartInfo.Arguments += " " + winscpargs;
                         try
                         {
@@ -1428,20 +1196,6 @@ namespace AutoPuTTY
                 bEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
                 tbPass.UseSystemPasswordChar = false;
             }
-        }
-
-        // toggle "search" form
-        private void FindSwitch(bool status)
-        {
-            // reset the search input text
-            if (status && !filtervisible) tbFilter.Text = "";
-            // show the "search" form
-            tlLeft.RowStyles[1].Height = status ? 25 : 0;
-            filtervisible = status;
-            // focus the filter input
-            tbFilter.Focus();
-            // pressed ctrl + F twice, select the search input text so we can search again over last one
-            if (status && filtervisible && tbFilter.Text != "") tbFilter.SelectAll();
         }
 
         private void updateTreeView()

@@ -80,22 +80,11 @@ namespace AutoPuTTY
             this.miClose = new System.Windows.Forms.MenuItem();
             this.cmList = new System.Windows.Forms.ContextMenu();
             this.tlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.tlLeft = new System.Windows.Forms.TableLayoutPanel();
-            this.pFind = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cbCase = new System.Windows.Forms.CheckBox();
-            this.bClose = new System.Windows.Forms.PictureBox();
-            this.tbFilter = new System.Windows.Forms.TextBox();
-            this.lbListSep = new System.Windows.Forms.TableLayoutPanel();
             this.tView = new System.Windows.Forms.TreeView();
             this.pConfig.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).BeginInit();
             this.tlMain.SuspendLayout();
-            this.tlLeft.SuspendLayout();
-            this.pFind.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bClose)).BeginInit();
-            this.lbListSep.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbServerPass
@@ -652,7 +641,7 @@ namespace AutoPuTTY
             this.tlMain.ColumnCount = 2;
             this.tlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.tlMain.Controls.Add(this.tlLeft, 0, 0);
+            this.tlMain.Controls.Add(this.tView, 0, 0);
             this.tlMain.Controls.Add(this.pConfig, 1, 0);
             this.tlMain.Location = new System.Drawing.Point(0, 0);
             this.tlMain.Margin = new System.Windows.Forms.Padding(0);
@@ -661,104 +650,6 @@ namespace AutoPuTTY
             this.tlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlMain.Size = new System.Drawing.Size(379, 532);
             this.tlMain.TabIndex = 0;
-            // 
-            // tlLeft
-            // 
-            this.tlLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlLeft.ColumnCount = 1;
-            this.tlLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlLeft.Controls.Add(this.pFind, 0, 1);
-            this.tlLeft.Controls.Add(this.lbListSep, 0, 0);
-            this.tlLeft.Location = new System.Drawing.Point(0, 0);
-            this.tlLeft.Margin = new System.Windows.Forms.Padding(0);
-            this.tlLeft.Name = "tlLeft";
-            this.tlLeft.RowCount = 2;
-            this.tlLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tlLeft.Size = new System.Drawing.Size(249, 532);
-            this.tlLeft.TabIndex = 0;
-            // 
-            // pFind
-            // 
-            this.pFind.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pFind.Controls.Add(this.label1);
-            this.pFind.Controls.Add(this.cbCase);
-            this.pFind.Controls.Add(this.bClose);
-            this.pFind.Controls.Add(this.tbFilter);
-            this.pFind.Location = new System.Drawing.Point(0, 507);
-            this.pFind.Margin = new System.Windows.Forms.Padding(0);
-            this.pFind.Name = "pFind";
-            this.pFind.Size = new System.Drawing.Size(249, 25);
-            this.pFind.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(249, 1);
-            this.label1.TabIndex = 8;
-            // 
-            // cbCase
-            // 
-            this.cbCase.AutoSize = true;
-            this.cbCase.Location = new System.Drawing.Point(174, 5);
-            this.cbCase.Name = "cbCase";
-            this.cbCase.Size = new System.Drawing.Size(82, 17);
-            this.cbCase.TabIndex = 7;
-            this.cbCase.Text = "Match case";
-            this.cbCase.UseVisualStyleBackColor = true;
-            this.cbCase.CheckedChanged += new System.EventHandler(this.cbCase_CheckedChanged);
-            // 
-            // bClose
-            // 
-            this.bClose.BackColor = System.Drawing.Color.Transparent;
-            this.bClose.Image = global::AutoPuTTY.Properties.Resources.close;
-            this.bClose.Location = new System.Drawing.Point(2, 3);
-            this.bClose.Margin = new System.Windows.Forms.Padding(0);
-            this.bClose.Name = "bClose";
-            this.bClose.Size = new System.Drawing.Size(20, 20);
-            this.bClose.TabIndex = 6;
-            this.bClose.TabStop = false;
-            this.bClose.Click += new System.EventHandler(this.bClose_Click);
-            this.bClose.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bClose_MouseDown);
-            this.bClose.MouseEnter += new System.EventHandler(this.bClose_MouseEnter);
-            this.bClose.MouseLeave += new System.EventHandler(this.bClose_MouseLeave);
-            // 
-            // tbFilter
-            // 
-            this.tbFilter.Location = new System.Drawing.Point(24, 3);
-            this.tbFilter.Name = "tbFilter";
-            this.tbFilter.Size = new System.Drawing.Size(107, 20);
-            this.tbFilter.TabIndex = 4;
-            this.tbFilter.TextChanged += new System.EventHandler(this.tbFilter_Changed);
-            this.tbFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbFilter_KeyDown);
-            this.tbFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbFilter_KeyPress);
-            // 
-            // lbListSep
-            // 
-            this.lbListSep.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbListSep.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbListSep.ColumnCount = 2;
-            this.lbListSep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.lbListSep.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1F));
-            this.lbListSep.Controls.Add(this.tView, 0, 0);
-            this.lbListSep.Location = new System.Drawing.Point(0, 0);
-            this.lbListSep.Margin = new System.Windows.Forms.Padding(0);
-            this.lbListSep.Name = "lbListSep";
-            this.lbListSep.RowCount = 1;
-            this.lbListSep.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.lbListSep.Size = new System.Drawing.Size(249, 507);
-            this.lbListSep.TabIndex = 2;
             // 
             // tView
             // 
@@ -771,10 +662,8 @@ namespace AutoPuTTY
             this.tView.Margin = new System.Windows.Forms.Padding(0);
             this.tView.Name = "tView";
             this.tView.ShowLines = false;
-            this.tView.Size = new System.Drawing.Size(248, 507);
-            this.tView.TabIndex = 0;
-            this.tView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseClick);
-            this.tView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseDoubleClick);
+            this.tView.Size = new System.Drawing.Size(249, 532);
+            this.tView.TabIndex = 2;
             // 
             // formMain
             // 
@@ -788,7 +677,7 @@ namespace AutoPuTTY
             this.Name = "formMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AutoPuTTY";
+            this.Text = "AutoPuTTY v2";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.Resize += new System.EventHandler(this.mainForm_Resize);
             this.pConfig.ResumeLayout(false);
@@ -796,11 +685,6 @@ namespace AutoPuTTY
             ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).EndInit();
             this.tlMain.ResumeLayout(false);
-            this.tlLeft.ResumeLayout(false);
-            this.pFind.ResumeLayout(false);
-            this.pFind.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bClose)).EndInit();
-            this.lbListSep.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -833,13 +717,6 @@ namespace AutoPuTTY
         private System.Windows.Forms.Label lServerSep2;
         private System.Windows.Forms.Label lServerSep1;
         private System.Windows.Forms.TableLayoutPanel tlMain;
-        private System.Windows.Forms.TableLayoutPanel tlLeft;
-        private System.Windows.Forms.Panel pFind;
-        private System.Windows.Forms.TextBox tbFilter;
-        private System.Windows.Forms.PictureBox bClose;
-        private System.Windows.Forms.CheckBox cbCase;
-        private System.Windows.Forms.TableLayoutPanel lbListSep;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox bServerEye;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbGroupName;
@@ -861,10 +738,10 @@ namespace AutoPuTTY
         private System.Windows.Forms.TextBox tbGroupDefaultHost;
         private System.Windows.Forms.Label lGroupDefaultHost;
         private System.Windows.Forms.Label label7;
-        public System.Windows.Forms.TreeView tView;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lPort;
         private System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.TreeView tView;
     }
 }
 
