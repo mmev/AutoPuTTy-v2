@@ -80,11 +80,13 @@ namespace AutoPuTTY
             this.miClose = new System.Windows.Forms.MenuItem();
             this.cmList = new System.Windows.Forms.ContextMenu();
             this.tlMain = new System.Windows.Forms.TableLayoutPanel();
+            this.tlLeft = new System.Windows.Forms.TableLayoutPanel();
             this.tView = new System.Windows.Forms.TreeView();
             this.pConfig.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).BeginInit();
             this.tlMain.SuspendLayout();
+            this.tlLeft.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbServerPass
@@ -641,8 +643,8 @@ namespace AutoPuTTY
             this.tlMain.ColumnCount = 2;
             this.tlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.tlMain.Controls.Add(this.tView, 0, 0);
             this.tlMain.Controls.Add(this.pConfig, 1, 0);
+            this.tlMain.Controls.Add(this.tlLeft, 0, 0);
             this.tlMain.Location = new System.Drawing.Point(0, 0);
             this.tlMain.Margin = new System.Windows.Forms.Padding(0);
             this.tlMain.Name = "tlMain";
@@ -650,6 +652,24 @@ namespace AutoPuTTY
             this.tlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlMain.Size = new System.Drawing.Size(379, 532);
             this.tlMain.TabIndex = 0;
+            // 
+            // tlLeft
+            // 
+            this.tlLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlLeft.ColumnCount = 1;
+            this.tlLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlLeft.Controls.Add(this.tView, 0, 0);
+            this.tlLeft.Location = new System.Drawing.Point(0, 0);
+            this.tlLeft.Margin = new System.Windows.Forms.Padding(0);
+            this.tlLeft.Name = "tlLeft";
+            this.tlLeft.RowCount = 1;
+            this.tlLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlLeft.Size = new System.Drawing.Size(249, 532);
+            this.tlLeft.TabIndex = 2;
             // 
             // tView
             // 
@@ -663,7 +683,9 @@ namespace AutoPuTTY
             this.tView.Name = "tView";
             this.tView.ShowLines = false;
             this.tView.Size = new System.Drawing.Size(249, 532);
-            this.tView.TabIndex = 2;
+            this.tView.TabIndex = 3;
+            this.tView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseClick);
+            this.tView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseDoubleClick);
             // 
             // formMain
             // 
@@ -685,6 +707,7 @@ namespace AutoPuTTY
             ((System.ComponentModel.ISupportInitialize)(this.bGroupEye)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bServerEye)).EndInit();
             this.tlMain.ResumeLayout(false);
+            this.tlLeft.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -741,6 +764,7 @@ namespace AutoPuTTY
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lPort;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TableLayoutPanel tlLeft;
         public System.Windows.Forms.TreeView tView;
     }
 }

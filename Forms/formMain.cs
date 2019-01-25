@@ -424,57 +424,12 @@ namespace AutoPuTTY
 
         protected void lbList_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.KeyCode == Keys.Apps) lbList_ContextMenu(true);
-            if (e.KeyCode == Keys.Delete) mDelete_Click(sender, e);
-            if (e.KeyCode == Keys.A && e.Control)
-            {
-                //for (int i = 0; i < lbList.Items.Count; i++)
-                //{
-                //    //change index for the first item only
-                //    if (i > 0) selectall = true;
-                //    lbList.SetSelected(i, true);
-                //}
-                //selectall = false;
-            }
+
         }
 
         protected void lbList_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = true;
 
-            TimeSpan ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            unixtime = Convert.ToInt64(ts.TotalMilliseconds);
-
-            string key = e.KeyChar.ToString();
-
-            if (e.KeyChar == (char)Keys.Return) Connect("-1");
-            else if (key.Length == 1)
-            {
-                if (unixtime - oldunixtime < 1000)
-                {
-                    keysearch = keysearch + e.KeyChar;
-                }
-                else
-                {
-                    keysearch = e.KeyChar.ToString();
-                }
-                //if (lbList.FindString(keysearch) >= 0)
-                //{
-                //    lbList.SelectedIndex = -1;
-                //    lbList.SelectedIndex = lbList.FindString(keysearch);
-                //}
-                //else
-                //{
-                //    keysearch = e.KeyChar.ToString();
-                //    if (lbList.FindString(keysearch) >= 0)
-                //    {
-                //        lbList.SelectedIndex = -1;
-                //        lbList.SelectedIndex = lbList.FindString(keysearch);
-                //    }
-                //}
-            }
-
-            oldunixtime = unixtime;
         }
 
         private void tbName_TextChanged(object sender, EventArgs e)
@@ -701,6 +656,8 @@ namespace AutoPuTTY
 
         private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            Console.WriteLine(123);
+
             if (e.Node.Parent == null)
             {
                 currentGroup = e.Node.Text;
