@@ -294,15 +294,22 @@ namespace AutoPuTTY
 
         private void bDelete_Click(object sender, EventArgs e)
         {
-            //if (lbList.SelectedItems.Count > 0)
-            //{
-            //    XmlHelper.XmlDropNode("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItems[0].ToString()));
-            //    remove = true;
-            //    lbList.Items.Remove(lbList.SelectedItems[0].ToString());
-            //    remove = false;
-            //    lbList.SelectedItems.Clear();
-            //    tbName_TextChanged(this, e);
-            //}
+            if (tView.SelectedNode != null)
+            {
+                TreeNode currentNode = tView.SelectedNode;
+
+                if (currentNode.Parent == null)
+                {
+                    otherHelper.Error("Please select server!");
+                    return;
+                }
+
+                string groupName = currentNode.Parent.Text;
+                string serverName = currentNode.Text;
+
+                xmlHelper.deleteServerByName(groupName, serverName);
+                updateTreeView();
+            }
         }
 
         private void bClose_Click(object sender, EventArgs e)
@@ -901,6 +908,9 @@ namespace AutoPuTTY
                 placeholderServerUsername = groupInfos[2];
                 placeholderServerPassword = groupInfos[3];
 
+                bServerDelete.Enabled = false;
+                bServerModify.Enabled = false;
+
                 return;
             }
 
@@ -928,6 +938,8 @@ namespace AutoPuTTY
             textBox1.Text = currentServer.serverPort;
             tbServerUser.Text = currentServer.serverUsername;
             tbServerPass.Text = currentServer.serverPassword;
+
+            bServerDelete.Enabled = true;
         }
 
         #endregion

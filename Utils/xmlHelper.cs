@@ -659,5 +659,36 @@ namespace AutoPuTTY.Utils
             //TODO: Fix return null
             return null;
         }
+
+        public void deleteServerByName(string groupName, string serverName)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
+
+            foreach (XmlElement xmlElement in xmlGroup)
+            {
+                switch (xmlElement.Name)
+                {
+                    case "Server":
+                        string foundedServerName = xmlElement.GetAttribute("Name");
+
+                        if (!foundedServerName.Equals(serverName)) continue;
+
+                        xmlGroup.RemoveChild(xmlElement);
+                        break;
+                }
+            }
+
+            try
+            {
+                xmldoc.Save(Settings.Default.cfgpath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+            }
+        }
     }
 }
