@@ -918,7 +918,7 @@ namespace AutoPuTTY
             {
                 case "1": //RDP
                     string[] rdpextractpath = ExtractFilePath(Settings.Default.rdpath);
-                    string rdpath = rdpextractpath[0];
+                    string rdpath = Environment.ExpandEnvironmentVariables(rdpextractpath[0]);
                     string rdpargs = rdpextractpath[1];
 
                     if (File.Exists(rdpath))
