@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Xml;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils;
+using AutoPuTTY.Utils.Datas;
 using ListBox=System.Windows.Forms.ListBox;
 using MenuItem=System.Windows.Forms.MenuItem;
 
@@ -69,6 +70,13 @@ namespace AutoPuTTY
         string placeholderServerPort = "";
         string placeholderServerUsername = "";
         string placeholderServerPassword = "";
+
+        bool placeholderMode = true;
+
+        bool placeholderModeHost = true;
+        bool placeholderModePort = true;
+        bool placeholderModeUsername = true;
+        bool placeholderModePassword = true;
 
         #endregion
 
@@ -231,52 +239,19 @@ namespace AutoPuTTY
 
         private void bAdd_Click(object sender, EventArgs e)
         {
-            if (tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
+            if (tView.SelectedNode != null && tbServerName.Text.Trim() != "")
             {
-                string file = Settings.Default.cfgpath;
-                XmlDocument xmldoc = new XmlDocument();
-                xmldoc.Load(file);
+                string groupName = tView.SelectedNode.Text;
+                string serverName = tbServerName.Text.Trim();
 
-                XmlElement newserver = xmldoc.CreateElement("Server");
-                XmlAttribute name = xmldoc.CreateAttribute("Name");
-                name.Value = tbServerName.Text.Trim();
-                newserver.SetAttributeNode(name);
+                string serverHostname = tbServerHost.Text.Trim();
+                string serverPort = textBox1.Text.Trim();
+                string serverUsername = tbServerUser.Text.Trim();
+                string serverPassword = tbServerPass.Text.Trim();
+                string serverType = Array.IndexOf(types, cbType.Text).ToString();
 
-                if (tbServerHost.Text.Trim() != "")
-                {
-                    XmlElement host = xmldoc.CreateElement("Host");
-                    host.InnerText = cryptHelper.Encrypt(tbServerHost.Text.Trim());
-                    newserver.AppendChild(host);
-                }
-                if (tbServerUser.Text != "")
-                {
-                    XmlElement user = xmldoc.CreateElement("User");
-                    user.InnerText = cryptHelper.Encrypt(tbServerUser.Text);
-                    newserver.AppendChild(user);
-                }
-                if (tbServerPass.Text != "")
-                {
-                    XmlElement pass = xmldoc.CreateElement("Password");
-                    pass.InnerText = cryptHelper.Encrypt(tbServerPass.Text);
-                    newserver.AppendChild(pass);
-                }
-                if (cbType.SelectedIndex > 0)
-                {
-                    XmlElement type = xmldoc.CreateElement("Type");
-                    type.InnerText = Array.IndexOf(types, cbType.Text).ToString();
-                    newserver.AppendChild(type);
-                }
-
-                if (xmldoc.DocumentElement != null) xmldoc.DocumentElement.InsertAfter(newserver, xmldoc.DocumentElement.LastChild);
-
-                try
-                {
-                    xmldoc.Save(file);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-                }
+                xmlHelper.addServer(groupName, serverName, serverHostname, serverPort,
+                    serverUsername, serverPassword, serverType);
 
                 tbServerName.Text = tbServerName.Text.Trim();
                 //lbList.Items.Add(tbServerName.Text);
@@ -286,13 +261,13 @@ namespace AutoPuTTY
                 bServerAdd.Enabled = false;
                 bServerDelete.Enabled = true;
                 //BeginInvoke(new InvokeDelegate(lbList.Focus));
+
+                updateTreeView();
             }
             else
             {
-                otherHelper.Error("No name ?\nNo hostname ??\nTry again ...");
+                otherHelper.Error("Enter server name and try again.");
             }
-
-            if (filtervisible) tbFilter_Changed(new object(), new EventArgs());
         }
 
         private void mDelete_Click(object sender, EventArgs e)
@@ -519,31 +494,10 @@ namespace AutoPuTTY
 
         private void tbName_TextChanged(object sender, EventArgs e)
         {
-            if (indexchanged) return;
-            //modify an existing item
-            //if (lbList.SelectedItem != null && tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "")
-            //{
-            //    //changed name
-            //    if (tbServerName.Text != lbList.SelectedItem.ToString())
-            //    {
-            //        //if new name doesn't exist in list, modify or add
-            //        bServerModify.Enabled = xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count > 0 ? false : true;
-            //        bServerAdd.Enabled = xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count > 0 ? false : true;
-            //    }
-            //    //changed other stuff
-            //    else
-            //    {
-            //        bServerModify.Enabled = true;
-            //        bServerAdd.Enabled = false;
-            //    }
-            //}
-            ////create new item
-            //else
-            //{
-            //    bServerModify.Enabled = false;
-            //    if (tbServerName.Text.Trim() != "" && tbServerHost.Text.Trim() != "" && xmlHelper.XmlGetServer(tbServerName.Text.Trim()).Count < 1) bServerAdd.Enabled = true;
-            //    else bServerAdd.Enabled = false;
-            //}
+            if (tbServerName.Text.Trim() != "")
+                bServerAdd.Enabled = true;
+            else
+                bServerAdd.Enabled = false;
         }
 
         private void tbHost_TextChanged(object sender, EventArgs e)
@@ -640,42 +594,114 @@ namespace AutoPuTTY
         private void tbServerHost_Enter(object sender, EventArgs e)
         {
             tbServerHost.ForeColor = Color.Black;
-            tbServerHost.Text = "";
+
+            if (placeholderMode)
+            {
+                if (placeholderModeHost)
+                {
+                    tbServerHost.Text = "";
+                }
+            }
         }
         private void tbServerHost_Leave(object sender, EventArgs e)
         {
-            tbServerHost.ForeColor = Color.Gray;
-            tbServerHost.Text = placeholderServerHost;
+            if (!tbServerHost.Text.Equals(placeholderServerHost) && tbServerHost.Text.Trim() != "")
+                placeholderModeHost = false;
+            else
+                placeholderModeHost = true;
+
+            if (placeholderMode)
+            {
+                if (placeholderModeHost)
+                {
+                    tbServerHost.ForeColor = Color.Gray;
+                    tbServerHost.Text = placeholderServerHost;
+                }
+            }
         }
         private void textBox1_Enter(object sender, EventArgs e)
         {
             textBox1.ForeColor = Color.Black;
-            textBox1.Text = "";
+
+            if (placeholderMode) {
+
+                if (placeholderModePort)
+                {
+                    textBox1.Text = "";
+                }
+            }
         }
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            textBox1.ForeColor = Color.Gray;
-            textBox1.Text = placeholderServerPort;
+            if (!textBox1.Text.Equals(placeholderServerPort) && textBox1.Text.Trim() != "")
+                placeholderModePort = false;
+            else
+                placeholderModePort = true;
+
+            if (placeholderMode)
+            {
+                if (placeholderModePort)
+                {
+                    textBox1.ForeColor = Color.Gray;
+                    textBox1.Text = placeholderServerPort;
+                }
+            }
         }
         private void tbServerUser_Enter(object sender, EventArgs e)
         {
             tbServerUser.ForeColor = Color.Black;
-            tbServerUser.Text = "";
+
+            if (placeholderMode)
+            {
+                if (placeholderModeUsername)
+                {
+                    tbServerUser.Text = "";
+                }
+            }
         }
         private void tbServerUser_Leave(object sender, EventArgs e)
         {
-            tbServerUser.ForeColor = Color.Gray;
-            tbServerUser.Text = placeholderServerUsername;
+            if (!tbServerUser.Text.Equals(placeholderServerUsername) && tbServerUser.Text.Trim() != "")
+                placeholderModeUsername = false;
+            else
+                placeholderModeUsername = true;
+
+            if (placeholderMode)
+            {
+                if (placeholderModeUsername)
+                {
+                    tbServerUser.ForeColor = Color.Gray;
+                    tbServerUser.Text = placeholderServerUsername;
+                }
+            }
         }
         private void tbServerPass_Enter(object sender, EventArgs e)
         {
             tbServerPass.ForeColor = Color.Black;
-            tbServerPass.Text = "";
+
+            if (placeholderMode)
+            {
+                if (placeholderModePassword)
+                {
+                    tbServerPass.Text = "";
+                }
+            }
         }
         private void tbServerPass_Leave(object sender, EventArgs e)
         {
-            tbServerPass.ForeColor = Color.Gray;
-            tbServerPass.Text = placeholderServerPassword;
+            if (!tbServerPass.Text.Equals(placeholderServerPassword) && tbServerPass.Text.Trim() != "")
+                placeholderModePassword = false;
+            else
+                placeholderModePassword = true;
+
+            if (placeholderMode)
+            {
+                if (placeholderModePassword)
+                {
+                    tbServerPass.ForeColor = Color.Gray;
+                    tbServerPass.Text = placeholderServerPassword;
+                }
+            }
         }
 
         #endregion
@@ -842,34 +868,66 @@ namespace AutoPuTTY
 
         private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            ArrayList groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
-            string[] groupInfos = (string[])groupInfo[0];
+            if (e.Node.Parent == null)
+            {
+                ArrayList groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
+                string[] groupInfos = (string[])groupInfo[0];
 
-            tbGroupName.Text = e.Node.Text;
-            tbGroupDefaultHost.Text = groupInfos[0];
-            tbGroupDefaultPort.Text = groupInfos[1];
-            tbGroupDefaultUsername.Text = groupInfos[2];
-            tbGroupDefaultPassword.Text = groupInfos[3];
+                tbGroupName.Text = e.Node.Text;
+                tbGroupDefaultHost.Text = groupInfos[0];
+                tbGroupDefaultPort.Text = groupInfos[1];
+                tbGroupDefaultUsername.Text = groupInfos[2];
+                tbGroupDefaultPassword.Text = groupInfos[3];
 
-            bGroupAdd.Enabled = false;
-            bGroupDelete.Enabled = true;
+                bGroupAdd.Enabled = false;
+                bGroupDelete.Enabled = true;
 
-            tbServerHost.Enabled = true;
-            tbServerName.Enabled = true;
-            tbServerUser.Enabled = true;
-            textBox1.Enabled = true;
-            tbServerPass.Enabled = true;
-            cbType.Enabled = true;
+                tbServerHost.Enabled = true;
+                tbServerName.Enabled = true;
+                tbServerUser.Enabled = true;
+                textBox1.Enabled = true;
+                tbServerPass.Enabled = true;
+                cbType.Enabled = true;
 
-            setPlaceholderTextBox(tbServerHost, groupInfos[0]);
-            setPlaceholderTextBox(textBox1, groupInfos[1]);
-            setPlaceholderTextBox(tbServerUser, groupInfos[2]);
-            setPlaceholderTextBox(tbServerPass, groupInfos[3]);
+                placeholderMode = true;
 
-            placeholderServerHost = groupInfos[0];
-            placeholderServerPort = groupInfos[1];
-            placeholderServerUsername = groupInfos[2];
-            placeholderServerPassword = groupInfos[3];
+                setPlaceholderTextBox(tbServerHost, groupInfos[0]);
+                setPlaceholderTextBox(textBox1, groupInfos[1]);
+                setPlaceholderTextBox(tbServerUser, groupInfos[2]);
+                setPlaceholderTextBox(tbServerPass, groupInfos[3]);
+
+                placeholderServerHost = groupInfos[0];
+                placeholderServerPort = groupInfos[1];
+                placeholderServerUsername = groupInfos[2];
+                placeholderServerPassword = groupInfos[3];
+
+                return;
+            }
+
+
+            TreeNode parent = e.Node.Parent;
+            TreeNode currentNode = e.Node;
+
+            Console.WriteLine(parent.Text + " " + currentNode.Text);
+
+
+            ServerElement currentServer = xmlHelper.getServerByName(parent.Text, currentNode.Text);
+
+            Console.WriteLine(currentServer.serverName + " " + currentServer.serverPort);
+
+            placeholderMode = false;
+
+            tbServerName.ForeColor = Color.Black;
+            tbServerHost.ForeColor = Color.Black;
+            textBox1.ForeColor = Color.Black;
+            tbServerUser.ForeColor = Color.Black;
+            tbServerPass.ForeColor = Color.Black;
+
+            tbServerName.Text = currentServer.serverName;
+            tbServerHost.Text = currentServer.serverHost;
+            textBox1.Text = currentServer.serverPort;
+            tbServerUser.Text = currentServer.serverUsername;
+            tbServerPass.Text = currentServer.serverPassword;
         }
 
         #endregion
@@ -1322,13 +1380,23 @@ namespace AutoPuTTY
         {
             tView.Nodes.Clear();
 
-            groupList = xmlHelper.getGroups();
+            groupList = xmlHelper.getAllData();
 
-            foreach (string[] group in groupList)
+            foreach (GroupElement group in groupList)
             {
-                string currentGroupName = group[0];
+                string currentGroupName = group.groupName;
+                TreeNode groupNode = tView.Nodes.Add(currentGroupName);
 
-                tView.Nodes.Add(currentGroupName);
+                if (group.servers.Count > 0)
+                {
+                    foreach (ServerElement server in group.servers)
+                    {
+                        string currentServerName = server.serverName;
+                        groupNode.Nodes.Add(currentServerName);
+
+                    }
+
+                }
             }
         }
 
@@ -1347,8 +1415,5 @@ namespace AutoPuTTY
 
 
         #endregion
-
-        
-        
     }
 }

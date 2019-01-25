@@ -91,6 +91,8 @@
       <DependentUpon>popupAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\cryptHelper.cs" />
+    <Compile Include="Utils\Datas\GroupElement.cs" />
+    <Compile Include="Utils\Datas\ServerElement.cs" />
     <Compile Include="Utils\FusionTrackBar.cs">
       <SubType>Component</SubType>
     </Compile>

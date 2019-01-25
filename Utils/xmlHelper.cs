@@ -1,4 +1,5 @@
 ﻿using AutoPuTTY.Properties;
+using AutoPuTTY.Utils.Datas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -216,6 +217,96 @@ namespace AutoPuTTY.Utils
         /*
          * NEW METHODS
          */
+
+        public ArrayList getAllData()
+        {
+            if (!File.Exists(Settings.Default.cfgpath))
+            {
+                return new ArrayList();
+            }
+
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            ArrayList groups = new ArrayList();
+
+            XmlNodeList groupNodes = xmldoc.SelectNodes("//*[@GroupName]");
+            if (groupNodes != null)
+            {
+                if (groupNodes.Count > 0)
+                {
+                    foreach (XmlElement groupNode in groupNodes)
+                    {
+                        string groupName = groupNode.GetAttribute("GroupName");
+
+                        string groupDefaulHostname = "";
+                        string groupDefaultPort = "";
+                        string groupDefaultUsername = "";
+                        string groupDefaultPassword = "";
+
+                        ArrayList servers = new ArrayList();
+
+                        foreach (XmlElement childnode in groupNode.ChildNodes)
+                        {
+                            switch (childnode.Name)
+                            {
+                                case "DefaultHost":
+                                    groupDefaulHostname = cryptHelper.Decrypt(childnode.InnerText);
+                                    break;
+                                case "DefaultPort":
+                                    groupDefaultPort = cryptHelper.Decrypt(childnode.InnerText);
+                                    break;
+                                case "DefaultUsername":
+                                    groupDefaultUsername = cryptHelper.Decrypt(childnode.InnerText);
+                                    break;
+                                case "DefaultPassword":
+                                    groupDefaultPassword = cryptHelper.Decrypt(childnode.InnerText);
+                                    break;
+                                case "Server":
+                                    string serverName = childnode.GetAttribute("Name").Trim();
+
+                                    string serverHost = "";
+                                    string serverPort = "";
+                                    string serverUsername = "";
+                                    string serverPassword = "";
+                                    string serverType = "";
+
+                                    foreach (XmlElement serverElement in childnode.ChildNodes)
+                                    {
+                                        switch (serverElement.Name)
+                                        {
+                                            case "Host":
+                                                serverHost = childnode.InnerText;
+                                                break;
+                                            case "Port":
+                                                serverPort = childnode.InnerText;
+                                                break;
+                                            case "Username":
+                                                serverUsername = childnode.InnerText;
+                                                break;
+                                            case "Password":
+                                                serverPassword = childnode.InnerText;
+                                                break;
+                                            case "Type":
+                                                serverType = childnode.InnerText;
+                                                break;
+                                        }
+                                    }
+
+                                    servers.Add(new ServerElement(serverName, serverHost, serverPort, serverUsername, serverPassword, serverType));
+                                    break;
+                            }
+                        }
+
+                        groups.Add(new GroupElement(groupName, groupDefaulHostname,
+                            groupDefaultPort, groupDefaultUsername, groupDefaultPassword, servers));
+                    }
+                }
+                else return new ArrayList();
+            }
+
+            return groups;
+        }
 
         // Creating group in XML Config
         public void createGroup(string groupName, string defaultHost, string defaultPort,
@@ -447,6 +538,126 @@ namespace AutoPuTTY.Utils
                 otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
 
+        }
+
+
+        public void addServer(string groupName, string serverName, string serverHost, string serverPort,
+            string serverUsername, string serverPassword, string serverType)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
+            XmlNode xmlLastElementGroup = xmlGroup.LastChild;
+
+            XmlElement newServer = xmldoc.CreateElement("Server");
+            XmlAttribute name = xmldoc.CreateAttribute("Name");
+            name.Value = serverName;
+            newServer.SetAttributeNode(name);
+
+            if (serverHost != "")
+            {
+                XmlElement host = xmldoc.CreateElement("Host");
+                host.InnerText = cryptHelper.Encrypt(serverHost);
+                newServer.AppendChild(host);
+            }
+
+            if (serverPort != "")
+            {
+                XmlElement host = xmldoc.CreateElement("Port");
+                host.InnerText = cryptHelper.Encrypt(serverPort);
+                newServer.AppendChild(host);
+            }
+
+            if (serverUsername != "")
+            {
+                XmlElement host = xmldoc.CreateElement("Username");
+                host.InnerText = cryptHelper.Encrypt(serverUsername);
+                newServer.AppendChild(host);
+            }
+
+            if (serverPassword != "")
+            {
+                XmlElement host = xmldoc.CreateElement("Password");
+                host.InnerText = cryptHelper.Encrypt(serverPassword);
+                newServer.AppendChild(host);
+            }
+
+            if (serverType != "")
+            {
+                XmlElement host = xmldoc.CreateElement("Type");
+                host.InnerText = cryptHelper.Encrypt(serverType);
+                newServer.AppendChild(host);
+            }
+
+            xmlGroup.AppendChild(newServer);
+
+            try
+            {
+                xmldoc.Save(Settings.Default.cfgpath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+            }
+        }
+
+        public ServerElement getServerByName(string groupName, string serverName)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
+
+            foreach (XmlElement xmlElement in xmlGroup)
+            {
+                switch (xmlElement.Name)
+                {
+                    case "Server":
+                        string foundedServerName = xmlElement.GetAttribute("Name");
+
+                        if (!foundedServerName.Equals(serverName)) continue;
+
+                        string serverHost = "";
+                        string serverPort = "";
+                        string serverUsername = "";
+                        string serverPassword = "";
+                        string serverType = "";
+
+                        foreach (XmlElement serverElements in xmlElement.ChildNodes)
+                        {
+                            switch (serverElements.Name)
+                            {
+                                case "Host":
+                                    serverHost = cryptHelper.Decrypt(serverElements.InnerText);
+                                    break;
+
+                                case "Port":
+                                    serverPort = cryptHelper.Decrypt(serverElements.InnerText);
+                                    break;
+
+                                case "Username":
+                                    serverUsername = cryptHelper.Decrypt(serverElements.InnerText);
+                                    break;
+
+                                case "Password":
+                                    serverPassword = cryptHelper.Decrypt(serverElements.InnerText);
+                                    break;
+
+                                case "Type":
+                                    serverType = cryptHelper.Decrypt(serverElements.InnerText);
+                                    break;
+                            }
+                        }
+
+                        ServerElement currentServer = new ServerElement(foundedServerName, serverHost, serverPort, serverUsername, serverPassword, serverType);
+
+                        return currentServer;
+                }
+            }
+
+            //TODO: Fix return null
+            return null;
         }
     }
 }

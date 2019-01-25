@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+
+namespace AutoPuTTY.Utils.Datas
+{
+    class GroupElement
+    {
+        public string groupName;
+
+        public string defaultHost;
+        public string defaultPort;
+        public string defaultUsername;
+        public string defaultPassword;
+
+        public ArrayList servers;
+
+        public GroupElement(string groupName, string defaultHost, string defaultPort, string defaultUsername, string defaultPassword, ArrayList servers)
+        {
+            this.groupName = groupName;
+
+            this.defaultHost = defaultHost;
+            this.defaultPort = defaultPort;
+            this.defaultUsername = defaultUsername;
+            this.defaultPassword = defaultPassword;
+
+            this.servers = servers;
+        }
+    }
+}
