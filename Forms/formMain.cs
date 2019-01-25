@@ -223,20 +223,27 @@ namespace AutoPuTTY
 
         private void bModify_Click(object sender, EventArgs e)
         {
-            
+            if (tView.SelectedNode != null && tView.SelectedNode.Parent != null)
+            {
+                string groupName = tView.SelectedNode.Parent.Text;
+                string oldServerName = tView.SelectedNode.Text;
 
-            remove = true;
-            //tView.Items.RemoveAt(lbList.Items.IndexOf(lbList.SelectedItem));
-            remove = false;
-            tbServerName.Text = tbServerName.Text.Trim();
-            //lbList.Items.Add(tbServerName.Text);
-            //lbList.SelectedItems.Clear();
-            //lbList.SelectedItem = tbServerName.Text;
-            bServerModify.Enabled = false;
-            bServerAdd.Enabled = false;
-            //BeginInvoke(new InvokeDelegate(lbList.Focus));
+                string newServerName = tbServerName.Text.Trim();
+                string newServerHost = tbServerHost.Text.Trim();
+                string newServerPort = textBox1.Text.Trim();
+                string newServerUsername = tbServerUser.Text.Trim();
+                string newServerPassword = tbServerPass.Text.Trim();
+                string newServerType = Array.IndexOf(types, cbType.Text).ToString();
 
-            if (filtervisible) tbFilter_Changed(new object(), new EventArgs());
+                ServerElement server = new ServerElement(newServerName, newServerHost, newServerPort, newServerUsername, newServerPassword, newServerType);
+
+                xmlHelper.modifyServer(groupName, oldServerName, server);
+
+                bServerModify.Enabled = false;
+                bServerAdd.Enabled = false;
+
+                updateTreeView();
+            }
         }
 
         private void bAdd_Click(object sender, EventArgs e)
@@ -549,6 +556,12 @@ namespace AutoPuTTY
         {
             tbName_TextChanged(this, e);
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            tbName_TextChanged(null, e);
+        }
+
 
         // update "search"
         private void tbFilter_Changed(object sender, EventArgs e)

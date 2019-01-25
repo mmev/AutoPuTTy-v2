@@ -690,5 +690,63 @@ namespace AutoPuTTY.Utils
                 otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
+
+        public void modifyServer(string groupName, string oldServerName, ServerElement serverElement)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
+
+            foreach (XmlElement xmlElement in xmlGroup)
+            {
+                switch (xmlElement.Name)
+                {
+                    case "Server":
+                        string foundedServerName = xmlElement.GetAttribute("Name");
+
+                        if (!foundedServerName.Equals(oldServerName)) continue;
+
+                        xmlElement.Attributes["Name"].Value = serverElement.serverName;
+
+                        foreach (XmlElement subElements in xmlElement.ChildNodes)
+                        {
+                            switch (subElements.Name)
+                            {
+                                case "Host":
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverHost);
+                                    break;
+
+                                case "Port":
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverPort);
+                                    break;
+
+                                case "Username":
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverUsername);
+                                    break;
+
+                                case "Password":
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverPassword);
+                                    break;
+
+                                case "Type":
+                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.serverType);
+                                    break;
+                            }
+                        }
+
+                        break;
+                }
+
+                try
+                {
+                    xmldoc.Save(Settings.Default.cfgpath);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                }
+            }
+        }
     }
 }
