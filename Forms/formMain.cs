@@ -939,6 +939,8 @@ namespace AutoPuTTY
                 bServerDelete.Enabled = false;
                 bServerModify.Enabled = false;
 
+                changeGroupState(true);
+
                 return;
             }
 
@@ -965,6 +967,12 @@ namespace AutoPuTTY
             tbServerPass.Text = currentServer.serverPassword;
 
             bServerDelete.Enabled = true;
+
+            changeGroupState(false);
+
+            bGroupAdd.Enabled = false;
+            bGroupModify.Enabled = false;
+            bGroupDelete.Enabled = false;
         }
 
         #endregion
@@ -1441,6 +1449,15 @@ namespace AutoPuTTY
         {
             textBox.ForeColor = Color.Gray;
             textBox.Text = text;
+        }
+
+        private void changeGroupState(bool state)
+        {
+            tbGroupName.Enabled = state;
+            tbGroupDefaultHost.Enabled = state;
+            tbGroupDefaultUsername.Enabled = state;
+            tbGroupDefaultPassword.Enabled = state;
+            tbGroupDefaultPort.Enabled = state;
         }
 
         #endregion
