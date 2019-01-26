@@ -15,9 +15,14 @@ namespace AutoPuTTY.Utils
 {
     class connectionHelper
     {
-        private static string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
-        private static string[] ps = { "/", "\\\\" };
-        private static string[] pr = { "\\", "\\" };
+        private static readonly string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
+        private static readonly string[] ps = { "/", "\\\\" };
+        private static readonly string[] pr = { "\\", "\\" };
+
+        // for some reason you only have escape \ if it's followed by "
+        // will "fix" up to 3 \ in a password like \\\", then screw you with your maniac passwords
+        private static readonly string[] passs = { "\"", "\\\\\"", "\\\\\\\\\"", "\\\\\\\\\\\\\"", };
+        private static readonly string[] passr = { "\\\"", "\\\\\\\"", "\\\\\\\\\\\"", "\\\\\\\\\\\\\\\"", };
 
         private static string _currentGroup;
         private static string _currentServer;
@@ -30,7 +35,7 @@ namespace AutoPuTTY.Utils
         /// В зависимости от переданного типа запускает нужный софт
         /// </summary>
         /// <param name="type">Program type TODO: type string -> enum </param>
-        /// <param name="selectedNode">Current selected node in Tree View</param>
+        /// <param name="selectedNode">Current selected node from Tree View</param>
         public static void StartConnect(string type, TreeNode selectedNode)
         {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
@@ -95,6 +100,8 @@ namespace AutoPuTTY.Utils
 
                 
                 TextWriter rdpFileWriter = new StreamWriter(path: _rdpOutPath + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp");
+
+                //TODO: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated
 
                 rdpFileWriter.WriteLine(Settings.Default.rdsize == "Full screen" ? "screen mode id:i:2" : "screen mode id:i:1");
                 rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopwidth:i:" + sizes[0] : "");
@@ -198,58 +205,46 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        /// <summary>
+        /// Method for launch PuTTy
+        /// </summary>
+        /// <param name="serverElement">Current selected server from Tree View<</param>
         private static void LaunchPuTTy(ServerElement serverElement)
         {
-            string[] puttyextractpath = ExtractFilePath(Settings.Default.puttypath);
-            string puttypath = puttyextractpath[0];
-            string puttyargs = puttyextractpath[1];
-            // for some reason you only have escape \ if it's followed by "
-            // will "fix" up to 3 \ in a password like \\\", then screw you with your maniac passwords
-            string[] passs = { "\"", "\\\\\"", "\\\\\\\\\"", "\\\\\\\\\\\\\"", };
-            string[] passr = { "\\\"", "\\\\\\\"", "\\\\\\\\\\\"", "\\\\\\\\\\\\\\\"", };
+            string[] puttyExtractPath = ExtractFilePath(Settings.Default.puttypath);
+            string puttyPath = puttyExtractPath[0];
+            string puttyArgs = puttyExtractPath[1];
 
-            if (File.Exists(puttypath))
+            if (File.Exists(puttyPath))
             {
-                string host;
-                string port;
-                string[] hostport = serverElement.HostWithServer.Split(':');
-                int split = hostport.Length;
+                string host = serverElement.Host;
+                string port = serverElement.Port != "" ? serverElement.Port : "22";
 
-                if (split == 2)
+                using (Process puttyProcess = new Process())
                 {
-                    host = hostport[0];
-                    port = hostport[1];
-                }
-                else
-                {
-                    host = serverElement.Host;
-                    port = "";
-                }
+                    puttyProcess.StartInfo.FileName = Settings.Default.puttypath;
+                    puttyProcess.StartInfo.Arguments = "-ssh ";
+                    puttyProcess.StartInfo.Arguments += serverElement.Username != "" ? serverElement.Username + "@" : "";
 
-                Process myProc = new Process();
-                myProc.StartInfo.FileName = Settings.Default.puttypath;
-                myProc.StartInfo.Arguments = "-ssh ";
-                if (serverElement.Username != "") myProc.StartInfo.Arguments += serverElement.Username + "@";
-                if (host != "") myProc.StartInfo.Arguments += host;
-                if (port != "") myProc.StartInfo.Arguments += " " + port;
-                if (serverElement.Username != "" && serverElement.Password != "") myProc.StartInfo.Arguments += " -pw \"" + otherHelper.ReplaceA(passs, passr, serverElement.Password) + "\"";
-                if (Settings.Default.puttyexecute && Settings.Default.puttycommand != "") myProc.StartInfo.Arguments += " -m \"" + Settings.Default.puttycommand + "\"";
-                if (Settings.Default.puttykey && Settings.Default.puttykeyfile != "") myProc.StartInfo.Arguments += " -i \"" + Settings.Default.puttykeyfile + "\"";
-                if (Settings.Default.puttyforward) myProc.StartInfo.Arguments += " -X";
-                //MessageBox.Show(this, myProc.StartInfo.Arguments);
-                if (puttyargs != "") myProc.StartInfo.Arguments += " " + puttyargs;
-                try
-                {
-                    myProc.Start();
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    //user canceled
+                    puttyProcess.StartInfo.Arguments += host != "" ? host : "";
+                    puttyProcess.StartInfo.Arguments += port != "" ? " " + port : "";
+                    puttyProcess.StartInfo.Arguments += serverElement.Username != "" && serverElement.Password != "" ? " -pw \"" + otherHelper.ReplaceA(passs, passr, serverElement.Password) + "\"" : "";
+                    puttyProcess.StartInfo.Arguments += Settings.Default.puttyexecute && Settings.Default.puttycommand != "" ? " -m \"" + Settings.Default.puttycommand + "\"" : "";
+                    puttyProcess.StartInfo.Arguments += Settings.Default.puttykey && Settings.Default.puttykeyfile != "" ? " -i \"" + Settings.Default.puttykeyfile + "\"" : "";
+                    puttyProcess.StartInfo.Arguments += Settings.Default.puttyforward ? " -X" : "";
+
+                    puttyProcess.StartInfo.Arguments += puttyArgs != "" ? " " + puttyArgs + "@" : "";
+
+                    puttyProcess.Start();
                 }
             }
             else
             {
-                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + puttypath + Resources.connectionHelper_LaunchVnc_M2, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bPuTTYPath_Click(serverElement.Type);
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + puttyPath + Resources.connectionHelper_LaunchVnc_M2,
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsform.bPuTTYPath_Click(serverElement.Type);
+                }
             }
         }
 
