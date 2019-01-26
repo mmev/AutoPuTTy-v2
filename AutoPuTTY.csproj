@@ -90,6 +90,11 @@
     <Compile Include="Forms\Popups\popupAbout.Designer.cs">
       <DependentUpon>popupAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Resources\StringResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\connectionHelper.cs" />
     <Compile Include="Utils\cryptHelper.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
@@ -167,6 +172,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Resources\StringResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

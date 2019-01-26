@@ -101,6 +101,34 @@ namespace AutoPuTTY.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error.
+        /// </summary>
+        internal static string connectionHelper_LaunchVnc_Error {
+            get {
+                return ResourceManager.GetString("connectionHelper_LaunchVnc_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Could not find file &quot;.
+        /// </summary>
+        internal static string connectionHelper_LaunchVnc_M1 {
+            get {
+                return ResourceManager.GetString("connectionHelper_LaunchVnc_M1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &quot;.
+        ///Do you want to change the configuration ?.
+        /// </summary>
+        internal static string connectionHelper_LaunchVnc_M2 {
+            get {
+                return ResourceManager.GetString("connectionHelper_LaunchVnc_M2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap iconadd {

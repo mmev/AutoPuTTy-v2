@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
+using AutoPuTTY.Forms;
 using AutoPuTTY.Properties;
-using AutoPuTTY.Resources;
 using AutoPuTTY.Utils.Datas;
 
 namespace AutoPuTTY.Utils
@@ -23,7 +23,14 @@ namespace AutoPuTTY.Utils
         private static string _currentServer;
 
         private static string _rdpOutPath;
+        private static string _vncOutPath;
 
+        /// <summary>
+        /// Start connection method
+        /// В зависимости от переданного типа запускает нужный софт
+        /// </summary>
+        /// <param name="type">Program type TODO: type string -> enum </param>
+        /// <param name="selectedNode">Current selected node in Tree View</param>
         public static void StartConnect(string type, TreeNode selectedNode)
         {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
@@ -59,6 +66,10 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        /// <summary>
+        /// Method for launch default RDP client (mstcs.exe)
+        /// </summary>
+        /// <param name="serverElement">Server data for launching</param>
         private static void LaunchRdp(ServerElement serverElement)
         {
             string[] rdpExtractFilePath = ExtractFilePath(Settings.Default.rdpath);
@@ -110,7 +121,7 @@ namespace AutoPuTTY.Utils
             }
             else
             {
-                if (MessageBox.Show("Could not find file \"" + rdpPath + "\".\nDo you want to change the configuration ?", "Error",
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + rdpPath + Resources.connectionHelper_LaunchVnc_M2, Resources.connectionHelper_LaunchVnc_Error,
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
 
                 {
@@ -119,84 +130,71 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        /// <summary>
+        /// Method for launch user VNC client like a TinyVNC, UltraVNC or ReadlVNC
+        /// </summary>
+        /// <param name="serverElement">Current selected server from Tree View</param>
         private static void LaunchVnc(ServerElement serverElement)
         {
-            string[] vncextractpath = ExtractFilePath(Settings.Default.vncpath);
-            string vncpath = vncextractpath[0];
-            string vncargs = vncextractpath[1];
+            string[] vncExtractPath = ExtractFilePath(Settings.Default.vncpath);
+            string vncPath = Environment.ExpandEnvironmentVariables(vncExtractPath[0]);
+            string vncArgs = vncExtractPath[1];
 
-            if (File.Exists(vncpath))
+            if (File.Exists(vncPath))
             {
-                string host;
-                string port;
-                string[] hostport = serverElement.HostWithServer.Split(':');
-                int split = hostport.Length;
+                string host = serverElement.Host;
+                string port = serverElement.Port != "" ? serverElement.Port : "5900";
 
-                if (split == 2)
-                {
-                    host = hostport[0];
-                    port = hostport[1];
-                }
-                else
-                {
-                    host = serverElement.Host;
-                    port = "5900";
-                }
-
-                string vncout = "";
+                _vncOutPath = "";
 
                 if (Settings.Default.vncfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
                 {
-                    vncout = otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
+                    _vncOutPath = otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
 
-                    try
+                    if (!Directory.Exists(_vncOutPath))
+                        Directory.CreateDirectory(_vncOutPath);
+                }
+
+                TextWriter vncFile = new StreamWriter(_vncOutPath + otherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc");
+
+                vncFile.WriteLine("[Connection]");
+                vncFile.WriteLine(host != "" ? "host=" + host : "");
+                vncFile.WriteLine(port != "" ? "port=" + port : "");
+                vncFile.WriteLine(serverElement.Username != "" ? "username=" + serverElement.Username : "");
+                vncFile.WriteLine(serverElement.Password != "" ? "password=" + cryptVNC.EncryptPassword(serverElement.Password) : "");
+
+                vncFile.WriteLine("[Options]");
+                vncFile.WriteLine(Settings.Default.vncfullscreen ? "fullscreen=1" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "viewonly=1" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "sendptrevents=0" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "sendkeyevents=0" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "sendcuttext=0" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "acceptcuttext=0" : "");
+                vncFile.WriteLine(Settings.Default.vncviewonly ? "sharefiles=0" : "");
+
+                vncFile.WriteLine(serverElement.Password != "" && serverElement.Password.Length > 8 ? "protocol3.3=1" : ""); // fuckin vnc 4.0 auth
+
+                vncFile.Close();
+
+                Process myProc = new Process
+                {
+                    StartInfo =
                     {
-                        Directory.CreateDirectory(vncout);
+                        FileName = Settings.Default.vncpath,
+                        Arguments = "-config \"" + _vncOutPath + otherHelper.ReplaceU(f, serverElement.Name.ToString()) +
+                                    ".vnc\"" + (vncArgs != "" ? " " + vncArgs : "")
                     }
-                    catch
-                    {
-                        MessageBox.Show("Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", StringResources.connectionHelper_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        vncout = "";
-                    }
-                }
+                };
 
-                TextWriter vncfile = new StreamWriter(vncout + otherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc");
-                vncfile.WriteLine("[Connection]");
-                if (host != "") vncfile.WriteLine("host=" + host.Trim());
-                if (port != "") vncfile.WriteLine("port=" + port.Trim());
-                if (serverElement.Username != "") vncfile.WriteLine("username=" + serverElement.Username);
-                if (serverElement.Password != "") vncfile.WriteLine("password=" + cryptVNC.EncryptPassword(serverElement.Password));
-                vncfile.WriteLine("[Options]");
-                if (Settings.Default.vncfullscreen) vncfile.WriteLine("fullscreen=1");
-                if (Settings.Default.vncviewonly)
-                {
-                    vncfile.WriteLine("viewonly=1"); //ultravnc
-                    vncfile.WriteLine("sendptrevents=0"); //realvnc
-                    vncfile.WriteLine("sendkeyevents=0"); //realvnc
-                    vncfile.WriteLine("sendcuttext=0"); //realvnc
-                    vncfile.WriteLine("acceptcuttext=0"); //realvnc
-                    vncfile.WriteLine("sharefiles=0"); //realvnc
-                }
-
-                if (serverElement.Password != "" && serverElement.Password.Length > 8) vncfile.WriteLine("protocol3.3=1"); // fuckin vnc 4.0 auth
-                vncfile.Close();
-
-                Process myProc = new Process();
-                myProc.StartInfo.FileName = Settings.Default.vncpath;
-                myProc.StartInfo.Arguments = "-config \"" + vncout + otherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc\"";
-                if (vncargs != "") myProc.StartInfo.Arguments += " " + vncargs;
-                try
-                {
-                    myProc.Start();
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    //user canceled
-                }
+                myProc.Start();
             }
             else
             {
-                if (MessageBox.Show("Could not find file \"" + vncpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bVNCPath_Click(serverElement.Type);
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + vncPath + Resources.connectionHelper_LaunchVnc_M2,
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsform.bVNCPath_Click(serverElement.Type);
+                }
             }
         }
 
@@ -251,7 +249,7 @@ namespace AutoPuTTY.Utils
             }
             else
             {
-                if (MessageBox.Show("Could not find file \"" + puttypath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bPuTTYPath_Click(serverElement.Type);
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + puttypath + Resources.connectionHelper_LaunchVnc_M2, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bPuTTYPath_Click(serverElement.Type);
             }
         }
 
@@ -307,7 +305,7 @@ namespace AutoPuTTY.Utils
             }
             else
             {
-                if (MessageBox.Show("Could not find file \"" + winscppath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bWSCPPath_Click(serverElement.Type);
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + winscppath + Resources.connectionHelper_LaunchVnc_M2, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bWSCPPath_Click(serverElement.Type);
             }
         }
 
