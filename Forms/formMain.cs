@@ -99,7 +99,7 @@ namespace AutoPuTTY
                 try
                 {
                     Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
-                    xmlHelper.create();
+                    xmlHelper.CreateDefaultConfig();
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -108,7 +108,7 @@ namespace AutoPuTTY
                         try
                         {
                             Settings.Default.cfgpath = userpath + "\\" + Settings.Default.cfgfilepath;
-                            xmlHelper.create();
+                            xmlHelper.CreateDefaultConfig();
                         }
                         catch (UnauthorizedAccessException)
                         {
@@ -865,7 +865,7 @@ namespace AutoPuTTY
 
         public void connect(string type)
         {
-            connectionHelper.StartConnect(type, tView.SelectedNode);
+            ConnectionHelper.StartConnect(type, tView.SelectedNode);
         }
 
         #endregion

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AutoPuTTY.Utils;
 
 namespace AutoPuTTY
 {
@@ -33,7 +34,7 @@ namespace AutoPuTTY
 
         private void bOK_Click(object sender, EventArgs e)
         {
-            if (mainform.Cryptor.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
+            if (cryptHelper.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
             {
                 auth = true;
                 Close();

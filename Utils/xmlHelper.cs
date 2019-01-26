@@ -2,22 +2,22 @@
 using AutoPuTTY.Utils.Datas;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace AutoPuTTY.Utils
 {
     class xmlHelper
     {
-        public static void create()
+        /// <summary>
+        /// Creating new xml file with default content
+        /// </summary>
+        public static void CreateDefaultConfig()
         {
-            const string xmlcontent = "<?xml version=\"1.0\"?>\r\n<List>\r\n</List>";
-            TextWriter newfile = new StreamWriter(Settings.Default.cfgpath);
-            newfile.Write(xmlcontent);
-            newfile.Close();
+            const string xmlContent = "<?xml version=\"1.0\"?>\r\n<List>\r\n</List>";
+            TextWriter newFileWriter = new StreamWriter(Settings.Default.cfgpath);
+            newFileWriter.Write(xmlContent);
+            newFileWriter.Close();
         }
 
         public void configSet(string id, string val)
@@ -100,98 +100,6 @@ namespace AutoPuTTY.Utils
             {
                 otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
-        }
-
-        public void dropNode(ArrayList node)
-        {
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            foreach (string item in node)
-            {
-                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@" + item + "]");
-                if (xmldoc.DocumentElement != null)
-                {
-                    if (xmlnode != null) xmldoc.DocumentElement.RemoveChild(xmlnode[0]);
-                }
-            }
-
-            try
-            {
-                xmldoc.Save(file);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-            }
-        }
-
-        internal void toList(ListBox lbList)
-        {
-            lbList.Items.Clear();
-
-            if (File.Exists(Settings.Default.cfgpath))
-            {
-                string file = Settings.Default.cfgpath;
-                XmlDocument xmldoc = new XmlDocument();
-                xmldoc.Load(file);
-
-                XmlNodeList xmlnode = xmldoc.GetElementsByTagName("Server");
-                for (int i = 0; i < xmlnode.Count; i++) if (!lbList.Items.Contains(xmlnode[i].Attributes[0].Value)) lbList.Items.Add(xmlnode[i].Attributes[0].Value);
-            }
-            else
-            {
-                otherHelper.Error("\"" + Settings.Default.cfgpath + "\" file not found.");
-            }
-        }
-
-        public ArrayList getServer(string name)
-        {
-            if (!File.Exists(Settings.Default.cfgpath))
-            {
-                return new ArrayList();
-            }
-
-            ArrayList server = new ArrayList();
-            string host = "";
-            string user = "";
-            string pass = "";
-            int type = 0;
-
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
-
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + parseXpathString(name) + "]");
-            if (xmlnode != null)
-            {
-                if (xmlnode.Count > 0)
-                {
-                    foreach (XmlElement childnode in xmlnode[0].ChildNodes)
-                    {
-                        switch (childnode.Name)
-                        {
-                            case "Host":
-                                host = childnode.InnerText;
-                                break;
-                            case "User":
-                                user = childnode.InnerText;
-                                break;
-                            case "Password":
-                                pass = childnode.InnerText;
-                                break;
-                            case "Type":
-                                Int32.TryParse(childnode.InnerText, out type);
-                                break;
-                        }
-                    }
-                }
-                else return new ArrayList();
-            }
-
-            server.AddRange(new string[] { name, host, user, pass, type.ToString() });
-            return server;
         }
 
         public string parseXpathString(string input)

@@ -62,12 +62,10 @@ namespace AutoPuTTY
                 tbWSCPKey.Text = Settings.Default.winscpkeyfile;
                 cbWSCPPassive.Checked = Settings.Default.winscppassive;
 
-                slGMulti.Value = Convert.ToInt32(Settings.Default.multicolumnwidth);
-                cbGMulti.Checked = Settings.Default.multicolumn;
                 cbGMinimize.Checked = Settings.Default.minimize;
                 if (Settings.Default.password.Trim() != "")
                 {
-                    Settings.Default.password = mainform.Cryptor.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
+                    Settings.Default.password = cryptHelper.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
                     tbGPassword.Text = Settings.Default.password;
                     tbGConfirm.Text = Settings.Default.password;
                     Settings.Default.cryptkey = Settings.Default.password;
@@ -207,7 +205,7 @@ namespace AutoPuTTY
                 if (Settings.Default.password != tbGPassword.Text)
                 {
                     Settings.Default.password = tbGPassword.Text;
-                    mainform.XmlHelper.configSet("password", mainform.Cryptor.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+                    mainform.XmlHelper.configSet("password", cryptHelper.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
 
                     string[] bwArgs = { "recrypt", Settings.Default.password };
                     bwProgress.RunWorkerAsync(bwArgs);
@@ -491,19 +489,16 @@ namespace AutoPuTTY
 
         private void cbMulti_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.Default.multicolumn = cbGMulti.Checked;
             if (!firstread) mainform.XmlHelper.configSet("multicolumn", Settings.Default.multicolumn.ToString());
 
             if (Settings.Default.multicolumn)
             {
                 //mainform.lbList.MultiColumn = true;
-                slGMulti.Enabled = true;
                 slMulti_Scroll(this, e);
             }
             else
             {
                 //mainform.lbList.MultiColumn = false;
-                slGMulti.Enabled = false;
             }
 
         }
@@ -573,7 +568,7 @@ namespace AutoPuTTY
                     ImportList((string)args[1]);
                     break;
                 case "recrypt":
-                    RecryptList((string)args[1]);
+                    ReCryptServeList((string)args[1]);
                     break;
             }
             e.Result = args[0];
@@ -612,8 +607,6 @@ namespace AutoPuTTY
 
         private void slMulti_Scroll(object sender, EventArgs e)
         {
-            if (!cbGMulti.Checked) return;
-            Settings.Default.multicolumnwidth = slGMulti.Value;
             if (!firstread) mainform.XmlHelper.configSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
             //mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
         }
@@ -622,93 +615,101 @@ namespace AutoPuTTY
 
         #region Methods
 
-        private void RecryptList(string newpass)
+        private void ReCryptServeList(string newPassword)
         {
-            #if DEBUG
-            DateTime time = DateTime.Now;
-            #endif
-
             importcancel = false;
             int count = 0;
 
-            string file = Settings.Default.cfgpath;
             XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
+            xmldoc.Load(Settings.Default.cfgpath);
 
-            XmlNodeList xmlnodes = xmldoc.SelectNodes("/List/Server");
-            if (xmlnodes != null) foreach (XmlNode xmlnode in xmlnodes)
+            XmlNodeList xmlGroup = xmldoc.SelectNodes("//*[@GroupName]");
+
+            foreach (XmlElement currentGroup in xmlGroup)
+            {
+                count++;
+
+                foreach (XmlElement xmlElement in currentGroup.ChildNodes)
                 {
-                    count++;
-                    string _host = "";
-                    string _user = "";
-                    string _pass = "";
-                    int _type = 0;
+                    string serverType = "";
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
 
-                    foreach (XmlElement childnode in xmlnode.ChildNodes)
-                    {
-                        switch (childnode.Name)
-                        {
-                            case "Host":
-                                _host = cryptHelper.Decrypt(childnode.InnerText);
-                                break;
-                            case "User":
-                                _user = cryptHelper.Decrypt(childnode.InnerText);
-                                break;
-                            case "Password":
-                                _pass = cryptHelper.Decrypt(childnode.InnerText);
-                                break;
-                            case "Type":
-                                Int32.TryParse(childnode.InnerText, out _type);
-                                break;
-                        }
+                            count++;
+
+                            string serverHost = "";
+                            string serverPort = "";
+                            string serverUsername = "";
+                            string serverPassword = "";
+
+                            foreach (XmlElement serverElements in xmlElement.ChildNodes)
+                            {
+
+                                switch (serverElements.Name)
+                                {
+
+                                    case "Host":
+                                        serverHost = cryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = cryptHelper.Encrypt(serverHost, newPassword);
+                                        break;
+
+                                    case "Port":
+                                        serverPort = cryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = cryptHelper.Encrypt(serverPort, newPassword);
+                                        break;
+
+                                    case "Username":
+                                        serverUsername = cryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = cryptHelper.Encrypt(serverUsername, newPassword);
+                                        break;
+
+                                    case "Password":
+                                        serverPassword = cryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = cryptHelper.Encrypt(serverPassword, newPassword);
+                                        break;
+
+                                    case "Type":
+                                        serverType = cryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = cryptHelper.Encrypt(serverType, newPassword);
+                                        break;
+                                }
+
+                                string[] progressArgs = new string[] { "recrypt", count + " / " + mainform.tView.GetNodeCount(true) };
+                                bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.GetNodeCount(true) * 100)), progressArgs);
+                            }
+
+                            break;
+                        case "DefaultHost":
+                            serverHost = cryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = cryptHelper.Encrypt(serverHost, newPassword);
+                            break;
+
+                        case "DefaultPort":
+                            serverPort = cryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = cryptHelper.Encrypt(serverPort, newPassword);
+                            break;
+
+                        case "DefaultUsername":
+                            serverUsername = cryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = cryptHelper.Encrypt(serverUsername, newPassword);
+                            break;
+
+                        case "DefaultPassword":
+                            serverPassword = cryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = cryptHelper.Encrypt(serverPassword, newPassword);
+                            break;
                     }
 
-                    XmlElement newserver = xmldoc.CreateElement("Server");
-                    XmlAttribute name = xmldoc.CreateAttribute("Name");
-                    name.Value = xmlnode.Attributes[0].Value;
-                    newserver.SetAttributeNode(name);
-
-                    if (_host != "")
-                    {
-                        XmlElement host = xmldoc.CreateElement("Host");
-                        host.InnerText = mainform.Cryptor.Encrypt(_host, newpass);
-                        newserver.AppendChild(host);
-                    }
-                    if (_user != "")
-                    {
-                        XmlElement user = xmldoc.CreateElement("User");
-                        user.InnerText = mainform.Cryptor.Encrypt(_user, newpass);
-                        newserver.AppendChild(user);
-                    }
-                    if (_pass != "")
-                    {
-                        XmlElement pass = xmldoc.CreateElement("Password");
-                        pass.InnerText = mainform.Cryptor.Encrypt(_pass, newpass);
-                        newserver.AppendChild(pass);
-                    }
-                    if (_type > 0)
-                    {
-                        XmlElement type = xmldoc.CreateElement("Type");
-                        type.InnerText = _type.ToString();
-                        newserver.AppendChild(type);
-                    }
-
-                    //XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + formMain.ParseXpathString(xmlnode.Attributes[0].Value) + "]");
-                    XmlNodeList xmlnodename = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.parseXpathString(xmlnode.Attributes[0].Value) + "]");
-                    if (xmldoc.DocumentElement != null)
-                    {
-                        if (xmlnodename != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnodename[0]);
-                    }
-
-                    string[] args = new string[] { "recrypt", count + " / " + mainform.tView.Nodes.Count };
-                    bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.Nodes.Count * 100)), args);
+                    
                 }
+            }
 
-            xmldoc.Save(file);
+            string[] args = new string[] { "recrypt", count + " / " + mainform.tView.GetNodeCount(true) };
+            bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.GetNodeCount(true) * 100)), args);
 
-            #if DEBUG
-            Debug.WriteLine("Encryption duration :" + (DateTime.Now - time));
-            #endif
+            xmldoc.Save(Settings.Default.cfgpath);
+            Console.WriteLine(mainform.tView.GetNodeCount(true));
         }
 
         private void ImportList(string f)

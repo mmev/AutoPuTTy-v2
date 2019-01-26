@@ -95,13 +95,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\connectionHelper.cs" />
+    <Compile Include="Utils\ConnectionHelper.cs" />
     <Compile Include="Utils\cryptHelper.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
     <Compile Include="Utils\Datas\ServerElement.cs" />
-    <Compile Include="Utils\FusionTrackBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Forms\Popups\popupRecrypt.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -30,7 +30,7 @@ namespace AutoPuTTY.Utils
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public string Encrypt(string toEncrypt, string key)
+        public static string Encrypt(string toEncrypt, string key)
         {
             if (toEncrypt == "") return "";
 
@@ -74,7 +74,7 @@ namespace AutoPuTTY.Utils
             return Encoding.UTF8.GetString(resultArray);
         }
 
-        public string Decrypt(string toDecrypt, string key)
+        public static string Decrypt(string toDecrypt, string key)
         {
             if (toDecrypt == "") return "";
 
