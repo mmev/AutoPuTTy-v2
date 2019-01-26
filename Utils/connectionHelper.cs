@@ -13,7 +13,7 @@ using AutoPuTTY.Utils.Datas;
 
 namespace AutoPuTTY.Utils
 {
-    class connectionHelper
+    class ConnectionHelper
     {
         private static readonly string[] f = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
         private static readonly string[] ps = { "/", "\\\\" };
@@ -212,7 +212,7 @@ namespace AutoPuTTY.Utils
         private static void LaunchPuTTy(ServerElement serverElement)
         {
             string[] puttyExtractPath = ExtractFilePath(Settings.Default.puttypath);
-            string puttyPath = puttyExtractPath[0];
+            string puttyPath = Environment.ExpandEnvironmentVariables(puttyExtractPath[0]);
             string puttyArgs = puttyExtractPath[1];
 
             if (File.Exists(puttyPath))
@@ -248,76 +248,76 @@ namespace AutoPuTTY.Utils
             }
         }
 
+
+        /// <summary>
+        /// Method for launch WinSCP: SCP, FTP, SFTP Protocols
+        /// </summary>
+        /// <param name="protocol"> "scp://" or "ftp://" or "sftp://"</param>
+        /// <param name="serverElement">Current selected server from Tree View</param>
         private static void LaunchWinScp(string protocol, ServerElement serverElement)
         {
-            string[] winscpextractpath = ExtractFilePath(Settings.Default.winscppath);
-            string winscppath = winscpextractpath[0];
-            string winscpargs = winscpextractpath[1];
+            string[] winScpExtractPath = ExtractFilePath(Settings.Default.winscppath);
+            string winScpPath = Environment.ExpandEnvironmentVariables(winScpExtractPath[0]);
+            string winScpArgs = winScpExtractPath[1];
 
-            if (File.Exists(winscppath))
+            if (File.Exists(winScpPath))
             {
-                string host;
-                string port;
-                string[] hostport = serverElement.HostWithServer.Split(':');
-                int split = hostport.Length;
+                string host = serverElement.Host;
+                string port = serverElement.Port != "" ? serverElement.Port : "";
 
-                if (split == 2)
+                using (Process winScpProcess = new Process())
                 {
-                    host = hostport[0];
-                    port = hostport[1];
-                }
-                else
-                {
-                    host = serverElement.Host;
-                    port = "";
-                }
+                    winScpProcess.StartInfo.FileName = Settings.Default.winscppath;
+                    winScpProcess.StartInfo.Arguments = protocol;
 
-                Process myProc = new Process();
-                myProc.StartInfo.FileName = Settings.Default.winscppath;
-                myProc.StartInfo.Arguments = protocol;
-                if (serverElement.Username != "")
-                {
-                    string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
-                    serverElement.Username = otherHelper.ReplaceU(s, serverElement.Username);
-                    serverElement.Password = otherHelper.ReplaceU(s, serverElement.Password);
-                    myProc.StartInfo.Arguments += serverElement.Username;
-                    if (serverElement.Password != "") myProc.StartInfo.Arguments += ":" + serverElement.Password;
-                    myProc.StartInfo.Arguments += "@";
-                }
-                if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host) ?? throw new InvalidOperationException();
-                if (port != "") myProc.StartInfo.Arguments += ":" + port;
-                if (protocol == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
-                if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
-                if (winscpargs != "") myProc.StartInfo.Arguments += " " + winscpargs;
-                try
-                {
-                    myProc.Start();
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    //user canceled
+                    if (serverElement.Username != "")
+                    {
+                        string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
+                        serverElement.Username = otherHelper.ReplaceU(s, serverElement.Username);
+                        serverElement.Password = otherHelper.ReplaceU(s, serverElement.Password);
+
+                        winScpProcess.StartInfo.Arguments += serverElement.Username;
+                        winScpProcess.StartInfo.Arguments += serverElement.Password != "" ? ":" + serverElement.Password : "";
+                        winScpProcess.StartInfo.Arguments += "@";
+                    }
+
+                    winScpProcess.StartInfo.Arguments += (host != "" ? HttpUtility.UrlEncode(host) : "") ?? throw new InvalidOperationException();
+                    winScpProcess.StartInfo.Arguments += port != "" ? ":" + port : "";
+                    winScpProcess.StartInfo.Arguments += protocol == "ftp://" ? " /passive=" + (Settings.Default.winscppassive ? "on" : "off") : "";
+                    winScpProcess.StartInfo.Arguments += Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "" ? " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"" : "";
+                    winScpProcess.StartInfo.Arguments += winScpArgs != "" ? " " + winScpArgs : "";
+
+                    winScpProcess.Start();
                 }
             }
             else
             {
-                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + winscppath + Resources.connectionHelper_LaunchVnc_M2, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bWSCPPath_Click(serverElement.Type);
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + winScpPath + Resources.connectionHelper_LaunchVnc_M2,
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsform.bWSCPPath_Click(serverElement.Type);
+                }
             }
         }
 
+        //TODO: Refactor func
+        /// <summary>
+        /// Extract file path and arguments
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns> ??? </returns>
         private static string[] ExtractFilePath(string path)
         {
-            //extract file path and arguments
+            //
             if (path.IndexOf("\"", StringComparison.Ordinal) == 0)
             {
-                int s = path.Substring(1).IndexOf("\"", StringComparison.Ordinal);
-                if (s > 0) return new string[] { path.Substring(1, s), path.Substring(s + 2).Trim() };
-                return new string[] { path.Substring(1), "" };
+                var s = path.Substring(1).IndexOf("\"", StringComparison.Ordinal);
+                return s > 0 ? new string[] { path.Substring(1, s), path.Substring(s + 2).Trim() } : new string[] { path.Substring(1), "" };
             }
             else
             {
                 int s = path.Substring(1).IndexOf(" ", StringComparison.Ordinal);
-                if (s > 0) return new string[] { path.Substring(0, s + 1), path.Substring(s + 2).Trim() };
-                return new string[] { path.Substring(0), "" };
+                return s > 0 ? new string[] { path.Substring(0, s + 1), path.Substring(s + 2).Trim() } : new string[] { path.Substring(0), "" };
             }
         }
     }
