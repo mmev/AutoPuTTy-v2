@@ -865,7 +865,7 @@ namespace AutoPuTTY
 
         public void connect(string type)
         {
-            connectionHelper.startConnect(type, tView.SelectedNode);
+            connectionHelper.StartConnect(type, tView.SelectedNode);
         }
 
         #endregion

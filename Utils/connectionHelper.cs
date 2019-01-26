@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Windows.Forms;
 using AutoPuTTY.Properties;
+using AutoPuTTY.Resources;
 using AutoPuTTY.Utils.Datas;
 
 namespace AutoPuTTY.Utils
@@ -18,127 +19,107 @@ namespace AutoPuTTY.Utils
         private static string[] ps = { "/", "\\\\" };
         private static string[] pr = { "\\", "\\" };
 
-        private static string currentGroup;
-        private static string currentServer;
+        private static string _currentGroup;
+        private static string _currentServer;
 
-        public static void startConnect(string type, TreeNode selectedNode)
+        private static string _rdpOutPath;
+
+        public static void StartConnect(string type, TreeNode selectedNode)
         {
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
 
             if (selectedNode?.Parent == null) return;
 
-            currentGroup = selectedNode.Parent.Text;
-            currentServer = selectedNode.Text;
+            _currentGroup = selectedNode.Parent.Text;
+            _currentServer = selectedNode.Text;
 
-            ServerElement serverElement = xmlHelper.getServerByName(currentGroup, currentServer);
+            ServerElement serverElement = xmlHelper.getServerByName(_currentGroup, _currentServer);
             if (serverElement == null) return;
 
-            string winscpprot = "sftp://";
-
-            string _host = serverElement.Host + ":" + serverElement.Port;
-            string _user = serverElement.Username;
-            string _pass = serverElement.Password;
-            string _type = type == "-1" ? serverElement.Type : type;
-
-            switch (_type)
+            switch (serverElement.Type)
             {
                 case "1": //RDP
-                    launchRDP(serverElement);
+                    LaunchRdp(serverElement);
                     break;
                 case "2": //VNC
-                    launchVNC(serverElement);
+                    LaunchVnc(serverElement);
                     break;
                 case "3": //WinSCP (SCP)
-                    launchWinSCP("scp://", serverElement);
+                    LaunchWinScp("scp://", serverElement);
                     break;
                 case "4": //WinSCP (SFTP)
-                    launchWinSCP("sftp://", serverElement);
+                    LaunchWinScp("sftp://", serverElement);
                     break;
                 case "5": //WinSCP (FTP)
-                    launchWinSCP("ftp://", serverElement);
+                    LaunchWinScp("ftp://", serverElement);
                     break;
                 default: //PuTTY
-                    launchPuTTy(serverElement);
+                    LaunchPuTTy(serverElement);
                     break;
             }
         }
 
-        private static void launchRDP(ServerElement serverElement)
+        private static void LaunchRdp(ServerElement serverElement)
         {
-            string[] rdpextractpath = ExtractFilePath(Settings.Default.rdpath);
-            string rdpath = Environment.ExpandEnvironmentVariables(rdpextractpath[0]);
-            string rdpargs = rdpextractpath[1];
+            string[] rdpExtractFilePath = ExtractFilePath(Settings.Default.rdpath);
+            string rdpPath = Environment.ExpandEnvironmentVariables(rdpExtractFilePath[0]);
+            string rdpLaunchArgs = rdpExtractFilePath[1];
 
-            if (File.Exists(rdpath))
+            if (File.Exists(rdpPath))
             {
-                Mstscpw mstscpw = new Mstscpw();
-                string rdppass = mstscpw.encryptpw(serverElement.Password);
+                Mstscpw defaultRdpLauncher = new Mstscpw();
 
-                ArrayList arraylist = new ArrayList();
-                string[] size = Settings.Default.rdsize.Split('x');
+                string[] sizes = Settings.Default.rdsize.Split('x');
 
-                string rdpout = "";
+                _rdpOutPath = "";
+
                 if (Settings.Default.rdfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
                 {
-                    rdpout = otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
+                    _rdpOutPath = otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
 
-                    try
+                    //TODO: add try for exception
+                    if (!Directory.Exists(_rdpOutPath))
+                        Directory.CreateDirectory(_rdpOutPath);
+                }
+
+                
+                TextWriter rdpFileWriter = new StreamWriter(path: _rdpOutPath + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp");
+
+                rdpFileWriter.WriteLine(Settings.Default.rdsize == "Full screen" ? "screen mode id:i:2" : "screen mode id:i:1");
+                rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopwidth:i:" + sizes[0] : "");
+                rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopheight:i:" + sizes[1] : "");
+                rdpFileWriter.WriteLine(serverElement.HostWithServer != "" ? "full address:s:" + serverElement.HostWithServer : "");
+                rdpFileWriter.WriteLine(serverElement.Username != "" ? "username:s:" + serverElement.Username : "");
+                rdpFileWriter.WriteLine(serverElement.Username != "" && serverElement.Password != "" ? "password 51:b:" + defaultRdpLauncher.encryptpw(serverElement.Password) : "");
+                rdpFileWriter.WriteLine(Settings.Default.rddrives ? "redirectdrives:i:1" : "");
+                rdpFileWriter.WriteLine(Settings.Default.rdadmin ? "administrative session:i:1" : "");
+                rdpFileWriter.WriteLine(Settings.Default.rdspan ? "use multimon:i:1" : "");
+
+                rdpFileWriter.Close();
+
+                Process myProc = new Process
+                {
+                    StartInfo =
                     {
-                        Directory.CreateDirectory(rdpout);
+                        FileName = rdpPath,
+                        Arguments = "\"" + _rdpOutPath + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp\"" + (rdpLaunchArgs != null ? " " + rdpLaunchArgs : ""),
                     }
-                    catch
-                    {
-                        MessageBox.Show("Output path for generated \".rdp\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        rdpout = "";
-                    }
-                }
+                };
 
-                foreach (string width in size)
-                {
-                    int num;
-                    if (Int32.TryParse(width.Trim(), out num)) arraylist.Add(width.Trim());
-                }
-
-                TextWriter rdpfile = new StreamWriter(path: rdpout + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp");
-                if (Settings.Default.rdsize == "Full screen") rdpfile.WriteLine("screen mode id:i:2");
-                else rdpfile.WriteLine("screen mode id:i:1");
-                if (arraylist.Count == 2)
-                {
-                    rdpfile.WriteLine("desktopwidth:i:" + arraylist[0]);
-                    rdpfile.WriteLine("desktopheight:i:" + arraylist[1]);
-                }
-                if (serverElement.HostWithServer != "") rdpfile.WriteLine("full address:s:" + serverElement.HostWithServer);
-                if (serverElement.Username != "")
-                {
-                    rdpfile.WriteLine("username:s:" + serverElement.Username);
-                    if (serverElement.Password != "") rdpfile.WriteLine("password 51:b:" + rdppass);
-                }
-                if (Settings.Default.rddrives) rdpfile.WriteLine("redirectdrives:i:1");
-                if (Settings.Default.rdadmin) rdpfile.WriteLine("administrative session:i:1");
-                if (Settings.Default.rdspan) rdpfile.WriteLine("use multimon:i:1");
-                rdpfile.Close();
-
-                Process myProc = new Process();
-                myProc.StartInfo.FileName = rdpath;
-                myProc.StartInfo.Arguments = "\"" + rdpout + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp\"";
-                if (rdpargs != "") myProc.StartInfo.Arguments += " " + rdpargs;
-                //MessageBox.Show(myProc.StartInfo.FileName + myProc.StartInfo.FileName.IndexOf('"').ToString() + File.Exists(myProc.StartInfo.FileName).ToString());
-                try
-                {
-                    myProc.Start();
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    //user canceled
-                }
+                myProc.Start();
             }
             else
             {
-                if (MessageBox.Show("Could not find file \"" + rdpath + "\".\nDo you want to change the configuration ?", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK) formMain.optionsform.bRDPath_Click(serverElement.Type);
+                if (MessageBox.Show("Could not find file \"" + rdpPath + "\".\nDo you want to change the configuration ?", "Error",
+                        MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+
+                {
+                    formMain.optionsform.bRDPath_Click(serverElement.Type);
+                }
             }
         }
 
-        private static void launchVNC(ServerElement serverElement)
+        private static void LaunchVnc(ServerElement serverElement)
         {
             string[] vncextractpath = ExtractFilePath(Settings.Default.vncpath);
             string vncpath = vncextractpath[0];
@@ -174,7 +155,7 @@ namespace AutoPuTTY.Utils
                     }
                     catch
                     {
-                        MessageBox.Show("Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Output path for generated \".vnc\" connection files doesn't exist.\nFiles will be generated in the current path.", StringResources.connectionHelper_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         vncout = "";
                     }
                 }
@@ -219,7 +200,7 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        private static void launchPuTTy(ServerElement serverElement)
+        private static void LaunchPuTTy(ServerElement serverElement)
         {
             string[] puttyextractpath = ExtractFilePath(Settings.Default.puttypath);
             string puttypath = puttyextractpath[0];
@@ -274,7 +255,7 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        private static void launchWinSCP(string protocol, ServerElement serverElement)
+        private static void LaunchWinScp(string protocol, ServerElement serverElement)
         {
             string[] winscpextractpath = ExtractFilePath(Settings.Default.winscppath);
             string winscppath = winscpextractpath[0];
@@ -310,7 +291,7 @@ namespace AutoPuTTY.Utils
                     if (serverElement.Password != "") myProc.StartInfo.Arguments += ":" + serverElement.Password;
                     myProc.StartInfo.Arguments += "@";
                 }
-                if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host);
+                if (host != "") myProc.StartInfo.Arguments += HttpUtility.UrlEncode(host) ?? throw new InvalidOperationException();
                 if (port != "") myProc.StartInfo.Arguments += ":" + port;
                 if (protocol == "ftp://") myProc.StartInfo.Arguments += " /passive=" + (Settings.Default.winscppassive ? "on" : "off");
                 if (Settings.Default.winscpkey && Settings.Default.winscpkeyfile != "") myProc.StartInfo.Arguments += " /privatekey=\"" + Settings.Default.winscpkeyfile + "\"";
