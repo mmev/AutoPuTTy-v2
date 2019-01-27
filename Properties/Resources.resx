@@ -162,4 +162,69 @@ Do you want to change the configuration ?</value>
   <data name="connectionHelper_LaunchVnc_Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="formOptions_liGImport_LinkClicked_" xml:space="preserve">
+    <value>List format:
+
+GroupName  Name     Hostname[:port]     [[Domain\]username]     [Password]     [Type]
+
+- One server per line.
+- Use a tab as separator.
+- Only "GroupName" and "Name" are required.
+- "Type" is a numerical value, use the following correspondence:
+    0 = PuTTY
+    1 = Remote Desktop
+    2 = VNC
+    3 = WinSCP (SCP)
+    4 = WinSCP (SFTP)
+    5 = WinSCP (FTP)
+- If no "Type" is given it'll be set as "PuTTY" by default.</value>
+  </data>
+  <data name="formOptions_bPuTTYPath_Click_Select_PuTTY_executable" xml:space="preserve">
+    <value>Select PuTTY executable</value>
+  </data>
+  <data name="formOptions_bPuTTYPath_Click_EXE_File____exe____exe" xml:space="preserve">
+    <value>EXE File (*.exe)|*.exe</value>
+  </data>
+  <data name="formOptions_bRDPath_Click_Select_Remote_Desktop_executable" xml:space="preserve">
+    <value>Select Remote Desktop executable</value>
+  </data>
+  <data name="formOptions_bVNCPath_Click_Select_VNC_Viewer_executable" xml:space="preserve">
+    <value>Select VNC Viewer executable</value>
+  </data>
+  <data name="formOptions_bVNCKeep_Click_Select__vnc_files_path" xml:space="preserve">
+    <value>Select .vnc files path</value>
+  </data>
+  <data name="formOptions_bWSCPPath_Click_Select_WinSCP_executable" xml:space="preserve">
+    <value>Select WinSCP executable</value>
+  </data>
+  <data name="formOptions_bWSCPKey_Click_Select_private_key_file" xml:space="preserve">
+    <value>Select private key file</value>
+  </data>
+  <data name="formOptions_bWSCPKey_Click_PuTTY_private_key_files____ppk____ppk_All_files__________" xml:space="preserve">
+    <value>PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*</value>
+  </data>
+  <data name="formOptions_bPassword_Click_Password_can_t_be_empty" xml:space="preserve">
+    <value>Password can't be empty</value>
+  </data>
+  <data name="formOptions_bPassword_Click_Password_confirmation_doesn_t_match" xml:space="preserve">
+    <value>Password confirmation doesn't match</value>
+  </data>
+  <data name="formOptions_bPassword_Click_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="formOptions_bGImport_Click_Select_server_list" xml:space="preserve">
+    <value>Select server list</value>
+  </data>
+  <data name="formOptions_bGImport_Click_TXT_File____txt____txt" xml:space="preserve">
+    <value>TXT File (*.txt)|*.txt</value>
+  </data>
+  <data name="formOptions_bPassword_Click_Applying" xml:space="preserve">
+    <value>Applying</value>
+  </data>
+  <data name="formOptions_bPuTTYExecute_Click_Select_commands_file" xml:space="preserve">
+    <value>Select commands file</value>
+  </data>
+  <data name="formOptions_bRDKeep_Click_Select__rdp_files_path" xml:space="preserve">
+    <value>Select .rdp files path</value>
+  </data>
 </root>

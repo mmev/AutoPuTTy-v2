@@ -14,14 +14,14 @@ namespace AutoPuTTY
     {
         #region Conts Init
 
-        public formMain mainform;
-        public popupImport importpopup;
-        public popupRecrypt recryptpopup;
-        public bool firstread = true;
-        public bool importcancel;
-        public bool importempty;
-        public object locker = new object();
-        public string importreplace = "";
+        private readonly formMain MainForm;
+        private popupImport ImportPopup;
+        private popupRecrypt ReCryptPopup;
+        private readonly bool FirstRead = true;
+        public bool ImportEmpty;
+
+        public readonly object locker = new object();
+        public string ImportReplace = "";
 
         #endregion
 
@@ -29,10 +29,10 @@ namespace AutoPuTTY
 
         public formOptions(formMain form)
         {
-            mainform = form;
+            MainForm = form;
             InitializeComponent();
-            importpopup = new popupImport(this);
-            recryptpopup = new popupRecrypt(this);
+            ImportPopup = new popupImport(this);
+            ReCryptPopup = new popupRecrypt(this);
 
             Settings.Default.ocryptkey = Settings.Default.cryptkey;
 
@@ -74,130 +74,192 @@ namespace AutoPuTTY
             }
 
             bGPassword.Enabled = false;
-            firstread = false;
+            FirstRead = false;
         }
 
         #endregion
 
         #region Button Events
 
+        /// <summary>
+        /// When user try connect SSH and PuTTy client not found
+        /// this method launch event click select path and retry connect
+        /// </summary>
+        /// <param name="type">connection type</param>
         public void bPuTTYPath_Click(string type)
         {
             bPuTTYPath_Click(new object(), new EventArgs());
-            mainform.connect(type);
+            MainForm.connect(type);
         }
 
-        public void bPuTTYPath_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Browse PuTTy (.exe) file path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bPuTTYPath_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select PuTTY executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bPuTTYPath_Click_Select_PuTTY_executable,
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
                 tbPuTTYPath.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// When user try connect RDP and rdp client not found
+        /// this method launch event click select path and retry connect
+        /// </summary>
+        /// <param name="type">connection type</param>
         public void bRDPath_Click(string type)
         {
             bRDPath_Click(new object(), new EventArgs());
-            mainform.connect(type);
+            MainForm.connect(type);
         }
 
-        public void bRDPath_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Open file dialog for select rdp (mstsc.exe) file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bRDPath_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select Remote Desktop executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bRDPath_Click_Select_Remote_Desktop_executable,
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
                 tbRDPath.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// When user try connect VNC and vnc client not found
+        /// this method launch event click select path and retry connect
+        /// </summary>
+        /// <param name="type">connection type</param>
         public void bVNCPath_Click(string type)
         {
             bVNCPath_Click(new object(), new EventArgs());
-            mainform.connect(type);
+            MainForm.connect(type);
         }
 
-        public void bVNCPath_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Open file dialog for select vnc client file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bVNCPath_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select VNC Viewer executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bVNCPath_Click_Select_VNC_Viewer_executable,
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
                 tbVNCPath.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// Open file dialog for select folder for saving .vnc files
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bVNCKeep_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.Description = "Select .vnc files path";
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+            {
+                Description = Resources.formOptions_bVNCKeep_Click_Select__vnc_files_path
+            };
+
             DialogResult result = folderBrowserDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 tbVNCKeep.Text = folderBrowserDialog.SelectedPath;
             }
-            else return;
         }
 
+        /// <summary>
+        /// When user try connect with WinSCP and client not found
+        /// this method launch event click select path and retry connect
+        /// </summary>
+        /// <param name="type">connection type</param>
         public void bWSCPPath_Click(string type)
         {
             bWSCPPath_Click(new object(), new EventArgs());
-            mainform.connect(type);
+            MainForm.connect(type);
         }
 
-        public void bWSCPPath_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Open file dialog for select WinSCP client exe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bWSCPPath_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select WinSCP executable";
-            browseFile.Filter = "EXE File (*.exe)|*.exe";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bWSCPPath_Click_Select_WinSCP_executable,
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
                 tbWSCPPath.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// Open file dialog for select WinSCP client exe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bWSCPKey_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select private key file";
-            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bWSCPKey_Click_Select_private_key_file,
+                Filter = Resources.formOptions_bWSCPKey_Click_PuTTY_private_key_files____ppk____ppk_All_files__________
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 tbWSCPKey.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// Set new password for crypt group and server data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bPassword_Click(object sender, EventArgs e)
         {
             if (tbGPassword.Text.Trim() == "")
             {
-                MessageBox.Show(this, "Password can't be empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Resources.formOptions_bPassword_Click_Password_can_t_be_empty, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 tbGPassword.Text = "";
                 tbGConfirm.Text = "";
             }
             else if (tbGConfirm.Text != tbGPassword.Text)
             {
-                MessageBox.Show(this, "Password confirmation doesn't match", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Resources.formOptions_bPassword_Click_Password_confirmation_doesn_t_match, Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 tbGConfirm.Text = "";
             }
             else
@@ -205,13 +267,13 @@ namespace AutoPuTTY
                 if (Settings.Default.password != tbGPassword.Text)
                 {
                     Settings.Default.password = tbGPassword.Text;
-                    mainform.XmlHelper.configSet("password", cryptHelper.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+                    MainForm.XmlHelper.configSet("password", cryptHelper.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
 
                     string[] bwArgs = { "recrypt", Settings.Default.password };
                     bwProgress.RunWorkerAsync(bwArgs);
-                    recryptpopup = new popupRecrypt(this);
-                    recryptpopup.Text = "Applying" + recryptpopup.Text;
-                    recryptpopup.ShowDialog(this);
+                    ReCryptPopup = new popupRecrypt(this);
+                    ReCryptPopup.Text = Resources.formOptions_bPassword_Click_Applying + ReCryptPopup.Text;
+                    ReCryptPopup.ShowDialog(this);
 
                     Settings.Default.cryptkey = Settings.Default.password;
                 }
@@ -219,122 +281,145 @@ namespace AutoPuTTY
             }
         }
 
+        /// <summary>
+        /// Browser .txt with server data
+        /// Show import group|server popup   
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bGImport_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select server list";
-            browseFile.Filter = "TXT File (*.txt)|*.txt";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bGImport_Click_Select_server_list,
+                Filter = Resources.formOptions_bGImport_Click_TXT_File____txt____txt
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 string file = browseFile.FileName;
                 if (File.Exists(file))
                 {
-                    importpopup = new popupImport(this);
+                    ImportPopup = new popupImport(this);
                     object[] bwArgs = { "import", file };
                     bwProgress.RunWorkerAsync(bwArgs);
-                    importpopup.ShowDialog(this);
-                    return;
+                    ImportPopup.ShowDialog(this);
                 }
             }
         }
 
+        /// <summary>
+        /// Select .txt with command for putty start
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bPuTTYExecute_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select commands file";
-            browseFile.Filter = "TXT File (*.txt)|*.txt";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bPuTTYExecute_Click_Select_commands_file,
+                Filter = Resources.formOptions_bGImport_Click_TXT_File____txt____txt
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 tbPuTTYExecute.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// Select private key for ssh connect
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bPuTTYKey_Click(object sender, EventArgs e)
         {
-            OpenFileDialog browseFile = new OpenFileDialog();
-            browseFile.Title = "Select private key file";
-            browseFile.Filter = "PuTTY private key files (*.ppk)|*.ppk|All files (*.*)|*.*";
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bWSCPKey_Click_Select_private_key_file,
+                Filter = Resources
+                    .formOptions_bWSCPKey_Click_PuTTY_private_key_files____ppk____ppk_All_files__________
+            };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
             {
                 tbPuTTYKey.Text = browseFile.FileName;
             }
-            else return;
         }
 
+        /// <summary>
+        /// Select folder for save .rdp files
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bRDKeep_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.Description = "Select .rdp files path";
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog {Description = Resources.formOptions_bRDKeep_Click_Select__rdp_files_path};
             DialogResult result = folderBrowserDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 tbRDKeep.Text = folderBrowserDialog.SelectedPath;
             }
-            else return;
         }
-
 
         #endregion
 
         #region TextBox Events
 
+        
         private void tbPuTTY_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttypath = tbPuTTYPath.Text;
-            if (!firstread) mainform.XmlHelper.configSet("putty", Settings.Default.puttypath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("putty", Settings.Default.puttypath);
         }
 
         private void tbPuTTYExecute_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttycommand = tbPuTTYExecute.Text;
-            if (!firstread) mainform.XmlHelper.configSet("puttycommand", Settings.Default.puttycommand);
+            if (!FirstRead) MainForm.XmlHelper.configSet("puttycommand", Settings.Default.puttycommand);
         }
 
         private void tbPuTTYKey_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.puttykeyfile = tbPuTTYKey.Text;
-            if (!firstread) mainform.XmlHelper.configSet("puttykeyfile", Settings.Default.puttykeyfile);
+            if (!FirstRead) MainForm.XmlHelper.configSet("puttykeyfile", Settings.Default.puttykeyfile);
         }
 
         private void tbRD_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.rdpath = tbRDPath.Text;
-            if (!firstread) mainform.XmlHelper.configSet("remotedesktop", Settings.Default.rdpath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("remotedesktop", Settings.Default.rdpath);
         }
 
         private void tbRDKeep_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.rdfilespath = tbRDKeep.Text;
-            if (!firstread) mainform.XmlHelper.configSet("rdfilespath", Settings.Default.rdfilespath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("rdfilespath", Settings.Default.rdfilespath);
         }
 
         private void tbVNCPath_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.vncpath = tbVNCPath.Text;
-            if (!firstread) mainform.XmlHelper.configSet("vnc", Settings.Default.vncpath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("vnc", Settings.Default.vncpath);
         }
 
         private void tbVNCKeep_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.vncfilespath = tbVNCKeep.Text;
-            if (!firstread) mainform.XmlHelper.configSet("vncfilespath", Settings.Default.vncfilespath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("vncfilespath", Settings.Default.vncfilespath);
         }
 
         private void tbWSCPPath_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.winscppath = tbWSCPPath.Text;
-            if (!firstread) mainform.XmlHelper.configSet("winscp", Settings.Default.winscppath);
+            if (!FirstRead) MainForm.XmlHelper.configSet("winscp", Settings.Default.winscppath);
         }
 
         private void tbWSCPKey_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.winscpkeyfile = tbWSCPKey.Text;
-            if (!firstread) mainform.XmlHelper.configSet("winscpkeyfile", Settings.Default.winscpkeyfile);
+            if (!FirstRead) MainForm.XmlHelper.configSet("winscpkeyfile", Settings.Default.winscpkeyfile);
         }
 
         private void tbPassword_TextChanged(object sender, EventArgs e)
@@ -375,7 +460,7 @@ namespace AutoPuTTY
         private void cbPuTTYExecute_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttyexecute = cbPuTTYExecute.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("puttyexecute", Settings.Default.puttyexecute.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("puttyexecute", Settings.Default.puttyexecute.ToString());
 
             if (Settings.Default.puttyexecute)
             {
@@ -392,7 +477,7 @@ namespace AutoPuTTY
         private void cbPuTTYKey_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttykey = cbPuTTYKey.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("puttykey", Settings.Default.puttykey.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("puttykey", Settings.Default.puttykey.ToString());
 
             if (Settings.Default.puttykey)
             {
@@ -409,25 +494,25 @@ namespace AutoPuTTY
         private void cbPuTTYXforward_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.puttyforward = cbPuTTYForward.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("puttyforward", Settings.Default.puttyforward.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("puttyforward", Settings.Default.puttyforward.ToString());
         }
 
         private void cbRDAdmin_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rdadmin = cbRDAdmin.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("rdadmin", Settings.Default.rdadmin.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("rdadmin", Settings.Default.rdadmin.ToString());
         }
 
         private void cbDrives_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rddrives = cbRDDrives.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("rddrives", Settings.Default.rddrives.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("rddrives", Settings.Default.rddrives.ToString());
         }
 
         private void cbRDSpan_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.rdspan = cbRDSpan.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("rdspan", Settings.Default.rdspan.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("rdspan", Settings.Default.rdspan.ToString());
             cbRDSize.Enabled = !cbRDSpan.Checked;
         }
 
@@ -438,13 +523,12 @@ namespace AutoPuTTY
 
             foreach (string width in size)
             {
-                int num;
-                if (Int32.TryParse(width.Trim(), out num)) arraylist.Add(width.Trim());
+                if (Int32.TryParse(width.Trim(), out _)) arraylist.Add(width.Trim());
             }
 
             if (arraylist.Count == 2 || cbRDSize.Text.Trim() == cbRDSize.Items[cbRDSize.Items.Count - 1].ToString()) Settings.Default.rdsize = cbRDSize.Text.Trim();
             else Settings.Default.rdsize = "";
-            if (!firstread) mainform.XmlHelper.configSet("rdsize", Settings.Default.rdsize);
+            if (!FirstRead) MainForm.XmlHelper.configSet("rdsize", Settings.Default.rdsize);
         }
 
         private void cbRDSize_TextChanged(object sender, EventArgs e)
@@ -455,19 +539,19 @@ namespace AutoPuTTY
         private void cbVNCFullscreen_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.vncfullscreen = cbVNCFullscreen.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("vncfullscreen", Settings.Default.vncfullscreen.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("vncfullscreen", Settings.Default.vncfullscreen.ToString());
         }
 
         private void cbVNCView_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.vncviewonly = cbVNCViewonly.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("vncviewonly", Settings.Default.vncviewonly.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("vncviewonly", Settings.Default.vncviewonly.ToString());
         }
 
         private void cbWSCPKey_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.winscpkey = cbWSCPKey.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("winscpkey", Settings.Default.winscpkey.ToString());
+            if (!FirstRead) MainForm.XmlHelper.configSet("winscpkey", Settings.Default.winscpkey.ToString());
 
             if (Settings.Default.winscpkey)
             {
@@ -484,23 +568,7 @@ namespace AutoPuTTY
         private void cbWSCPPassive_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.winscppassive = cbWSCPPassive.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("winscppassive", Settings.Default.winscppassive.ToString());
-        }
-
-        private void cbMulti_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!firstread) mainform.XmlHelper.configSet("multicolumn", Settings.Default.multicolumn.ToString());
-
-            if (Settings.Default.multicolumn)
-            {
-                //mainform.lbList.MultiColumn = true;
-                slMulti_Scroll(this, e);
-            }
-            else
-            {
-                //mainform.lbList.MultiColumn = false;
-            }
-
+            if (!FirstRead) MainForm.XmlHelper.configSet("winscppassive", Settings.Default.winscppassive.ToString());
         }
 
         private void cbGPassword_CheckedChanged(object sender, EventArgs e)
@@ -516,11 +584,11 @@ namespace AutoPuTTY
                 {
                     string[] bwArgs = { "recrypt", Settings.Default.ocryptkey };
                     bwProgress.RunWorkerAsync(bwArgs);
-                    recryptpopup = new popupRecrypt(this);
-                    recryptpopup.Text = "Removing" + recryptpopup.Text;
-                    recryptpopup.ShowDialog(this);
+                    ReCryptPopup = new popupRecrypt(this);
+                    ReCryptPopup.Text = "Removing" + ReCryptPopup.Text;
+                    ReCryptPopup.ShowDialog(this);
 
-                    mainform.XmlHelper.dropNode("ID='password'");
+                    MainForm.XmlHelper.dropNode("ID='password'");
                     Settings.Default.password = "";
                     Settings.Default.cryptkey = Settings.Default.ocryptkey;
                 }
@@ -546,8 +614,8 @@ namespace AutoPuTTY
         private void cbGMinimize_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.minimize = cbGMinimize.Checked;
-            if (!firstread) mainform.XmlHelper.configSet("minimize", Settings.Default.minimize.ToString());
-            mainform.notifyIcon.Visible = Settings.Default.minimize;
+            if (!FirstRead) MainForm.XmlHelper.configSet("minimize", Settings.Default.minimize.ToString());
+            MainForm.notifyIcon.Visible = Settings.Default.minimize;
         }
 
         #endregion
@@ -556,7 +624,7 @@ namespace AutoPuTTY
 
         private void liGImport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("List format:\r\n\r\nName     Hostname[:port]     [[Domain\\]username]     [Password]     [Type]\r\n\r\n- One server per line.\r\n- Use a tab as separator.\r\n- Only \"Name\" and \"Hostname\" are required.\r\n- \"Type\" is a numerical value, use the following correspondence:\r\n    0 = PuTTY\r\n    1 = Remote Desktop\r\n    2 = VNC\r\n    3 = WinSCP (SCP)\r\n    4 = WinSCP (SFTP)\r\n    5 = WinSCP (FTP)\r\n- If no \"Type\" is given it'll be set as \"PuTTY\" by default.", "Import list");
+            MessageBox.Show(Resources.formOptions_liGImport_LinkClicked_, "Import list");
         }
 
         private void bwProgress_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -581,11 +649,11 @@ namespace AutoPuTTY
             {
                 case "import":
                     args[0] = e.ProgressPercentage.ToString();
-                    importpopup.ImportProgress(args);
+                    ImportPopup.ImportProgress(args);
                     break;
                 case "recrypt":
                     args[0] = e.ProgressPercentage.ToString();
-                    recryptpopup.RecryptProgress(args);
+                    ReCryptPopup.RecryptProgress(args);
                     break;
             }
         }
@@ -595,30 +663,33 @@ namespace AutoPuTTY
             switch ((string)e.Result)
             {
                 case "import":
-                    importpopup.ImportComplete();
-                    //mainform.lbList.SelectedItems.Clear();
-                    //if (mainform.lbList.Items.Count > 0) mainform.lbList.SelectedIndex = 0;
+                    ImportPopup.ImportComplete();
+                    //MainForm.lbList.SelectedItems.Clear();
+                    //if (MainForm.lbList.Items.Count > 0) MainForm.lbList.SelectedIndex = 0;
                     break;
                 case "recrypt":
-                    recryptpopup.RecryptComplete();
+                    ReCryptPopup.RecryptComplete();
                     break;
             }
         }
 
         private void slMulti_Scroll(object sender, EventArgs e)
         {
-            if (!firstread) mainform.XmlHelper.configSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
-            //mainform.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
+            if (!FirstRead) MainForm.XmlHelper.configSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
+            //MainForm.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Method for re crypt group default data and server data with new custom password
+        /// </summary>
+        /// <param name="newPassword">new password for encrypt</param>
         private void ReCryptServeList(string newPassword)
         {
-            importcancel = false;
-            int count = 0;
+            var count = 0;
 
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(Settings.Default.cfgpath);
@@ -675,8 +746,8 @@ namespace AutoPuTTY
                                         break;
                                 }
 
-                                string[] progressArgs = new string[] { "recrypt", count + " / " + mainform.tView.GetNodeCount(true) };
-                                bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.GetNodeCount(true) * 100)), progressArgs);
+                                string[] progressArgs = new string[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
+                                bwProgress.ReportProgress(((int)((double)count / (double)MainForm.tView.GetNodeCount(true) * 100)), progressArgs);
                             }
 
                             break;
@@ -705,21 +776,15 @@ namespace AutoPuTTY
                 }
             }
 
-            string[] args = new string[] { "recrypt", count + " / " + mainform.tView.GetNodeCount(true) };
-            bwProgress.ReportProgress(((int)((double)count / (double)mainform.tView.GetNodeCount(true) * 100)), args);
+            var args = new string[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
+            bwProgress.ReportProgress(((int)((double)count / (double)MainForm.tView.GetNodeCount(true) * 100)), args);
 
             xmldoc.Save(Settings.Default.cfgpath);
-            Console.WriteLine(mainform.tView.GetNodeCount(true));
         }
 
         private void ImportList(string f)
         {
-            #if DEBUG
-            DateTime time = DateTime.Now;
-            #endif
-
-            importcancel = false;
-            importempty = false;
+            ImportEmpty = false;
             string line;
             int c_add = 0;
             int c_replace = 0;
@@ -740,7 +805,7 @@ namespace AutoPuTTY
             string[] args = new string[] { "import", c_total + " / " + lines.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
             bwProgress.ReportProgress(((int)((double)c_total / (double)lines.Count * 100)), args);
 
-            for (int i = 0; i < lines.Count && !importcancel; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 //cancel = bwProgress.CancellationPending;
                 //if (cancel) break;
@@ -754,7 +819,7 @@ namespace AutoPuTTY
 
                 if (listarray.Count > 1)
                 {
-                    importreplace = "";
+                    ImportReplace = "";
                     string _name = split[0].Trim();
                     string _host = split[1].Trim();
                     string _user = "";
@@ -795,7 +860,7 @@ namespace AutoPuTTY
                         newserver.AppendChild(type);
                     }
 
-                    if (mainform.tView.Nodes.Find(_name, true) != null) //duplicate
+                    if (MainForm.tView.Nodes.Find(_name, true) != null) //duplicate
                     {
                         if (cbGSkip.Checked) //skip
                         {
@@ -805,35 +870,34 @@ namespace AutoPuTTY
                         {
                             if (cbGReplace.Checked || (!cbGReplace.Checked && ImportAskDuplicate(_name)))
                             {
-                                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + mainform.XmlHelper.parseXpathString(_name) + "]");
+                                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + MainForm.XmlHelper.parseXpathString(_name) + "]");
                                 if (xmldoc.DocumentElement != null)
                                 {
                                     if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
                                 }
-                                //if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate
+                                //if (MainForm.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate
                                 //{
-                                //    mainform.lbList.Items.Remove(_name);
-                                //    mainform.lbList.Items.Add(_name);
+                                //    MainForm.lbList.Items.Remove(_name);
+                                //    MainForm.lbList.Items.Add(_name);
                                 //}));
                                 //else
                                 //{
-                                //    mainform.lbList.Items.Remove(_name);
-                                //    mainform.lbList.Items.Add(_name);
+                                //    MainForm.lbList.Items.Remove(_name);
+                                //    MainForm.lbList.Items.Add(_name);
                                 //}
                                 c_replace++;
                             }
                             else //cancel or skip
                             {
-                                if (!importcancel) c_skip++;
-                                else c_total--;
+                                c_total--;
                             }
                         }
                     }
                     else //add
                     {
                         if (xmldoc.DocumentElement != null) xmldoc.DocumentElement.InsertAfter(newserver, xmldoc.DocumentElement.LastChild);
-                        //if (mainform.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate { mainform.lbList.Items.Add(_name); }));
-                        //else mainform.lbList.Items.Add(_name);
+                        //if (MainForm.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate { MainForm.lbList.Items.Add(_name); }));
+                        //else MainForm.lbList.Items.Add(_name);
                         c_add++;
                     }
                 }
@@ -841,17 +905,14 @@ namespace AutoPuTTY
                 bwProgress.ReportProgress(((int)((double)c_total / (double)lines.Count * 100)), args);
             }
             xmldoc.Save(file);
-            #if DEBUG
-            Debug.WriteLine("Import duration :" + (DateTime.Now - time));
-            #endif
-            if (!importcancel && (c_add + c_replace + c_skip) < 1) importempty = true;
+            if ((c_add + c_replace + c_skip) < 1) ImportEmpty = true;
         }
 
         public bool ImportAskDuplicate(string n)
         {
-            importpopup.ToggleDuplicateWarning(true, "Duplicate found: " + n);
-            lock (locker) while (importreplace == "" && !importcancel) Monitor.Wait(locker);
-            if (importreplace == "replace") return true;
+            ImportPopup.ToggleDuplicateWarning(true, "Duplicate found: " + n);
+            lock (locker) while (ImportReplace == "") Monitor.Wait(locker);
+            if (ImportReplace == "replace") return true;
             return false;
         }
 

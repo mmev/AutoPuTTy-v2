@@ -35,7 +35,6 @@ namespace AutoPuTTY
 
         private void bCancel_Click(object sender, EventArgs e)
         {
-            optionsform.importcancel = true;
             lock (optionsform.locker)
             {
                 Monitor.Pulse(optionsform.locker);
@@ -46,7 +45,7 @@ namespace AutoPuTTY
         private void bReplace_Click(object sender, EventArgs e)
         {
             SwitchDuplicateWarning(false);
-            optionsform.importreplace = "replace";
+            optionsform.ImportReplace = "replace";
             lock (optionsform.locker)
             {
                 Monitor.Pulse(optionsform.locker);
@@ -56,7 +55,7 @@ namespace AutoPuTTY
         private void bSkip_Click(object sender, EventArgs e)
         {
             SwitchDuplicateWarning(false);
-            optionsform.importreplace = "skip";
+            optionsform.ImportReplace = "skip";
             lock (optionsform.locker)
             {
                 Monitor.Pulse(optionsform.locker);
@@ -134,10 +133,10 @@ namespace AutoPuTTY
 
         public void ImportComplete()
         {
-            Text = optionsform.importcancel ? "Import cancelled" : "Import complete";
+            Text = "Import complete";
             bCancel.Text = "OK";
             bCancel.DialogResult = DialogResult.Cancel;
-            if (optionsform.importempty) SwitchEmptyWarning("No entry found in file");
+            if (optionsform.ImportEmpty) SwitchEmptyWarning("No entry found in file");
             else SwitchDuplicateWarning(false);
         }
 
