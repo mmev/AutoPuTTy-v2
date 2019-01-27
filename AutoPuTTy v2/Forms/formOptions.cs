@@ -585,7 +585,7 @@ namespace AutoPuTTY
                     string[] bwArgs = { "recrypt", Settings.Default.ocryptkey };
                     bwProgress.RunWorkerAsync(bwArgs);
                     ReCryptPopup = new popupRecrypt(this);
-                    ReCryptPopup.Text = "Removing" + ReCryptPopup.Text;
+                    ReCryptPopup.Text = Resources.formOptions_cbGPassword_CheckedChanged_Removing + ReCryptPopup.Text;
                     ReCryptPopup.ShowDialog(this);
 
                     MainForm.XmlHelper.dropNode("ID='password'");
@@ -709,10 +709,10 @@ namespace AutoPuTTY
 
                             count++;
 
-                            string serverHost = "";
-                            string serverPort = "";
-                            string serverUsername = "";
-                            string serverPassword = "";
+                            string serverHost;
+                            string serverPort;
+                            string serverUsername;
+                            string serverPassword;
 
                             foreach (XmlElement serverElements in xmlElement.ChildNodes)
                             {
@@ -892,13 +892,6 @@ namespace AutoPuTTY
                                 c_total--;
                             }
                         }
-                    }
-                    else //add
-                    {
-                        if (xmldoc.DocumentElement != null) xmldoc.DocumentElement.InsertAfter(newserver, xmldoc.DocumentElement.LastChild);
-                        //if (MainForm.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate { MainForm.lbList.Items.Add(_name); }));
-                        //else MainForm.lbList.Items.Add(_name);
-                        c_add++;
                     }
                 }
                 args = new string[] { "import", c_total + " / " + lines.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };

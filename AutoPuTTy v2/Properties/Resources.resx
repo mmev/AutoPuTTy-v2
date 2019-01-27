@@ -227,4 +227,7 @@ GroupName  Name     Hostname[:port]     [[Domain\]username]     [Password]     [
   <data name="formOptions_bRDKeep_Click_Select__rdp_files_path" xml:space="preserve">
     <value>Select .rdp files path</value>
   </data>
+  <data name="formOptions_cbGPassword_CheckedChanged_Removing" xml:space="preserve">
+    <value>Removing</value>
+  </data>
 </root>

@@ -274,6 +274,15 @@ namespace AutoPuTTY.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Removing.
+        /// </summary>
+        internal static string formOptions_cbGPassword_CheckedChanged_Removing {
+            get {
+                return ResourceManager.GetString("formOptions_cbGPassword_CheckedChanged_Removing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List format:
         ///
         ///GroupName  Name     Hostname[:port]     [[Domain\]username]     [Password]     [Type]
