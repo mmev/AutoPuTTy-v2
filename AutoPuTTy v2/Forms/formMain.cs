@@ -240,6 +240,9 @@ namespace AutoPuTTY
                 string groupName = tView.SelectedNode.Text;
                 string serverName = tbServerName.Text.Trim();
 
+                if (tView.SelectedNode.Parent != null)
+                    groupName = tView.SelectedNode.Parent.Text;
+
                 string serverHostname = tbServerHost.Text.Trim();
                 string serverPort = textBox1.Text.Trim();
                 string serverUsername = tbServerUser.Text.Trim();

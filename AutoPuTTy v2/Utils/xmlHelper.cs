@@ -455,8 +455,9 @@ namespace AutoPuTTY.Utils
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(Settings.Default.cfgpath);
 
+            Console.WriteLine(groupName);
+            
             XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
-            XmlNode xmlLastElementGroup = xmlGroup.LastChild;
 
             XmlElement newServer = xmldoc.CreateElement("Server");
             XmlAttribute name = xmldoc.CreateAttribute("Name");
