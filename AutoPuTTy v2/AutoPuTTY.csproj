@@ -96,7 +96,7 @@
       <DependentUpon>StringResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\ConnectionHelper.cs" />
-    <Compile Include="Utils\cryptHelper.cs" />
+    <Compile Include="Utils\CryptHelper.cs" />
     <Compile Include="Utils\Datas\ConnectionType.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
     <Compile Include="Utils\Datas\ServerElement.cs" />
@@ -118,7 +118,6 @@
     <Compile Include="Forms\formOptions.Designer.cs">
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\cryptDPAPI.cs" />
     <Compile Include="Forms\Popups\popupPassword.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,9 +132,8 @@
     </Compile>
     <Compile Include="app.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\ImageOpacity.cs" />
-    <Compile Include="Utils\otherHelper.cs" />
-    <Compile Include="Utils\xmlHelper.cs" />
+    <Compile Include="Utils\OtherHelper.cs" />
+    <Compile Include="Utils\XmlHelper.cs" />
     <EmbeddedResource Include="Forms\Popups\popupAbout.resx">
       <DependentUpon>popupAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -184,7 +182,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Utils\cryptVNC.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\iconmodify.png" />

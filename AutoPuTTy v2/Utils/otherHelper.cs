@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Security.AccessControl;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AutoPuTTY.Utils
 {
-    class otherHelper
+    class OtherHelper
     {
-        public  bool CheckWriteAccess(string path)
+        public bool CheckWriteAccess(string path)
         {
             bool writeAllow = false;
             bool writeDeny = false;
@@ -61,6 +61,22 @@ namespace AutoPuTTY.Utils
         public static void Error(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        public Image Set(Image image, float opacity)
+        {
+            Bitmap bmp = new Bitmap(image.Width, image.Height);
+            Graphics gfx = Graphics.FromImage(bmp);
+            ColorMatrix cmx = new ColorMatrix();
+            cmx.Matrix33 = opacity;
+
+            ImageAttributes ia = new ImageAttributes();
+            ia.SetColorMatrix(cmx, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, ia);
+            ia.Dispose();
+            gfx.Dispose();
+
+            return bmp;
         }
     }
 }

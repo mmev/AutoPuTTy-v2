@@ -35,12 +35,12 @@ namespace AutoPuTTY
 
         private ArrayList groupList = new ArrayList();
 
-        private xmlHelper xmlHelper;
-        internal xmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
+        private XmlHelper xmlHelper;
+        internal XmlHelper XmlHelper { get => xmlHelper; set => xmlHelper = value; }
 
-        internal cryptHelper Cryptor { get; set; }
+        internal CryptHelper Cryptor { get; set; }
 
-        internal otherHelper OtherHelper { get; set; }
+        internal OtherHelper OtherHelper { get; set; }
 
         private string placeholderServerHost = "";
         string placeholderServerPort = "";
@@ -62,9 +62,9 @@ namespace AutoPuTTY
 
         public formMain(bool full)
         {
-            XmlHelper = new xmlHelper();
-            Cryptor = new cryptHelper();
-            OtherHelper = new otherHelper();
+            XmlHelper = new XmlHelper();
+            Cryptor = new CryptHelper();
+            OtherHelper = new OtherHelper();
 
             //clone types array to have a sorted version
             _types = (string[])types.Clone();
@@ -79,7 +79,7 @@ namespace AutoPuTTY
                 try
                 {
                     Settings.Default.cfgpath = configPath + "\\" + Settings.Default.cfgfilepath;
-                    xmlHelper.CreateDefaultConfig();
+                    XmlHelper.CreateDefaultConfig();
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -88,11 +88,11 @@ namespace AutoPuTTY
                         try
                         {
                             Settings.Default.cfgpath = userPath + "\\" + Settings.Default.cfgfilepath;
-                            xmlHelper.CreateDefaultConfig();
+                            XmlHelper.CreateDefaultConfig();
                         }
                         catch (UnauthorizedAccessException)
                         {
-                            otherHelper.Error("No really, I could not find nor write my configuration file :'(\rPlease check your user permissions.");
+                            OtherHelper.Error("No really, I could not find nor write my configuration file :'(\rPlease check your user permissions.");
                             Environment.Exit(-1);
                         }
                     }
@@ -207,7 +207,7 @@ namespace AutoPuTTY
             }
             else
             {
-                otherHelper.Error("Enter server name and try again.");
+                OtherHelper.Error("Enter server name and try again.");
             }
         }
 
@@ -219,7 +219,7 @@ namespace AutoPuTTY
 
                 if (currentNode.Parent == null)
                 {
-                    otherHelper.Error("Please select server!");
+                    OtherHelper.Error("Please select server!");
                     return;
                 }
 
@@ -237,7 +237,7 @@ namespace AutoPuTTY
         }
         private void bEye_MouseEnter(object sender, EventArgs e)
         {
-            bServerEye.Image = ImageOpacity.Set(bServerEye.Image, (float)0.50);
+            bServerEye.Image = OtherHelper.Set(bServerEye.Image, (float)0.50);
         }
         private void bEye_MouseLeave(object sender, EventArgs e)
         {
@@ -248,10 +248,6 @@ namespace AutoPuTTY
         {
             optionsForm.ShowDialog(this);
         }
-
-        /*
-         * NEW EVENTS
-         */
 
         private void bGroupEye_Click(object sender, EventArgs e)
         {
@@ -289,7 +285,7 @@ namespace AutoPuTTY
                 bGroupDelete.Enabled = true;
             }
             else {
-                otherHelper.Error("Enter group name and try again.");
+                OtherHelper.Error("Enter group name and try again.");
             }
         }
 
@@ -346,8 +342,8 @@ namespace AutoPuTTY
                     if (tbServerName.Text != tView.SelectedNode.Text)
                     {
                         //if new name doesn't exist in list, modify or add
-                        bServerModify.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
-                        bServerAdd.Enabled = xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
+                        bServerModify.Enabled = XmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
+                        bServerAdd.Enabled = XmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null;
                     }
                     //changed other stuff
                     else
@@ -361,7 +357,7 @@ namespace AutoPuTTY
                 {
                     bServerModify.Enabled = false;
 
-                    if (tbServerName.Text.Trim() != "" && xmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null)
+                    if (tbServerName.Text.Trim() != "" && XmlHelper.getServerByName(currentGroup, tbServerName.Text.Trim()) == null)
                         bServerAdd.Enabled = true;
                     else
                         bServerAdd.Enabled = false;
@@ -610,7 +606,7 @@ namespace AutoPuTTY
 
             currentGroup = parent.Text;
 
-            ServerElement currentServer = xmlHelper.getServerByName(parent.Text, currentNode.Text);
+            ServerElement currentServer = XmlHelper.getServerByName(parent.Text, currentNode.Text);
 
             placeholderMode = false;
 
@@ -739,12 +735,12 @@ namespace AutoPuTTY
         {
             if (state)
             {
-                bEye.Image = ImageOpacity.Set(Resources.iconeyeshow, (float)0.50);
+                bEye.Image = OtherHelper.Set(Resources.iconeyeshow, (float)0.50);
                 tbPass.UseSystemPasswordChar = true;
             }
             else
             {
-                bEye.Image = ImageOpacity.Set(Resources.iconeyehide, (float)0.50);
+                bEye.Image = OtherHelper.Set(Resources.iconeyehide, (float)0.50);
                 tbPass.UseSystemPasswordChar = false;
             }
         }

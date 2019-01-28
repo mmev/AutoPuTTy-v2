@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Web;
 using System.Windows.Forms;
-using AutoPuTTY.Forms;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils.Datas;
 
@@ -44,7 +40,7 @@ namespace AutoPuTTY.Utils
             _currentGroup = selectedNode.Parent.Text;
             _currentServer = selectedNode.Text;
 
-            ServerElement serverElement = xmlHelper.getServerByName(_currentGroup, _currentServer);
+            ServerElement serverElement = XmlHelper.getServerByName(_currentGroup, _currentServer);
             if (serverElement == null) return;
 
             switch (serverElement.Type)
@@ -82,15 +78,13 @@ namespace AutoPuTTY.Utils
 
             if (File.Exists(rdpPath))
             {
-                Mstscpw defaultRdpLauncher = new Mstscpw();
-
                 string[] sizes = Settings.Default.rdsize.Split('x');
 
                 _rdpOutPath = "";
 
-                if (Settings.Default.rdfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
+                if (Settings.Default.rdfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath) != "\\")
                 {
-                    _rdpOutPath = otherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
+                    _rdpOutPath = OtherHelper.ReplaceA(ps, pr, Settings.Default.rdfilespath + "\\");
 
                     //TODO: add try for exception
                     if (!Directory.Exists(_rdpOutPath))
@@ -98,7 +92,7 @@ namespace AutoPuTTY.Utils
                 }
 
                 
-                TextWriter rdpFileWriter = new StreamWriter(path: _rdpOutPath + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp");
+                TextWriter rdpFileWriter = new StreamWriter(path: _rdpOutPath + OtherHelper.ReplaceU(f, serverElement.Name) + ".rdp");
 
                 //TODO: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated
 
@@ -107,7 +101,7 @@ namespace AutoPuTTY.Utils
                 rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopheight:i:" + sizes[1] : "");
                 rdpFileWriter.WriteLine(serverElement.HostWithServer != "" ? "full address:s:" + serverElement.HostWithServer : "");
                 rdpFileWriter.WriteLine(serverElement.Username != "" ? "username:s:" + serverElement.Username : "");
-                rdpFileWriter.WriteLine(serverElement.Username != "" && serverElement.Password != "" ? "password 51:b:" + defaultRdpLauncher.encryptpw(serverElement.Password) : "");
+                rdpFileWriter.WriteLine(serverElement.Username != "" && serverElement.Password != "" ? "password 51:b:" + CryptHelper.encryptpw(serverElement.Password) : "");
                 rdpFileWriter.WriteLine(Settings.Default.rddrives ? "redirectdrives:i:1" : "");
                 rdpFileWriter.WriteLine(Settings.Default.rdadmin ? "administrative session:i:1" : "");
                 rdpFileWriter.WriteLine(Settings.Default.rdspan ? "use multimon:i:1" : "");
@@ -119,7 +113,7 @@ namespace AutoPuTTY.Utils
                     StartInfo =
                     {
                         FileName = rdpPath,
-                        Arguments = "\"" + _rdpOutPath + otherHelper.ReplaceU(f, serverElement.Name) + ".rdp\"" + (rdpLaunchArgs != null ? " " + rdpLaunchArgs : ""),
+                        Arguments = "\"" + _rdpOutPath + OtherHelper.ReplaceU(f, serverElement.Name) + ".rdp\"" + (rdpLaunchArgs != null ? " " + rdpLaunchArgs : ""),
                     }
                 };
 
@@ -153,21 +147,21 @@ namespace AutoPuTTY.Utils
 
                 _vncOutPath = "";
 
-                if (Settings.Default.vncfilespath != "" && otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
+                if (Settings.Default.vncfilespath != "" && OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath) != "\\")
                 {
-                    _vncOutPath = otherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
+                    _vncOutPath = OtherHelper.ReplaceA(ps, pr, Settings.Default.vncfilespath + "\\");
 
                     if (!Directory.Exists(_vncOutPath))
                         Directory.CreateDirectory(_vncOutPath);
                 }
 
-                TextWriter vncFile = new StreamWriter(_vncOutPath + otherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc");
+                TextWriter vncFile = new StreamWriter(_vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc");
 
                 vncFile.WriteLine("[Connection]");
                 vncFile.WriteLine(host != "" ? "host=" + host : "");
                 vncFile.WriteLine(port != "" ? "port=" + port : "");
                 vncFile.WriteLine(serverElement.Username != "" ? "username=" + serverElement.Username : "");
-                vncFile.WriteLine(serverElement.Password != "" ? "password=" + cryptVNC.EncryptPassword(serverElement.Password) : "");
+                vncFile.WriteLine(serverElement.Password != "" ? "password=" + CryptHelper.EncryptPassword(serverElement.Password) : "");
 
                 vncFile.WriteLine("[Options]");
                 vncFile.WriteLine(Settings.Default.vncfullscreen ? "fullscreen=1" : "");
@@ -187,7 +181,7 @@ namespace AutoPuTTY.Utils
                     StartInfo =
                     {
                         FileName = Settings.Default.vncpath,
-                        Arguments = "-config \"" + _vncOutPath + otherHelper.ReplaceU(f, serverElement.Name.ToString()) +
+                        Arguments = "-config \"" + _vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name.ToString()) +
                                     ".vnc\"" + (vncArgs != "" ? " " + vncArgs : "")
                     }
                 };
@@ -227,7 +221,7 @@ namespace AutoPuTTY.Utils
 
                     puttyProcess.StartInfo.Arguments += host != "" ? host : "";
                     puttyProcess.StartInfo.Arguments += port != "" ? " " + port : "";
-                    puttyProcess.StartInfo.Arguments += serverElement.Username != "" && serverElement.Password != "" ? " -pw \"" + otherHelper.ReplaceA(passs, passr, serverElement.Password) + "\"" : "";
+                    puttyProcess.StartInfo.Arguments += serverElement.Username != "" && serverElement.Password != "" ? " -pw \"" + OtherHelper.ReplaceA(passs, passr, serverElement.Password) + "\"" : "";
                     puttyProcess.StartInfo.Arguments += Settings.Default.puttyexecute && Settings.Default.puttycommand != "" ? " -m \"" + Settings.Default.puttycommand + "\"" : "";
                     puttyProcess.StartInfo.Arguments += Settings.Default.puttykey && Settings.Default.puttykeyfile != "" ? " -i \"" + Settings.Default.puttykeyfile + "\"" : "";
                     puttyProcess.StartInfo.Arguments += Settings.Default.puttyforward ? " -X" : "";
@@ -272,8 +266,8 @@ namespace AutoPuTTY.Utils
                     if (serverElement.Username != "")
                     {
                         string[] s = { "%", " ", "+", "/", "@", "\"", ":", ";" };
-                        serverElement.Username = otherHelper.ReplaceU(s, serverElement.Username);
-                        serverElement.Password = otherHelper.ReplaceU(s, serverElement.Password);
+                        serverElement.Username = OtherHelper.ReplaceU(s, serverElement.Username);
+                        serverElement.Password = OtherHelper.ReplaceU(s, serverElement.Password);
 
                         winScpProcess.StartInfo.Arguments += serverElement.Username;
                         winScpProcess.StartInfo.Arguments += serverElement.Password != "" ? ":" + serverElement.Password : "";

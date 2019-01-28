@@ -65,7 +65,7 @@ namespace AutoPuTTY
                 cbGMinimize.Checked = Settings.Default.minimize;
                 if (Settings.Default.password.Trim() != "")
                 {
-                    Settings.Default.password = cryptHelper.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
+                    Settings.Default.password = CryptHelper.Decrypt(Settings.Default.password, Settings.Default.pcryptkey);
                     tbGPassword.Text = Settings.Default.password;
                     tbGConfirm.Text = Settings.Default.password;
                     Settings.Default.cryptkey = Settings.Default.password;
@@ -267,7 +267,7 @@ namespace AutoPuTTY
                 if (Settings.Default.password != tbGPassword.Text)
                 {
                     Settings.Default.password = tbGPassword.Text;
-                    MainForm.XmlHelper.configSet("password", cryptHelper.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
+                    MainForm.XmlHelper.configSet("password", CryptHelper.Encrypt(Settings.Default.password, Settings.Default.pcryptkey));
 
                     string[] bwArgs = { "recrypt", Settings.Default.password };
                     bwProgress.RunWorkerAsync(bwArgs);
@@ -721,28 +721,28 @@ namespace AutoPuTTY
                                 {
 
                                     case "Host":
-                                        serverHost = cryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = cryptHelper.Encrypt(serverHost, newPassword);
+                                        serverHost = CryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
                                         break;
 
                                     case "Port":
-                                        serverPort = cryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = cryptHelper.Encrypt(serverPort, newPassword);
+                                        serverPort = CryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
                                         break;
 
                                     case "Username":
-                                        serverUsername = cryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = cryptHelper.Encrypt(serverUsername, newPassword);
+                                        serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
                                         break;
 
                                     case "Password":
-                                        serverPassword = cryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = cryptHelper.Encrypt(serverPassword, newPassword);
+                                        serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
                                         break;
 
                                     case "Type":
-                                        serverType = cryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = cryptHelper.Encrypt(serverType, newPassword);
+                                        serverType = CryptHelper.Decrypt(serverElements.InnerText);
+                                        serverElements.InnerText = CryptHelper.Encrypt(serverType, newPassword);
                                         break;
                                 }
 
@@ -752,23 +752,23 @@ namespace AutoPuTTY
 
                             break;
                         case "DefaultHost":
-                            serverHost = cryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = cryptHelper.Encrypt(serverHost, newPassword);
+                            serverHost = CryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
                             break;
 
                         case "DefaultPort":
-                            serverPort = cryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = cryptHelper.Encrypt(serverPort, newPassword);
+                            serverPort = CryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
                             break;
 
                         case "DefaultUsername":
-                            serverUsername = cryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = cryptHelper.Encrypt(serverUsername, newPassword);
+                            serverUsername = CryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
                             break;
 
                         case "DefaultPassword":
-                            serverPassword = cryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = cryptHelper.Encrypt(serverPassword, newPassword);
+                            serverPassword = CryptHelper.Decrypt(xmlElement.InnerText);
+                            xmlElement.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
                             break;
                     }
 
@@ -838,19 +838,19 @@ namespace AutoPuTTY
                     if (_host != "")
                     {
                         XmlElement host = xmldoc.CreateElement("Host");
-                        host.InnerText = cryptHelper.Encrypt(_host);
+                        host.InnerText = CryptHelper.Encrypt(_host);
                         newserver.AppendChild(host);
                     }
                     if (_user != "")
                     {
                         XmlElement user = xmldoc.CreateElement("User");
-                        user.InnerText = cryptHelper.Encrypt(_user);
+                        user.InnerText = CryptHelper.Encrypt(_user);
                         newserver.AppendChild(user);
                     }
                     if (_pass != "")
                     {
                         XmlElement pass = xmldoc.CreateElement("Password");
-                        pass.InnerText = cryptHelper.Encrypt(_pass);
+                        pass.InnerText = CryptHelper.Encrypt(_pass);
                         newserver.AppendChild(pass);
                     }
                     if (_type > 0)

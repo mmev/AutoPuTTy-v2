@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace AutoPuTTY.Utils
 {
-    class xmlHelper
+    class XmlHelper
     {
         /// <summary>
         /// Creating new xml file with default content
@@ -59,7 +59,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -78,7 +78,7 @@ namespace AutoPuTTY.Utils
             }
             catch
             {
-                otherHelper.Error("\"" + Settings.Default.cfgpath + "\" file is corrupt, delete it and try again.");
+                OtherHelper.Error("\"" + Settings.Default.cfgpath + "\" file is corrupt, delete it and try again.");
                 Environment.Exit(-1);
             }
 
@@ -112,7 +112,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -178,16 +178,16 @@ namespace AutoPuTTY.Utils
                             switch (childNode.Name)
                             {
                                 case "DefaultHost":
-                                    groupDefaulHostname = cryptHelper.Decrypt(childNode.InnerText);
+                                    groupDefaulHostname = CryptHelper.Decrypt(childNode.InnerText);
                                     break;
                                 case "DefaultPort":
-                                    groupDefaultPort = cryptHelper.Decrypt(childNode.InnerText);
+                                    groupDefaultPort = CryptHelper.Decrypt(childNode.InnerText);
                                     break;
                                 case "DefaultUsername":
-                                    groupDefaultUsername = cryptHelper.Decrypt(childNode.InnerText);
+                                    groupDefaultUsername = CryptHelper.Decrypt(childNode.InnerText);
                                     break;
                                 case "DefaultPassword":
-                                    groupDefaultPassword = cryptHelper.Decrypt(childNode.InnerText);
+                                    groupDefaultPassword = CryptHelper.Decrypt(childNode.InnerText);
                                     break;
                                 case "Server":
                                     string serverName = childNode.GetAttribute("Name").Trim();
@@ -203,19 +203,19 @@ namespace AutoPuTTY.Utils
                                         switch (serverElement.Name)
                                         {
                                             case "Host":
-                                                serverHost = cryptHelper.Decrypt(serverElement.InnerText);
+                                                serverHost = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Port":
-                                                serverPort = cryptHelper.Decrypt(serverElement.InnerText);
+                                                serverPort = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Username":
-                                                serverUsername = cryptHelper.Decrypt(serverElement.InnerText);
+                                                serverUsername = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Password":
-                                                serverPassword = cryptHelper.Decrypt(serverElement.InnerText);
+                                                serverPassword = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Type":
-                                                serverType = cryptHelper.Decrypt(serverElement.InnerText);
+                                                serverType = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                         }
                                     }
@@ -257,28 +257,28 @@ namespace AutoPuTTY.Utils
             if (defaultHost != "")
             {
                 XmlElement host = xmlDocument.CreateElement("DefaultHost");
-                host.InnerText = cryptHelper.Encrypt(defaultHost);
+                host.InnerText = CryptHelper.Encrypt(defaultHost);
                 newGroup.AppendChild(host);
             }
 
             if (defaultPort != "")
             {
                 XmlElement host = xmlDocument.CreateElement("DefaultPort");
-                host.InnerText = cryptHelper.Encrypt(defaultPort);
+                host.InnerText = CryptHelper.Encrypt(defaultPort);
                 newGroup.AppendChild(host);
             }
 
             if (defaultUsername != "")
             {
                 XmlElement host = xmlDocument.CreateElement("DefaultUsername");
-                host.InnerText = cryptHelper.Encrypt(defaultUsername);
+                host.InnerText = CryptHelper.Encrypt(defaultUsername);
                 newGroup.AppendChild(host);
             }
 
             if (defaultPassword != "")
             {
                 XmlElement host = xmlDocument.CreateElement("DefaultPassword");
-                host.InnerText = cryptHelper.Encrypt(defaultPassword);
+                host.InnerText = CryptHelper.Encrypt(defaultPassword);
                 newGroup.AppendChild(host);
             }
 
@@ -290,7 +290,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -321,16 +321,16 @@ namespace AutoPuTTY.Utils
                         switch (groupNode.Name)
                         {
                             case "DefaultHost":
-                                groupDefaultHostname = cryptHelper.Decrypt(groupNode.InnerText);
+                                groupDefaultHostname = CryptHelper.Decrypt(groupNode.InnerText);
                                 break;
                             case "DefaultPort":
-                                groupDefaultPort = cryptHelper.Decrypt(groupNode.InnerText);
+                                groupDefaultPort = CryptHelper.Decrypt(groupNode.InnerText);
                                 break;
                             case "DefaultUsername":
-                                groupDefaultUsername = cryptHelper.Decrypt(groupNode.InnerText);
+                                groupDefaultUsername = CryptHelper.Decrypt(groupNode.InnerText);
                                 break;
                             case "DefaultPassword":
-                                groupDefaultPassword = cryptHelper.Decrypt(groupNode.InnerText);
+                                groupDefaultPassword = CryptHelper.Decrypt(groupNode.InnerText);
                                 break;
                         }
 
@@ -364,7 +364,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -391,28 +391,28 @@ namespace AutoPuTTY.Utils
             if (defaultHost != "")
             {
                 XmlElement host = xmlDocument.CreateElement("DefaultHost");
-                host.InnerText = cryptHelper.Encrypt(defaultHost);
+                host.InnerText = CryptHelper.Encrypt(defaultHost);
                 newGroup.AppendChild(host);
             }
 
             if (defaultPort != "")
             {
                 XmlElement port = xmlDocument.CreateElement("DefaultPort");
-                port.InnerText = cryptHelper.Encrypt(defaultPort);
+                port.InnerText = CryptHelper.Encrypt(defaultPort);
                 newGroup.AppendChild(port);
             }
 
             if (defaultUsername != "")
             {
                 XmlElement username = xmlDocument.CreateElement("DefaultUsername");
-                username.InnerText = cryptHelper.Encrypt(defaultUsername);
+                username.InnerText = CryptHelper.Encrypt(defaultUsername);
                 newGroup.AppendChild(username);
             }
 
             if (defaultPassword != "")
             {
                 XmlElement password = xmlDocument.CreateElement("DefaultPassword");
-                password.InnerText = cryptHelper.Encrypt(defaultPassword);
+                password.InnerText = CryptHelper.Encrypt(defaultPassword);
                 newGroup.AppendChild(password);
             }
 
@@ -428,7 +428,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
 
         }
@@ -461,35 +461,35 @@ namespace AutoPuTTY.Utils
             if (serverHost != "")
             {
                 XmlElement host = xmlDocument.CreateElement("Host");
-                host.InnerText = cryptHelper.Encrypt(serverHost);
+                host.InnerText = CryptHelper.Encrypt(serverHost);
                 newServer.AppendChild(host);
             }
 
             if (serverPort != "")
             {
                 XmlElement host = xmlDocument.CreateElement("Port");
-                host.InnerText = cryptHelper.Encrypt(serverPort);
+                host.InnerText = CryptHelper.Encrypt(serverPort);
                 newServer.AppendChild(host);
             }
 
             if (serverUsername != "")
             {
                 XmlElement host = xmlDocument.CreateElement("Username");
-                host.InnerText = cryptHelper.Encrypt(serverUsername);
+                host.InnerText = CryptHelper.Encrypt(serverUsername);
                 newServer.AppendChild(host);
             }
 
             if (serverPassword != "")
             {
                 XmlElement host = xmlDocument.CreateElement("Password");
-                host.InnerText = cryptHelper.Encrypt(serverPassword);
+                host.InnerText = CryptHelper.Encrypt(serverPassword);
                 newServer.AppendChild(host);
             }
 
             if (serverType != "")
             {
                 XmlElement host = xmlDocument.CreateElement("Type");
-                host.InnerText = cryptHelper.Encrypt(serverType);
+                host.InnerText = CryptHelper.Encrypt(serverType);
                 newServer.AppendChild(host);
             }
 
@@ -501,7 +501,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -538,23 +538,23 @@ namespace AutoPuTTY.Utils
                             switch (serverElements.Name)
                             {
                                 case "Host":
-                                    serverHost = cryptHelper.Decrypt(serverElements.InnerText);
+                                    serverHost = CryptHelper.Decrypt(serverElements.InnerText);
                                     break;
 
                                 case "Port":
-                                    serverPort = cryptHelper.Decrypt(serverElements.InnerText);
+                                    serverPort = CryptHelper.Decrypt(serverElements.InnerText);
                                     break;
 
                                 case "Username":
-                                    serverUsername = cryptHelper.Decrypt(serverElements.InnerText);
+                                    serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
                                     break;
 
                                 case "Password":
-                                    serverPassword = cryptHelper.Decrypt(serverElements.InnerText);
+                                    serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
                                     break;
 
                                 case "Type":
-                                    serverType = cryptHelper.Decrypt(serverElements.InnerText);
+                                    serverType = CryptHelper.Decrypt(serverElements.InnerText);
                                     break;
                             }
                         }
@@ -601,7 +601,7 @@ namespace AutoPuTTY.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
             }
         }
 
@@ -634,23 +634,23 @@ namespace AutoPuTTY.Utils
                             switch (subElements.Name)
                             {
                                 case "Host":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Host);
+                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Host);
                                     break;
 
                                 case "Port":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Port);
+                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Port);
                                     break;
 
                                 case "Username":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Username);
+                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Username);
                                     break;
 
                                 case "Password":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Password);
+                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Password);
                                     break;
 
                                 case "Type":
-                                    subElements.InnerText = cryptHelper.Encrypt(((int)serverElement.Type).ToString());
+                                    subElements.InnerText = CryptHelper.Encrypt(((int)serverElement.Type).ToString());
                                     break;
                             }
                         }
@@ -664,7 +664,7 @@ namespace AutoPuTTY.Utils
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    otherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                    OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
                 }
             }
         }

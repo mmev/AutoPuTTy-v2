@@ -34,7 +34,7 @@ namespace AutoPuTTY
 
         private void bOK_Click(object sender, EventArgs e)
         {
-            if (cryptHelper.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
+            if (CryptHelper.Encrypt(tbPassword.Text, Properties.Settings.Default.pcryptkey) == password)
             {
                 auth = true;
                 Close();
