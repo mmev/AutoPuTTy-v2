@@ -13,7 +13,7 @@ namespace AutoPuTTY.Utils.Datas
         public string Username;
         public string Password;
 
-        public string Type;
+        public ConnectionType Type;
 
         public string HostWithServer;
 
@@ -27,7 +27,7 @@ namespace AutoPuTTY.Utils.Datas
             this.Username = username.Trim();
             this.Password = password.Trim();
 
-            this.Type = type.Trim();
+            this.Type = (ConnectionType) Int32.Parse(type.Trim());
 
             this.HostWithServer = host.Trim() + ":" + port.Trim();
         }

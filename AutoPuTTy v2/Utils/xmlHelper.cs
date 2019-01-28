@@ -184,19 +184,19 @@ namespace AutoPuTTY.Utils
                                         switch (serverElement.Name)
                                         {
                                             case "Host":
-                                                serverHost = childnode.InnerText;
+                                                serverHost = cryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Port":
-                                                serverPort = childnode.InnerText;
+                                                serverPort = cryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Username":
-                                                serverUsername = childnode.InnerText;
+                                                serverUsername = cryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Password":
-                                                serverPassword = childnode.InnerText;
+                                                serverPassword = cryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                             case "Type":
-                                                serverType = childnode.InnerText;
+                                                serverType = cryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
                                         }
                                     }
@@ -370,20 +370,24 @@ namespace AutoPuTTY.Utils
             return groups;
         }
 
-        // Delete group by GroupName
+        /// <summary>
+        /// Remove group from xml config
+        /// </summary>
+        /// <param name="groupName">group name</param>
         public void deleteGroup(string groupName)
         {
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(Settings.Default.cfgpath);
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Settings.Default.cfgpath);
 
-            XmlNodeList groupNodes = xmldoc.SelectNodes("//*[@GroupName='" + groupName + "']");
+            XmlNodeList groupNodes = xmlDocument.SelectNodes("//*[@GroupName='" + groupName + "']");
 
-            if (groupNodes.Count > 0)
-                if (xmldoc != null) xmldoc.DocumentElement.RemoveChild(groupNodes[0]);
+            if (groupNodes != null && groupNodes.Count > 0)
+                if (xmlDocument.DocumentElement != null)
+                    xmlDocument.DocumentElement.RemoveChild(groupNodes[0]);
 
             try
             {
-                xmldoc.Save(Settings.Default.cfgpath);
+                xmlDocument.Save(Settings.Default.cfgpath);
             }
             catch (UnauthorizedAccessException)
             {
@@ -391,55 +395,63 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        // Modify group data, search by GroupName
+        /// <summary>
+        /// Modify group information
+        /// </summary>
+        /// <param name="groupName">old group name for search</param>
+        /// <param name="newGroupName">new group name</param>
+        /// <param name="defaultHost">new default host</param>
+        /// <param name="defaultPort">new default port</param>
+        /// <param name="defaultUsername">new default username</param>
+        /// <param name="defaultPassword">new default password</param>
         public void modifyGroup(string groupName, string newGroupName, string defaultHost, string defaultPort,
             string defaultUsername, string defaultPassword)
         {
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(Settings.Default.cfgpath);
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Settings.Default.cfgpath);
 
-            XmlElement newgroup = xmldoc.CreateElement("Group");
-            XmlAttribute name = xmldoc.CreateAttribute("GroupName");
+            XmlElement newGroup = xmlDocument.CreateElement("Group");
+            XmlAttribute name = xmlDocument.CreateAttribute("GroupName");
             name.Value = newGroupName;
-            newgroup.SetAttributeNode(name);
+            newGroup.SetAttributeNode(name);
 
             if (defaultHost != "")
             {
-                XmlElement host = xmldoc.CreateElement("DefaultHost");
+                XmlElement host = xmlDocument.CreateElement("DefaultHost");
                 host.InnerText = cryptHelper.Encrypt(defaultHost);
-                newgroup.AppendChild(host);
+                newGroup.AppendChild(host);
             }
 
             if (defaultPort != "")
             {
-                XmlElement host = xmldoc.CreateElement("DefaultPort");
-                host.InnerText = cryptHelper.Encrypt(defaultPort);
-                newgroup.AppendChild(host);
+                XmlElement port = xmlDocument.CreateElement("DefaultPort");
+                port.InnerText = cryptHelper.Encrypt(defaultPort);
+                newGroup.AppendChild(port);
             }
 
             if (defaultUsername != "")
             {
-                XmlElement host = xmldoc.CreateElement("DefaultUsername");
-                host.InnerText = cryptHelper.Encrypt(defaultUsername);
-                newgroup.AppendChild(host);
+                XmlElement username = xmlDocument.CreateElement("DefaultUsername");
+                username.InnerText = cryptHelper.Encrypt(defaultUsername);
+                newGroup.AppendChild(username);
             }
 
             if (defaultPassword != "")
             {
-                XmlElement host = xmldoc.CreateElement("DefaultPassword");
-                host.InnerText = cryptHelper.Encrypt(defaultPassword);
-                newgroup.AppendChild(host);
+                XmlElement password = xmlDocument.CreateElement("DefaultPassword");
+                password.InnerText = cryptHelper.Encrypt(defaultPassword);
+                newGroup.AppendChild(password);
             }
 
-            XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@GroupName='" + groupName + "']");
-            if (xmldoc.DocumentElement != null)
+            XmlNodeList groupsNode = xmlDocument.SelectNodes("//*[@GroupName='" + groupName + "']");
+            if (xmlDocument.DocumentElement != null)
             {
-                if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newgroup, xmlnode[0]);
+                if (groupsNode != null) xmlDocument.DocumentElement.ReplaceChild(newGroup, groupsNode[0]);
             }
 
             try
             {
-                xmldoc.Save(Settings.Default.cfgpath);
+                xmlDocument.Save(Settings.Default.cfgpath);
             }
             catch (UnauthorizedAccessException)
             {
@@ -448,7 +460,16 @@ namespace AutoPuTTY.Utils
 
         }
 
-
+        /// <summary>
+        /// Add new server to group in xml config
+        /// </summary>
+        /// <param name="groupName">group name</param>
+        /// <param name="serverName">server name</param>
+        /// <param name="serverHost">server host</param>
+        /// <param name="serverPort">server port</param>
+        /// <param name="serverUsername">server username</param>
+        /// <param name="serverPassword">server password</param>
+        /// <param name="serverType">server type</param>
         public void addServer(string groupName, string serverName, string serverHost, string serverPort,
             string serverUsername, string serverPassword, string serverType)
         {
@@ -639,7 +660,7 @@ namespace AutoPuTTY.Utils
                                     break;
 
                                 case "Type":
-                                    subElements.InnerText = cryptHelper.Encrypt(serverElement.Type);
+                                    subElements.InnerText = cryptHelper.Encrypt(((int)serverElement.Type).ToString());
                                     break;
                             }
                         }

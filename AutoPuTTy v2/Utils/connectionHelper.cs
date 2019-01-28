@@ -49,19 +49,19 @@ namespace AutoPuTTY.Utils
 
             switch (serverElement.Type)
             {
-                case "1": //RDP
+                case ConnectionType.Rdp: //RDP
                     LaunchRdp(serverElement);
                     break;
-                case "2": //VNC
+                case ConnectionType.Vnc: //VNC
                     LaunchVnc(serverElement);
                     break;
-                case "3": //WinSCP (SCP)
+                case ConnectionType.Scp: //WinSCP (SCP)
                     LaunchWinScp("scp://", serverElement);
                     break;
-                case "4": //WinSCP (SFTP)
+                case ConnectionType.Sftp: //WinSCP (SFTP)
                     LaunchWinScp("sftp://", serverElement);
                     break;
-                case "5": //WinSCP (FTP)
+                case ConnectionType.Ftp: //WinSCP (FTP)
                     LaunchWinScp("ftp://", serverElement);
                     break;
                 default: //PuTTY
@@ -131,7 +131,7 @@ namespace AutoPuTTY.Utils
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
 
                 {
-                    formMain.optionsform.bRDPath_Click(serverElement.Type);
+                    formMain.optionsForm.bRDPath_Click();
                 }
             }
         }
@@ -199,7 +199,7 @@ namespace AutoPuTTY.Utils
                 if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + vncPath + Resources.connectionHelper_LaunchVnc_M2,
                         Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
-                    formMain.optionsform.bVNCPath_Click(serverElement.Type);
+                    formMain.optionsForm.bVNCPath_Click();
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace AutoPuTTY.Utils
                 if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + puttyPath + Resources.connectionHelper_LaunchVnc_M2,
                         Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
-                    formMain.optionsform.bPuTTYPath_Click(serverElement.Type);
+                    formMain.optionsForm.bPuTTYPath_Click();
                 }
             }
         }
@@ -294,7 +294,7 @@ namespace AutoPuTTY.Utils
                 if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + winScpPath + Resources.connectionHelper_LaunchVnc_M2,
                         Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
-                    formMain.optionsform.bWSCPPath_Click(serverElement.Type);
+                    formMain.optionsForm.bWSCPPath_Click();
                 }
             }
         }

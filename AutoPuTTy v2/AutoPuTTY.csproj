@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Utils\ConnectionHelper.cs" />
     <Compile Include="Utils\cryptHelper.cs" />
+    <Compile Include="Utils\Datas\ConnectionType.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
     <Compile Include="Utils\Datas\ServerElement.cs" />
     <Compile Include="Forms\Popups\popupRecrypt.cs">

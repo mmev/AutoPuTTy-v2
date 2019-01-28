@@ -86,7 +86,7 @@ namespace AutoPuTTY
         /// this method launch event click select path and retry connect
         /// </summary>
         /// <param name="type">connection type</param>
-        public void bPuTTYPath_Click(string type)
+        public void bPuTTYPath_Click()
         {
             bPuTTYPath_Click(new object(), new EventArgs());
             MainForm.connect();
@@ -117,7 +117,7 @@ namespace AutoPuTTY
         /// this method launch event click select path and retry connect
         /// </summary>
         /// <param name="type">connection type</param>
-        public void bRDPath_Click(string type)
+        public void bRDPath_Click()
         {
             bRDPath_Click(new object(), new EventArgs());
             MainForm.connect();
@@ -148,7 +148,7 @@ namespace AutoPuTTY
         /// this method launch event click select path and retry connect
         /// </summary>
         /// <param name="type">connection type</param>
-        public void bVNCPath_Click(string type)
+        public void bVNCPath_Click()
         {
             bVNCPath_Click(new object(), new EventArgs());
             MainForm.connect();
@@ -199,7 +199,7 @@ namespace AutoPuTTY
         /// this method launch event click select path and retry connect
         /// </summary>
         /// <param name="type">connection type</param>
-        public void bWSCPPath_Click(string type)
+        public void bWSCPPath_Click()
         {
             bWSCPPath_Click(new object(), new EventArgs());
             MainForm.connect();

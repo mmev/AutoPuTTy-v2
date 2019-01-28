@@ -26,12 +26,12 @@ namespace AutoPuTTY
         public const int MF_SEPARATOR = 0x800;
         public const int WM_SYSCOMMAND = 0x112;
 
-        public static formOptions optionsform;
+        public static formOptions optionsForm;
 
         public string[] types = { "PuTTY", "Remote Desktop", "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
         public string[] _types;
 
-        private string laststate = "normal";
+        private string lastState = "normal";
 
         private ArrayList groupList = new ArrayList();
 
@@ -69,25 +69,25 @@ namespace AutoPuTTY
             //clone types array to have a sorted version
             _types = (string[])types.Clone();
             Array.Sort(_types);
-            string cfgpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
-            string userpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            if (File.Exists(cfgpath + "\\" + Settings.Default.cfgfilepath)) Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
-            else if (File.Exists(userpath + "\\" + Settings.Default.cfgfilepath)) Settings.Default.cfgpath = userpath + "\\" + Settings.Default.cfgfilepath;
+            if (File.Exists(configPath + "\\" + Settings.Default.cfgfilepath)) Settings.Default.cfgpath = configPath + "\\" + Settings.Default.cfgfilepath;
+            else if (File.Exists(userPath + "\\" + Settings.Default.cfgfilepath)) Settings.Default.cfgpath = userPath + "\\" + Settings.Default.cfgfilepath;
             else
             {
                 try
                 {
-                    Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
+                    Settings.Default.cfgpath = configPath + "\\" + Settings.Default.cfgfilepath;
                     xmlHelper.CreateDefaultConfig();
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    if (!File.Exists(userpath))
+                    if (!File.Exists(userPath))
                     {
                         try
                         {
-                            Settings.Default.cfgpath = userpath + "\\" + Settings.Default.cfgfilepath;
+                            Settings.Default.cfgpath = userPath + "\\" + Settings.Default.cfgfilepath;
                             xmlHelper.CreateDefaultConfig();
                         }
                         catch (UnauthorizedAccessException)
@@ -132,7 +132,7 @@ namespace AutoPuTTY
             if (XmlHelper.configGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlHelper.configGet("winscpkeyfile");
             if (XmlHelper.configGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
 
-            optionsform = new formOptions(this);
+            optionsForm = new formOptions(this);
 
             IntPtr sysMenuHandle = GetSystemMenu(Handle, false);
             //It would be better to find the position at run time of the 'Close' item, but...
@@ -246,7 +246,7 @@ namespace AutoPuTTY
 
         private void bOptions_Click(object sender, EventArgs e)
         {
-            optionsform.ShowDialog(this);
+            optionsForm.ShowDialog(this);
         }
 
         /*
@@ -654,7 +654,7 @@ namespace AutoPuTTY
             }
             else
             {
-                laststate = WindowState.ToString();
+                lastState = WindowState.ToString();
             }
         }
 
@@ -692,7 +692,7 @@ namespace AutoPuTTY
         private void miRestore_Click(object sender, EventArgs e)
         {
             Show();
-            WindowState = laststate == "Maximized" ? FormWindowState.Maximized : FormWindowState.Normal;
+            WindowState = lastState == "Maximized" ? FormWindowState.Maximized : FormWindowState.Normal;
             Activate();
             miRestore.Enabled = false;
         }
