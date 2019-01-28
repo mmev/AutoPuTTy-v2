@@ -1,34 +1,19 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Security.AccessControl;
 using System.Windows.Forms;
 
 namespace AutoPuTTY.Utils
 {
     class OtherHelper
     {
-        public bool CheckWriteAccess(string path)
-        {
-            bool writeAllow = false;
-            bool writeDeny = false;
-            DirectorySecurity accessControlList = Directory.GetAccessControl(path);
-            AuthorizationRuleCollection accessRules = accessControlList.GetAccessRules(true, true, typeof(System.Security.Principal.SecurityIdentifier));
-
-            foreach (FileSystemAccessRule rule in accessRules)
-            {
-                if ((FileSystemRights.Write & rule.FileSystemRights) != FileSystemRights.Write) continue;
-
-                if (rule.AccessControlType == AccessControlType.Allow)
-                    writeAllow = true;
-                else if (rule.AccessControlType == AccessControlType.Deny)
-                    writeDeny = true;
-            }
-
-            return writeAllow && !writeDeny;
-        }
-
+        /// <summary>
+        /// ???
+        /// </summary>
+        /// <param name="s">???</param>
+        /// <param name="r">???</param>
+        /// <param name="str">???</param>
+        /// <returns>???</returns>
         public static string ReplaceA(string[] s, string[] r, string str)
         {
             int i = 0;
@@ -43,6 +28,12 @@ namespace AutoPuTTY.Utils
             return str;
         }
 
+        /// <summary>
+        /// ???
+        /// </summary>
+        /// <param name="s">???</param>
+        /// <param name="str">???</param>
+        /// <returns>???</returns>
         public static string ReplaceU(string[] s, string str)
         {
             int i = 0;
@@ -58,11 +49,21 @@ namespace AutoPuTTY.Utils
             return str;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public static void Error(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+        /// <summary>
+        /// Change Image eye opacity when click
+        /// </summary>
+        /// <param name="image">image</param>
+        /// <param name="opacity">opacity param</param>
+        /// <returns>new image with custom opacity</returns>
         public Image Set(Image image, float opacity)
         {
             Bitmap bmp = new Bitmap(image.Width, image.Height);

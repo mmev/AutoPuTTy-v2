@@ -84,11 +84,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\Popups\popupAbout.cs">
+    <Compile Include="Forms\Popups\PopupAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Popups\popupAbout.Designer.cs">
-      <DependentUpon>popupAbout.cs</DependentUpon>
+    <Compile Include="Forms\Popups\PopupAbout.Designer.cs">
+      <DependentUpon>PopupAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StringResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -100,63 +100,63 @@
     <Compile Include="Utils\Datas\ConnectionType.cs" />
     <Compile Include="Utils\Datas\GroupElement.cs" />
     <Compile Include="Utils\Datas\ServerElement.cs" />
-    <Compile Include="Forms\Popups\popupRecrypt.cs">
+    <Compile Include="Forms\Popups\PopupRecrypt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Popups\popupRecrypt.Designer.cs">
-      <DependentUpon>popupRecrypt.cs</DependentUpon>
+    <Compile Include="Forms\Popups\PopupRecrypt.Designer.cs">
+      <DependentUpon>PopupRecrypt.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Popups\popupImport.cs">
+    <Compile Include="Forms\Popups\PopupImport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Popups\popupImport.Designer.cs">
-      <DependentUpon>popupImport.cs</DependentUpon>
+    <Compile Include="Forms\Popups\PopupImport.Designer.cs">
+      <DependentUpon>PopupImport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\formOptions.cs">
+    <Compile Include="Forms\FormOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\formOptions.Designer.cs">
-      <DependentUpon>formOptions.cs</DependentUpon>
+    <Compile Include="Forms\FormOptions.Designer.cs">
+      <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Popups\popupPassword.cs">
+    <Compile Include="Forms\Popups\PopupPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Popups\popupPassword.Designer.cs">
-      <DependentUpon>popupPassword.cs</DependentUpon>
+    <Compile Include="Forms\Popups\PopupPassword.Designer.cs">
+      <DependentUpon>PopupPassword.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\formMain.cs">
+    <Compile Include="Forms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\formMain.Designer.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
+    <Compile Include="Forms\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
     <Compile Include="app.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\OtherHelper.cs" />
     <Compile Include="Utils\XmlHelper.cs" />
-    <EmbeddedResource Include="Forms\Popups\popupAbout.resx">
-      <DependentUpon>popupAbout.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Popups\PopupAbout.resx">
+      <DependentUpon>PopupAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Popups\popupRecrypt.resx">
-      <DependentUpon>popupRecrypt.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Popups\PopupRecrypt.resx">
+      <DependentUpon>PopupRecrypt.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\formOptions.resx">
-      <DependentUpon>formOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormOptions.resx">
+      <DependentUpon>FormOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\formMain.resx">
+    <EmbeddedResource Include="Forms\FormMain.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>formMain.cs</DependentUpon>
+      <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Popups\popupPassword.resx">
+    <EmbeddedResource Include="Forms\Popups\PopupPassword.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>popupPassword.cs</DependentUpon>
+      <DependentUpon>PopupPassword.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Popups\popupImport.resx">
+    <EmbeddedResource Include="Forms\Popups\PopupImport.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>popupImport.cs</DependentUpon>
+      <DependentUpon>PopupImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
