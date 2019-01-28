@@ -34,9 +34,8 @@ namespace AutoPuTTY.Utils
         /// Start connection method
         /// В зависимости от переданного типа запускает нужный софт
         /// </summary>
-        /// <param name="type">Program type TODO: type string -> enum </param>
         /// <param name="selectedNode">Current selected node from Tree View</param>
-        public static void StartConnect(string type, TreeNode selectedNode)
+        public static void StartConnect(TreeNode selectedNode)
         {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
 

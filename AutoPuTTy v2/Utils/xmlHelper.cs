@@ -324,14 +324,14 @@ namespace AutoPuTTY.Utils
         }
 
         // Get default group info
-        public ArrayList getGroupDefaultInfo(string groupName)
+        public GroupElement getGroupDefaultInfo(string groupName)
         {
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(Settings.Default.cfgpath);
 
-            ArrayList groups = new ArrayList();
+            GroupElement groups;
 
-            string groupDefaulHostname = "";
+            string groupDefaultHostname = "";
             string groupDefaultPort = "";
             string groupDefaultUsername = "";
             string groupDefaultPassword = "";
@@ -348,7 +348,7 @@ namespace AutoPuTTY.Utils
                         switch (groupNode.Name)
                         {
                             case "DefaultHost":
-                                groupDefaulHostname = cryptHelper.Decrypt(groupNode.InnerText);
+                                groupDefaultHostname = cryptHelper.Decrypt(groupNode.InnerText);
                                 break;
                             case "DefaultPort":
                                 groupDefaultPort = cryptHelper.Decrypt(groupNode.InnerText);
@@ -364,9 +364,9 @@ namespace AutoPuTTY.Utils
                         
                     }
                 }
-                else return new ArrayList();
+                else return null;
             }
-            groups.Add(new string[] { groupDefaulHostname, groupDefaultPort, groupDefaultUsername, groupDefaultPassword });
+            groups = new GroupElement(groupName, groupDefaultHostname, groupDefaultPort, groupDefaultUsername, groupDefaultPassword, null);
             return groups;
         }
 

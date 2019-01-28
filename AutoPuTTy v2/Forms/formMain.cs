@@ -1,23 +1,13 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading;
-using System.Web;
 using System.Windows.Forms;
-using System.Xml;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils;
 using AutoPuTTY.Utils.Datas;
-using ListBox=System.Windows.Forms.ListBox;
 using MenuItem=System.Windows.Forms.MenuItem;
 
 namespace AutoPuTTY
@@ -30,21 +20,16 @@ namespace AutoPuTTY
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
         [DllImport("user32.dll")]
         private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
         public const int IDM_ABOUT = 1000;
-        public const int IDM_OPTIONS = 900;
         public const int MF_BYPOSITION = 0x400;
         public const int MF_SEPARATOR = 0x800;
         public const int WM_SYSCOMMAND = 0x112;
-        public const int SW_RESTORE = 9;
 
         public static formOptions optionsform;
 
         public string[] types = { "PuTTY", "Remote Desktop", "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
         public string[] _types;
-        private const int tbfilterw = 145;
 
         private string laststate = "normal";
 
@@ -81,15 +66,10 @@ namespace AutoPuTTY
             Cryptor = new cryptHelper();
             OtherHelper = new otherHelper();
 
-
-            #if DEBUG
-            DateTime time = DateTime.Now;
-            #endif
-
             //clone types array to have a sorted version
             _types = (string[])types.Clone();
             Array.Sort(_types);
-            string cfgpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", "");
+            string cfgpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
             string userpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             if (File.Exists(cfgpath + "\\" + Settings.Default.cfgfilepath)) Settings.Default.cfgpath = cfgpath + "\\" + Settings.Default.cfgfilepath;
@@ -163,41 +143,6 @@ namespace AutoPuTTY
             notifyIcon.Visible = Settings.Default.minimize;
             notifyIcon.ContextMenu = cmSystray;
 
-            int i = 0;
-            MenuItem connectmenu = new MenuItem();
-            connectmenu.Index = i;
-            connectmenu.Text = "Connect";
-            //connectmenu.Click += lbList_DoubleClick;
-            cmList.MenuItems.Add(connectmenu);
-            i++;
-            MenuItem sepmenu1 = new MenuItem();
-            sepmenu1.Index = i;
-            sepmenu1.Text = "-";
-            cmList.MenuItems.Add(sepmenu1);
-            i++;
-            foreach (string type in _types)
-            {
-                MenuItem listmenu = new MenuItem();
-                listmenu.Index = i;
-                listmenu.Text = type;
-                string _type = Array.IndexOf(types, type).ToString();
-                listmenu.Click += delegate { connect(_type); }; 
-                cmList.MenuItems.Add(listmenu);
-                i++;
-            }
-            MenuItem sepmenu2 = new MenuItem();
-            sepmenu2.Index = i;
-            sepmenu2.Text = "-";
-            cmList.MenuItems.Add(sepmenu2);
-            i++;
-            MenuItem deletemenu = new MenuItem();
-            deletemenu.Index = i;
-            deletemenu.Text = "Delete";
-            deletemenu.Click += mDelete_Click;
-            cmList.MenuItems.Add(deletemenu);
-
-            //XmlHelper.XmlToList(lbList);
-
             updateTreeView();
 
             AutoSize = false;
@@ -253,13 +198,10 @@ namespace AutoPuTTY
                     serverUsername, serverPassword, serverType);
 
                 tbServerName.Text = tbServerName.Text.Trim();
-                //lbList.Items.Add(tbServerName.Text);
-                //lbList.SelectedItems.Clear();
-                //lbList.SelectedItem = tbServerName.Text;
+
                 bServerModify.Enabled = false;
                 bServerAdd.Enabled = false;
                 bServerDelete.Enabled = true;
-                //BeginInvoke(new InvokeDelegate(lbList.Focus));
 
                 updateTreeView();
             }
@@ -267,28 +209,6 @@ namespace AutoPuTTY
             {
                 otherHelper.Error("Enter server name and try again.");
             }
-        }
-
-        private void mDelete_Click(object sender, EventArgs e)
-        {
-            //if (lbList.SelectedItems.Count > 0)
-            //{
-            //    ArrayList _items = new ArrayList();
-            //    string confirmtxt = "Are you sure you want to delete the selected item ?";
-            //    if (lbList.SelectedItems.Count > 1) confirmtxt = "Are you sure you want to delete the " + lbList.SelectedItems.Count + " selected items ?";
-            //    if (MessageBox.Show(confirmtxt, "Delete confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-            //    {
-            //        remove = true;
-            //        while (lbList.SelectedItems.Count > 0)
-            //        {
-            //            _items.Add("Name=" + xmlHelper.ParseXpathString(lbList.SelectedItem.ToString()));
-            //            lbList.Items.Remove(lbList.SelectedItem);
-            //        }
-            //        remove = false;
-            //        if (_items.Count > 0) XmlHelper.XmlDropNode(_items);
-            //        tbName_TextChanged(this, e);
-            //    }
-            //}
         }
 
         private void bDelete_Click(object sender, EventArgs e)
@@ -483,8 +403,8 @@ namespace AutoPuTTY
                 if (tbGroupName.Text.Trim() != tView.SelectedNode.Text.Trim())
                 {
                     //if new name doesn't exist in list, modify or add
-                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count <= 0;
-                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()).Count <= 0;
+                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) != null;
+                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) != null;
                 }
                 //changed other stuff
                 else
@@ -644,14 +564,13 @@ namespace AutoPuTTY
             {
                 currentGroup = e.Node.Text;
 
-                ArrayList groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
-                string[] groupInfos = (string[])groupInfo[0];
+                GroupElement groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
 
                 tbGroupName.Text = e.Node.Text;
-                tbGroupDefaultHost.Text = groupInfos[0];
-                tbGroupDefaultPort.Text = groupInfos[1];
-                tbGroupDefaultUsername.Text = groupInfos[2];
-                tbGroupDefaultPassword.Text = groupInfos[3];
+                tbGroupDefaultHost.Text = groupInfo.defaultHost;
+                tbGroupDefaultPort.Text = groupInfo.defaultPort;
+                tbGroupDefaultUsername.Text = groupInfo.defaultUsername;
+                tbGroupDefaultPassword.Text = groupInfo.defaultPassword;
 
                 bGroupAdd.Enabled = false;
                 bGroupDelete.Enabled = true;
@@ -665,15 +584,15 @@ namespace AutoPuTTY
 
                 placeholderMode = true;
 
-                setPlaceholderTextBox(tbServerHost, groupInfos[0]);
-                setPlaceholderTextBox(textBox1, groupInfos[1]);
-                setPlaceholderTextBox(tbServerUser, groupInfos[2]);
-                setPlaceholderTextBox(tbServerPass, groupInfos[3]);
+                setPlaceholderTextBox(tbServerHost, groupInfo.defaultHost);
+                setPlaceholderTextBox(textBox1, groupInfo.defaultPort);
+                setPlaceholderTextBox(tbServerUser, groupInfo.defaultUsername);
+                setPlaceholderTextBox(tbServerPass, groupInfo.defaultPassword);
 
-                placeholderServerHost = groupInfos[0];
-                placeholderServerPort = groupInfos[1];
-                placeholderServerUsername = groupInfos[2];
-                placeholderServerPassword = groupInfos[3];
+                placeholderServerHost = groupInfo.defaultHost;
+                placeholderServerPort = groupInfo.defaultPort;
+                placeholderServerUsername = groupInfo.defaultUsername;
+                placeholderServerPassword = groupInfo.defaultPassword;
 
                 bServerDelete.Enabled = false;
                 bServerModify.Enabled = false;
@@ -719,7 +638,7 @@ namespace AutoPuTTY
 
         private void tView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            connect("-1");
+            connect();
         }
 
         #endregion
@@ -760,7 +679,7 @@ namespace AutoPuTTY
             }
             else if (e.KeyCode == Keys.Enter && tView.SelectedNode != null && tView.SelectedNode.Parent != null)
             {
-                connect("-1");
+                connect();
             }
         }
 
@@ -783,15 +702,14 @@ namespace AutoPuTTY
             Application.Exit();
         }
 
-        private void liOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            optionsform.ShowDialog(this);
-        }
-
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// ???
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WM_SYSCOMMAND)
@@ -802,8 +720,6 @@ namespace AutoPuTTY
                         popupAbout aboutpopup = new popupAbout();
                         aboutpopup.ShowDialog(this);
                         return;
-                    default:
-                        break;
                 }
             }
             if (m.Msg == NativeMethods.WmShowMe)
@@ -813,6 +729,12 @@ namespace AutoPuTTY
             base.WndProc(ref m);
         }
 
+        /// <summary>
+        /// Change eye button and show/hide password
+        /// </summary>
+        /// <param name="bEye">link icon</param>
+        /// <param name="tbPass">text box</param>
+        /// <param name="state">true for hide, false for show</param>
         private void TooglePassword(PictureBox bEye, TextBox tbPass, bool state)
         {
             if (state)
@@ -827,6 +749,9 @@ namespace AutoPuTTY
             }
         }
 
+        /// <summary>
+        /// Clear Tree View and read xml config after add groups and servers
+        /// </summary>
         private void updateTreeView()
         {
             tView.Nodes.Clear();
@@ -844,19 +769,27 @@ namespace AutoPuTTY
                     {
                         string currentServerName = server.Name;
                         groupNode.Nodes.Add(currentServerName);
-
                     }
 
                 }
             }
         }
 
+        /// <summary>
+        /// Set current text box text and color gray
+        /// </summary>
+        /// <param name="textBox">text box for set</param>
+        /// <param name="text">text for set</param>
         private void setPlaceholderTextBox(TextBox textBox, String text)
         {
             textBox.ForeColor = Color.Gray;
             textBox.Text = text;
         }
 
+        /// <summary>
+        /// Can enable or disable group textboxes
+        /// </summary>
+        /// <param name="state">enable or disable?</param>
         private void changeGroupState(bool state)
         {
             tbGroupName.Enabled = state;
@@ -866,18 +799,13 @@ namespace AutoPuTTY
             tbGroupDefaultPort.Enabled = state;
         }
 
-        public void connect(string type)
+        /// <summary>
+        /// Start launch any software 
+        /// </summary>
+        public void connect()
         {
-            ConnectionHelper.StartConnect(type, tView.SelectedNode);
+            ConnectionHelper.StartConnect(tView.SelectedNode);
         }
-
-        #endregion
-
-        #region Nested type: InvokeDelegate
-
-        private delegate bool InvokeDelegate();
-
-
 
         #endregion
     }

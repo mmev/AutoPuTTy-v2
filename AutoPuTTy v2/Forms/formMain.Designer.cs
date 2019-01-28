@@ -78,7 +78,6 @@ namespace AutoPuTTY
             this.cmSystray = new System.Windows.Forms.ContextMenu();
             this.miRestore = new System.Windows.Forms.MenuItem();
             this.miClose = new System.Windows.Forms.MenuItem();
-            this.cmList = new System.Windows.Forms.ContextMenu();
             this.tlMain = new System.Windows.Forms.TableLayoutPanel();
             this.tlLeft = new System.Windows.Forms.TableLayoutPanel();
             this.tView = new System.Windows.Forms.TreeView();
@@ -731,7 +730,6 @@ namespace AutoPuTTY
         private System.Windows.Forms.MenuItem miClose;
         private System.Windows.Forms.Label lServerType;
         private System.Windows.Forms.ComboBox cbType;
-        private System.Windows.Forms.ContextMenu cmList;
         private System.Windows.Forms.Label lHost;
         private System.Windows.Forms.Button bOptions;
         private System.Windows.Forms.Label lServerSep5;
