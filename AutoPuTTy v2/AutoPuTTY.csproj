@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoPuTTY</RootNamespace>
-    <AssemblyName>autoputty</AssemblyName>
+    <AssemblyName>AutoPuTTy</AssemblyName>
     <ApplicationIcon>Resources\autoputty.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ManifestCertificateThumbprint>4FF911C15089A0FF2B0624B2638377DECD8216B9</ManifestCertificateThumbprint>
@@ -61,6 +61,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\AutoPuTTy.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Secure|AnyCPU' ">
     <OutputPath>bin\Release Secure\</OutputPath>

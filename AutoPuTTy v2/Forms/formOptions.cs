@@ -700,9 +700,9 @@ namespace AutoPuTTY
             {
                 count++;
 
+                string serverType = "";
                 foreach (XmlElement xmlElement in currentGroup.ChildNodes)
                 {
-                    string serverType = "";
                     switch (xmlElement.Name)
                     {
                         case "Server":

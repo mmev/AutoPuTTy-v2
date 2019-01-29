@@ -5,12 +5,12 @@ using AutoPuTTY.Properties;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AutoPuTTY")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("AutoPuTTY v2")]
+[assembly: AssemblyDescription("Extened connection manager")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Litrux")]
-[assembly: AssemblyProduct("AutoPuTTY")]
-[assembly: AssemblyCopyright("Copyright © Litrux 2008")]
+[assembly: AssemblyCompany("Jaleary")]
+[assembly: AssemblyProduct("AutoPuTTY v2")]
+[assembly: AssemblyCopyright("Copyright © Jaleary 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

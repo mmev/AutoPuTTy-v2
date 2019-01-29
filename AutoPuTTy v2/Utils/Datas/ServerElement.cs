@@ -18,16 +18,16 @@ namespace AutoPuTTY.Utils.Datas
         public ServerElement(string name, string host, string port, 
             string username, string password, string type)
         {
-            this.Name = name.Trim();
+            Name = name.Trim();
 
-            this.Host = host.Trim();
-            this.Port = port.Trim();
-            this.Username = username.Trim();
-            this.Password = password.Trim();
+            Host = host.Trim();
+            Port = port.Trim();
+            Username = username.Trim();
+            Password = password.Trim();
 
-            this.Type = (ConnectionType) Int32.Parse(type.Trim());
+            Type = (ConnectionType) Int32.Parse(type.Trim());
 
-            this.HostWithServer = host.Trim() + ":" + port.Trim();
+            HostWithServer = host.Trim() + ":" + port.Trim();
         }
 
     }
