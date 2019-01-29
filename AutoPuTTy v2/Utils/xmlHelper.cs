@@ -316,8 +316,6 @@ namespace AutoPuTTY.Utils
                 {
                     foreach (XmlElement groupNode in groupNodes[0].ChildNodes)
                     {
-                        
-
                         switch (groupNode.Name)
                         {
                             case "DefaultHost":
@@ -383,43 +381,35 @@ namespace AutoPuTTY.Utils
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load(Settings.Default.cfgpath);
 
-            XmlElement newGroup = xmlDocument.CreateElement("Group");
-            XmlAttribute name = xmlDocument.CreateAttribute("GroupName");
-            name.Value = newGroupName;
-            newGroup.SetAttributeNode(name);
-
-            if (defaultHost != "")
+            XmlNodeList groupNodes = xmlDocument.SelectNodes("//*[@GroupName='" + groupName + "']");
+            if (groupNodes != null)
             {
-                XmlElement host = xmlDocument.CreateElement("DefaultHost");
-                host.InnerText = CryptHelper.Encrypt(defaultHost);
-                newGroup.AppendChild(host);
-            }
+                if (groupNodes.Count > 0)
+                {
+                    XmlNode currentGroup = groupNodes[0];
+                    if (currentGroup.Attributes != null) currentGroup.Attributes["GroupName"].Value = newGroupName;
 
-            if (defaultPort != "")
-            {
-                XmlElement port = xmlDocument.CreateElement("DefaultPort");
-                port.InnerText = CryptHelper.Encrypt(defaultPort);
-                newGroup.AppendChild(port);
-            }
+                    foreach (XmlElement groupNode in currentGroup.ChildNodes)
+                    {
+                        switch (groupNode.Name)
+                        {
+                            case "DefaultHost":
+                                groupNode.InnerText = CryptHelper.Encrypt(defaultHost);
+                                break;
+                            case "DefaultPort":
+                                groupNode.InnerText = CryptHelper.Encrypt(defaultPort);
+                                break;
+                            case "DefaultUsername":
+                                groupNode.InnerText = CryptHelper.Encrypt(defaultUsername);
+                                break;
+                            case "DefaultPassword":
+                                groupNode.InnerText = CryptHelper.Encrypt(defaultPassword);
+                                break;
+                        }
 
-            if (defaultUsername != "")
-            {
-                XmlElement username = xmlDocument.CreateElement("DefaultUsername");
-                username.InnerText = CryptHelper.Encrypt(defaultUsername);
-                newGroup.AppendChild(username);
-            }
 
-            if (defaultPassword != "")
-            {
-                XmlElement password = xmlDocument.CreateElement("DefaultPassword");
-                password.InnerText = CryptHelper.Encrypt(defaultPassword);
-                newGroup.AppendChild(password);
-            }
-
-            XmlNodeList groupsNode = xmlDocument.SelectNodes("//*[@GroupName='" + groupName + "']");
-            if (xmlDocument.DocumentElement != null)
-            {
-                if (groupsNode != null) xmlDocument.DocumentElement.ReplaceChild(newGroup, groupsNode[0]);
+                    }
+                }
             }
 
             try

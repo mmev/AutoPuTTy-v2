@@ -399,8 +399,8 @@ namespace AutoPuTTY
                 if (tbGroupName.Text.Trim() != tView.SelectedNode.Text.Trim())
                 {
                     //if new name doesn't exist in list, modify or add
-                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) != null;
-                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) != null;
+                    bGroupModify.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) == null;
+                    bGroupAdd.Enabled = xmlHelper.getGroupDefaultInfo(tbGroupName.Text.Trim()) == null;
                 }
                 //changed other stuff
                 else
