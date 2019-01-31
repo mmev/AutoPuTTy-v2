@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms.Popups
 {
     public partial class popupImport : Form
     {
@@ -84,19 +84,6 @@ namespace AutoPuTTY
                 bReplace.Enabled = s;
                 bSkip.Enabled = s;
             }
-        }
-
-        public void ToggleDuplicateWarning(bool s, string n)
-        {
-            if (lWarning.InvokeRequired) Invoke(new MethodInvoker(delegate
-            {
-                lWarning.Text = n;
-            }));
-            else
-            {
-                lWarning.Text = n;
-            }
-            SwitchDuplicateWarning(s);
         }
 
         private void SwitchEmptyWarning(string n)

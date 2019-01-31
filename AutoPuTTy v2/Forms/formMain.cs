@@ -5,31 +5,31 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using AutoPuTTY.Forms.Popups;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils;
-using AutoPuTTY.Utils.Datas;
-using MenuItem=System.Windows.Forms.MenuItem;
+using AutoPuTTY.Utils.Data;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms
 {
-    public partial class formMain : Form
+    public sealed partial class formMain : Form
     {
         #region Conts Init
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
         [DllImport("user32.dll")]
-        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
+        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIdNewItem, string lpNewItem);
 
-        public const int IDM_ABOUT = 1000;
-        public const int MF_BYPOSITION = 0x400;
-        public const int MF_SEPARATOR = 0x800;
-        public const int WM_SYSCOMMAND = 0x112;
+        public const int IdmAbout = 1000;
+        public const int MfByPosition = 0x400;
+        public const int MfSeparator = 0x800;
+        public const int WmSysCommand = 0x112;
 
         public static formOptions optionsForm;
 
-        public string[] types = { "PuTTY", "Remote Desktop", "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
-        public string[] _types;
+        public string[] types = { "PuTTY", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
+        public string[] Types;
 
         private string lastState = "normal";
 
@@ -67,8 +67,8 @@ namespace AutoPuTTY
             OtherHelper = new OtherHelper();
 
             //clone types array to have a sorted version
-            _types = (string[])types.Clone();
-            Array.Sort(_types);
+            Types = (string[])types.Clone();
+            Array.Sort(Types);
             string configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
@@ -102,7 +102,7 @@ namespace AutoPuTTY
             if (!full) return;
             InitializeComponent();
 
-            foreach (string type in _types)
+            foreach (string type in Types)
             {
                 cbType.Items.Add(type);
             }
@@ -137,8 +137,8 @@ namespace AutoPuTTY
             IntPtr sysMenuHandle = GetSystemMenu(Handle, false);
             //It would be better to find the position at run time of the 'Close' item, but...
 
-            InsertMenu(sysMenuHandle, 5, MF_BYPOSITION | MF_SEPARATOR, 0, string.Empty);
-            InsertMenu(sysMenuHandle, 6, MF_BYPOSITION, IDM_ABOUT, "About");
+            InsertMenu(sysMenuHandle, 5, MfByPosition | MfSeparator, 0, string.Empty);
+            InsertMenu(sysMenuHandle, 6, MfByPosition, IdmAbout, "About");
 
             notifyIcon.Visible = Settings.Default.minimize;
             notifyIcon.ContextMenu = cmSystray;
@@ -155,7 +155,7 @@ namespace AutoPuTTY
 
         private void bModify_Click(object sender, EventArgs e)
         {
-            if (tView.SelectedNode != null && tView.SelectedNode.Parent != null)
+            if (tView.SelectedNode?.Parent != null)
             {
                 string groupName = tView.SelectedNode.Parent.Text;
                 string oldServerName = tView.SelectedNode.Text;
@@ -413,10 +413,7 @@ namespace AutoPuTTY
             else
             {
                 bGroupModify.Enabled = false;
-                if (tbGroupName.Text.Trim() != "")
-                    bGroupAdd.Enabled = true;
-                else
-                    bGroupAdd.Enabled = false;
+                bGroupAdd.Enabled = tbGroupName.Text.Trim() != "";
             }
         }
 
@@ -621,7 +618,7 @@ namespace AutoPuTTY
             textBox1.Text = currentServer.Port;
             tbServerUser.Text = currentServer.Username;
             tbServerPass.Text = currentServer.Password;
-            cbType.SelectedIndex = Array.IndexOf(_types, types[Convert.ToInt32(currentServer.Type)]);
+            cbType.SelectedIndex = Array.IndexOf(Types, types[Convert.ToInt32(currentServer.Type)]);
 
             bServerDelete.Enabled = true;
 
@@ -673,7 +670,7 @@ namespace AutoPuTTY
             {
                 bOptions_Click(sender, e);
             }
-            else if (e.KeyCode == Keys.Enter && tView.SelectedNode != null && tView.SelectedNode.Parent != null)
+            else if (e.KeyCode == Keys.Enter && tView.SelectedNode?.Parent != null)
             {
                 connect();
             }
@@ -681,7 +678,7 @@ namespace AutoPuTTY
 
         private void cbType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lServerUser.Text = cbType.Text == "Remote Desktop" ? "[Domain\\] username" : "Username";
+            lServerUser.Text = cbType.Text == StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop ? "[Domain\\] username" : "Username";
             tbName_TextChanged(this, e);
         }
 
@@ -708,11 +705,11 @@ namespace AutoPuTTY
         /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_SYSCOMMAND)
+            if (m.Msg == WmSysCommand)
             {
                 switch (m.WParam.ToInt32())
                 {
-                    case IDM_ABOUT:
+                    case IdmAbout:
                         popupAbout aboutpopup = new popupAbout();
                         aboutpopup.ShowDialog(this);
                         return;

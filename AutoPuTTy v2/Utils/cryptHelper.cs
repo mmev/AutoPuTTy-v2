@@ -22,10 +22,10 @@ namespace AutoPuTTY.Utils
             MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             byte[] keyArray = md5CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(Settings.Default.cryptkey));
 
-            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider();
-            cryptoServiceProvider.Key = keyArray;
-            cryptoServiceProvider.Mode = CipherMode.ECB;
-            cryptoServiceProvider.Padding = PaddingMode.PKCS7;
+            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider
+            {
+                Key = keyArray, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7
+            };
 
             ICryptoTransform cTransform = cryptoServiceProvider.CreateEncryptor();
             byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
@@ -50,10 +50,10 @@ namespace AutoPuTTY.Utils
             MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             byte[] keyArray = md5CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(key));
 
-            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider();
-            cryptoServiceProvider.Key = keyArray;
-            cryptoServiceProvider.Mode = CipherMode.ECB;
-            cryptoServiceProvider.Padding = PaddingMode.PKCS7;
+            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider
+            {
+                Key = keyArray, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7
+            };
 
             ICryptoTransform cTransform = cryptoServiceProvider.CreateEncryptor();
             byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
@@ -77,10 +77,10 @@ namespace AutoPuTTY.Utils
             MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             byte[] keyArray = md5CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(Settings.Default.cryptkey));
 
-            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider();
-            cryptoServiceProvider.Key = keyArray;
-            cryptoServiceProvider.Mode = CipherMode.ECB;
-            cryptoServiceProvider.Padding = PaddingMode.PKCS7;
+            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider
+            {
+                Key = keyArray, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7
+            };
 
             ICryptoTransform cTransform = cryptoServiceProvider.CreateDecryptor();
             byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
@@ -105,10 +105,10 @@ namespace AutoPuTTY.Utils
             MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
             byte[] keyArray = md5CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(key));
 
-            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider();
-            cryptoServiceProvider.Key = keyArray;
-            cryptoServiceProvider.Mode = CipherMode.ECB;
-            cryptoServiceProvider.Padding = PaddingMode.PKCS7;
+            TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider
+            {
+                Key = keyArray, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7
+            };
 
             ICryptoTransform cTransform = cryptoServiceProvider.CreateDecryptor();
             byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
@@ -137,30 +137,24 @@ namespace AutoPuTTY.Utils
             rawKey[7] = 7;
             // revert it
             rawKey = FixDESBug(rawKey);
-            byte[] Passwd_Bytes = new byte[8];
-            if (passwd.Length >= 8)
-            {
-                Encoding.ASCII.GetBytes(passwd, 0, 8, Passwd_Bytes, 0);
-            }
-            else
-            {
-                Encoding.ASCII.GetBytes(passwd, 0, passwd.Length, Passwd_Bytes, 0);
-            }
+            byte[] passwdBytes = new byte[8];
+            Encoding.ASCII.GetBytes(passwd, 0, passwd.Length >= 8 ? 8 : passwd.Length, passwdBytes, 0);
 
             // VNC uses DES, not 3DES as written in some documentation
             DES des = new DESCryptoServiceProvider();
             des.Padding = PaddingMode.None;
             des.Mode = CipherMode.ECB;
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             ICryptoTransform enc = des.CreateEncryptor(rawKey, null);
 
-            byte[] passwd_enc = new byte[8];
-            enc.TransformBlock(Passwd_Bytes, 0, Passwd_Bytes.Length, passwd_enc, 0);
+            byte[] passwdEnc = new byte[8];
+            enc.TransformBlock(passwdBytes, 0, passwdBytes.Length, passwdEnc, 0);
             string ret = "";
 
             for (int i = 0; i < 8; i++)
             {
-                ret += passwd_enc[i].ToString("x2");
+                ret += passwdEnc[i].ToString("x2");
             }
             return ret;
         }
@@ -199,27 +193,27 @@ namespace AutoPuTTY.Utils
 
         #region DPAPI Crypt
 
-        private const int CRYPTPROTECT_UI_FORBIDDEN = 0x1;
-        private static readonly IntPtr NullPtr = ((IntPtr)((int)(0)));
+        private const int CryptprotectUiForbidden = 0x1;
+        private static readonly IntPtr nullPtr = ((IntPtr)(0));
 
         [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern bool CryptProtectData(
-        ref DATA_BLOB pPlainText,
+        ref dataBlob pPlainText,
         [MarshalAs(UnmanagedType.LPWStr)]string szDescription,
         IntPtr pEntroy,
         IntPtr pReserved,
         IntPtr pPrompt,
         int dwFlags,
-        ref DATA_BLOB pCipherText);
+        ref dataBlob pCipherText);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct DATA_BLOB
+        internal struct dataBlob
         {
             public int cbData;
             public IntPtr pbData;
         }
 
-        private static void InitBLOB(byte[] data, ref DATA_BLOB blob)
+        private static void InitBLOB(byte[] data, ref dataBlob blob)
         {
             blob.pbData = Marshal.AllocHGlobal(data.Length);
             if (blob.pbData == IntPtr.Zero) throw new Exception("Unable to allocate buffer for BLOB data.");
@@ -231,8 +225,8 @@ namespace AutoPuTTY.Utils
         public static string encryptpw(string pw)
         {
             byte[] pwba = Encoding.Unicode.GetBytes(pw);
-            DATA_BLOB dataIn = new DATA_BLOB();
-            DATA_BLOB dataOut = new DATA_BLOB();
+            dataBlob dataIn = new dataBlob();
+            dataBlob dataOut = new dataBlob();
             StringBuilder epwsb = new StringBuilder();
             try
             {
@@ -248,10 +242,10 @@ namespace AutoPuTTY.Utils
                 bool success = CryptProtectData(
                 ref dataIn,
                 "psw",
-                NullPtr,
-                NullPtr,
-                NullPtr,
-                CRYPTPROTECT_UI_FORBIDDEN,
+                nullPtr,
+                nullPtr,
+                nullPtr,
+                CryptprotectUiForbidden,
                 ref dataOut);
 
                 if (!success)

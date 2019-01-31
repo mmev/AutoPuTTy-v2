@@ -1,4 +1,4 @@
-﻿namespace AutoPuTTY.Utils.Datas
+﻿namespace AutoPuTTY.Utils.Data
 {
     public enum ConnectionType
     {

@@ -1,22 +1,17 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using AutoPuTTY.Utils;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms.Popups
 {
     public partial class popupPassword : Form
     {
-        //TODO: Переделать вход по паролю, добавить Secure
-
         #region Conts Init
 
         public bool auth;
         public string cpassword = "";
-        private readonly string password = "";
+        private readonly string password;
         private int i;
-
-        readonly formMain mainform = new formMain(false);
 
         #endregion
 

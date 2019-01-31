@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms.Popups
 {
     public partial class popupRecrypt : Form
     {

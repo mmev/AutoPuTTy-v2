@@ -1,8 +1,6 @@
-using System;
-using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms.Popups
 {
     public partial class popupAbout : Form
     {

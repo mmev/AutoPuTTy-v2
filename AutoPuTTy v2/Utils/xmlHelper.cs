@@ -1,9 +1,9 @@
 ﻿using AutoPuTTY.Properties;
-using AutoPuTTY.Utils.Datas;
 using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+using AutoPuTTY.Utils.Data;
 
 namespace AutoPuTTY.Utils
 {
@@ -282,7 +282,7 @@ namespace AutoPuTTY.Utils
                 newGroup.AppendChild(host);
             }
 
-            if (xmlDocument.DocumentElement != null) xmlDocument.DocumentElement.InsertAfter(newGroup, xmlDocument.DocumentElement.LastChild);
+            xmlDocument.DocumentElement?.InsertAfter(newGroup, xmlDocument.DocumentElement.LastChild);
 
             try
             {
@@ -353,8 +353,7 @@ namespace AutoPuTTY.Utils
             XmlNodeList groupNodes = xmlDocument.SelectNodes("//*[@GroupName='" + groupName + "']");
 
             if (groupNodes != null && groupNodes.Count > 0)
-                if (xmlDocument.DocumentElement != null)
-                    xmlDocument.DocumentElement.RemoveChild(groupNodes[0]);
+                xmlDocument.DocumentElement?.RemoveChild(groupNodes[0]);
 
             try
             {
@@ -483,7 +482,7 @@ namespace AutoPuTTY.Utils
                 newServer.AppendChild(host);
             }
 
-            xmlGroup.AppendChild(newServer);
+            xmlGroup?.AppendChild(newServer);
 
             try
             {
@@ -508,52 +507,54 @@ namespace AutoPuTTY.Utils
 
             XmlNode xmlGroup = xmlDocument.SelectSingleNode("//*[@GroupName='" + groupName + "']");
 
-            foreach (XmlElement xmlElement in xmlGroup)
-            {
-                switch (xmlElement.Name)
+            if (xmlGroup != null)
+                foreach (XmlElement xmlElement in xmlGroup)
                 {
-                    case "Server":
-                        string foundedServerName = xmlElement.GetAttribute("Name");
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
+                            string foundedServerName = xmlElement.GetAttribute("Name");
 
-                        if (!foundedServerName.Equals(serverName)) continue;
+                            if (!foundedServerName.Equals(serverName)) continue;
 
-                        string serverHost = "";
-                        string serverPort = "";
-                        string serverUsername = "";
-                        string serverPassword = "";
-                        string serverType = "";
+                            string serverHost = "";
+                            string serverPort = "";
+                            string serverUsername = "";
+                            string serverPassword = "";
+                            string serverType = "";
 
-                        foreach (XmlElement serverElements in xmlElement.ChildNodes)
-                        {
-                            switch (serverElements.Name)
+                            foreach (XmlElement serverElements in xmlElement.ChildNodes)
                             {
-                                case "Host":
-                                    serverHost = CryptHelper.Decrypt(serverElements.InnerText);
-                                    break;
+                                switch (serverElements.Name)
+                                {
+                                    case "Host":
+                                        serverHost = CryptHelper.Decrypt(serverElements.InnerText);
+                                        break;
 
-                                case "Port":
-                                    serverPort = CryptHelper.Decrypt(serverElements.InnerText);
-                                    break;
+                                    case "Port":
+                                        serverPort = CryptHelper.Decrypt(serverElements.InnerText);
+                                        break;
 
-                                case "Username":
-                                    serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
-                                    break;
+                                    case "Username":
+                                        serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
+                                        break;
 
-                                case "Password":
-                                    serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
-                                    break;
+                                    case "Password":
+                                        serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
+                                        break;
 
-                                case "Type":
-                                    serverType = CryptHelper.Decrypt(serverElements.InnerText);
-                                    break;
+                                    case "Type":
+                                        serverType = CryptHelper.Decrypt(serverElements.InnerText);
+                                        break;
+                                }
                             }
-                        }
 
-                        ServerElement currentServer = new ServerElement(foundedServerName, serverHost, serverPort, serverUsername, serverPassword, serverType);
+                            ServerElement currentServer = new ServerElement(foundedServerName, serverHost, serverPort,
+                                serverUsername, serverPassword, serverType);
 
-                        return currentServer;
+                            return currentServer;
+                    }
                 }
-            }
 
             //TODO: Fix return null
             return null;
@@ -571,19 +572,20 @@ namespace AutoPuTTY.Utils
 
             XmlNode xmlGroup = xmlDocument.SelectSingleNode("//*[@GroupName='" + groupName + "']");
 
-            foreach (XmlElement xmlElement in xmlGroup)
-            {
-                switch (xmlElement.Name)
+            if (xmlGroup != null)
+                foreach (XmlElement xmlElement in xmlGroup)
                 {
-                    case "Server":
-                        string foundedServerName = xmlElement.GetAttribute("Name");
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
+                            string foundedServerName = xmlElement.GetAttribute("Name");
 
-                        if (!foundedServerName.Equals(serverName)) continue;
+                            if (!foundedServerName.Equals(serverName)) continue;
 
-                        xmlGroup.RemoveChild(xmlElement);
-                        break;
+                            xmlGroup.RemoveChild(xmlElement);
+                            break;
+                    }
                 }
-            }
 
             try
             {
@@ -608,55 +610,58 @@ namespace AutoPuTTY.Utils
 
             XmlNode xmlGroup = xmldoc.SelectSingleNode("//*[@GroupName='" + groupName + "']");
 
-            foreach (XmlElement xmlElement in xmlGroup)
-            {
-                switch (xmlElement.Name)
+            if (xmlGroup != null)
+                foreach (XmlElement xmlElement in xmlGroup)
                 {
-                    case "Server":
-                        string foundedServerName = xmlElement.GetAttribute("Name");
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
+                            string foundedServerName = xmlElement.GetAttribute("Name");
 
-                        if (!foundedServerName.Equals(oldServerName)) continue;
+                            if (!foundedServerName.Equals(oldServerName)) continue;
 
-                        xmlElement.Attributes["Name"].Value = serverElement.Name;
+                            xmlElement.Attributes["Name"].Value = serverElement.Name;
 
-                        foreach (XmlElement subElements in xmlElement.ChildNodes)
-                        {
-                            switch (subElements.Name)
+                            foreach (XmlElement subElements in xmlElement.ChildNodes)
                             {
-                                case "Host":
-                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Host);
-                                    break;
+                                switch (subElements.Name)
+                                {
+                                    case "Host":
+                                        subElements.InnerText = CryptHelper.Encrypt(serverElement.Host);
+                                        break;
 
-                                case "Port":
-                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Port);
-                                    break;
+                                    case "Port":
+                                        subElements.InnerText = CryptHelper.Encrypt(serverElement.Port);
+                                        break;
 
-                                case "Username":
-                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Username);
-                                    break;
+                                    case "Username":
+                                        subElements.InnerText = CryptHelper.Encrypt(serverElement.Username);
+                                        break;
 
-                                case "Password":
-                                    subElements.InnerText = CryptHelper.Encrypt(serverElement.Password);
-                                    break;
+                                    case "Password":
+                                        subElements.InnerText = CryptHelper.Encrypt(serverElement.Password);
+                                        break;
 
-                                case "Type":
-                                    subElements.InnerText = CryptHelper.Encrypt(((int)serverElement.Type).ToString());
-                                    break;
+                                    case "Type":
+                                        subElements.InnerText =
+                                            CryptHelper.Encrypt(((int) serverElement.Type).ToString());
+                                        break;
+                                }
                             }
-                        }
 
-                        break;
-                }
+                            break;
+                    }
 
-                try
-                {
-                    xmldoc.Save(Settings.Default.cfgpath);
+                    try
+                    {
+                        xmldoc.Save(Settings.Default.cfgpath);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        OtherHelper.Error(
+                            "Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+                    }
                 }
-                catch (UnauthorizedAccessException)
-                {
-                    OtherHelper.Error("Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
-                }
-            }
         }
 
         /// <summary>

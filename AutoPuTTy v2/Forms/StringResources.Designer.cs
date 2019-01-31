@@ -78,5 +78,23 @@ namespace AutoPuTTY.Forms {
                 return ResourceManager.GetString("connectionHelper_Warning", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Remote Desktop.
+        /// </summary>
+        internal static string formMain_cbType_SelectedIndexChanged_Remote_Desktop {
+            get {
+                return ResourceManager.GetString("formMain_cbType_SelectedIndexChanged_Remote_Desktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Import list.
+        /// </summary>
+        internal static string formOptions_liGImport_LinkClicked_Import_list {
+            get {
+                return ResourceManager.GetString("formOptions_liGImport_LinkClicked_Import_list", resourceCulture);
+            }
+        }
     }
 }

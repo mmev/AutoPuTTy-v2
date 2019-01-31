@@ -1,4 +1,4 @@
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms.Popups
 {
     partial class popupPassword
     {

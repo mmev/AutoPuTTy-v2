@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 using System.Windows.Forms;
+using AutoPuTTY.Forms;
 using AutoPuTTY.Properties;
-using AutoPuTTY.Utils.Datas;
+using AutoPuTTY.Utils.Data;
 
 namespace AutoPuTTY.Utils
 {

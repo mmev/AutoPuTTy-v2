@@ -1,6 +1,6 @@
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms
 {
-    partial class formMain
+    sealed partial class formMain
     {
         /// <summary>
         /// Required designer variable.

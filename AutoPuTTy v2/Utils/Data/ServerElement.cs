@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AutoPuTTY.Utils.Datas
+namespace AutoPuTTY.Utils.Data
 {
     class ServerElement
     {

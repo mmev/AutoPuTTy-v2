@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using AutoPuTTY.Forms.Popups;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils;
-using AutoPuTTY.Utils.Datas;
+using AutoPuTTY.Utils.Data;
 
-namespace AutoPuTTY
+namespace AutoPuTTY.Forms
 {
     public partial class formOptions : Form
     {
@@ -18,7 +17,7 @@ namespace AutoPuTTY
         private readonly formMain MainForm;
         private popupImport ImportPopup;
         private popupRecrypt ReCryptPopup;
-        private readonly bool FirstRead = true;
+        private readonly bool FirstRead;
         public bool ImportEmpty;
 
         public readonly object locker = new object();
@@ -86,7 +85,6 @@ namespace AutoPuTTY
         /// When user try connect SSH and PuTTy client not found
         /// this method launch event click select path and retry connect
         /// </summary>
-        /// <param name="type">connection type</param>
         public void bPuTTYPath_Click()
         {
             bPuTTYPath_Click(new object(), new EventArgs());
@@ -107,17 +105,14 @@ namespace AutoPuTTY
             };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
-            {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
-                tbPuTTYPath.Text = browseFile.FileName;
-            }
+                    tbPuTTYPath.Text = browseFile.FileName;
         }
 
         /// <summary>
         /// When user try connect RDP and rdp client not found
         /// this method launch event click select path and retry connect
         /// </summary>
-        /// <param name="type">connection type</param>
         public void bRDPath_Click()
         {
             bRDPath_Click(new object(), new EventArgs());
@@ -138,17 +133,14 @@ namespace AutoPuTTY
             };
 
             if (browseFile.ShowDialog() == DialogResult.OK)
-            {
                 if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
-                tbRDPath.Text = browseFile.FileName;
-            }
+                    tbRDPath.Text = browseFile.FileName;
         }
 
         /// <summary>
         /// When user try connect VNC and vnc client not found
         /// this method launch event click select path and retry connect
         /// </summary>
-        /// <param name="type">connection type</param>
         public void bVNCPath_Click()
         {
             bVNCPath_Click(new object(), new EventArgs());
@@ -199,7 +191,6 @@ namespace AutoPuTTY
         /// When user try connect with WinSCP and client not found
         /// this method launch event click select path and retry connect
         /// </summary>
-        /// <param name="type">connection type</param>
         public void bWSCPPath_Click()
         {
             bWSCPPath_Click(new object(), new EventArgs());
@@ -616,7 +607,7 @@ namespace AutoPuTTY
 
         private void liGImport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show(Resources.formOptions_liGImport_LinkClicked_, "Import list");
+            MessageBox.Show(Resources.formOptions_liGImport_LinkClicked_, StringResources.formOptions_liGImport_LinkClicked_Import_list);
         }
 
         private void bwProgress_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -665,12 +656,6 @@ namespace AutoPuTTY
             }
         }
 
-        private void slMulti_Scroll(object sender, EventArgs e)
-        {
-            if (!FirstRead) MainForm.XmlHelper.configSet("multicolumnwidth", Settings.Default.multicolumnwidth.ToString());
-            //MainForm.lbList.ColumnWidth = Settings.Default.multicolumnwidth * 10;
-        }
-
         #endregion
 
         #region Methods
@@ -688,182 +673,170 @@ namespace AutoPuTTY
 
             XmlNodeList xmlGroup = xmldoc.SelectNodes("//*[@GroupName]");
 
-            foreach (XmlElement currentGroup in xmlGroup)
-            {
-                count++;
-
-                string serverType = "";
-                foreach (XmlElement xmlElement in currentGroup.ChildNodes)
+            if (xmlGroup != null)
+                foreach (XmlElement currentGroup in xmlGroup)
                 {
-                    switch (xmlElement.Name)
+                    count++;
+
+                    foreach (XmlElement xmlElement in currentGroup.ChildNodes)
                     {
-                        case "Server":
+                        switch (xmlElement.Name)
+                        {
+                            case "Server":
 
-                            count++;
+                                count++;
 
-                            string serverHost;
-                            string serverPort;
-                            string serverUsername;
-                            string serverPassword;
+                                string serverHost;
+                                string serverPort;
+                                string serverUsername;
+                                string serverPassword;
 
-                            foreach (XmlElement serverElements in xmlElement.ChildNodes)
-                            {
-
-                                switch (serverElements.Name)
+                                foreach (XmlElement serverElements in xmlElement.ChildNodes)
                                 {
+                                    switch (serverElements.Name)
+                                    {
+                                        case "Host":
+                                            serverHost = CryptHelper.Decrypt(serverElements.InnerText);
+                                            serverElements.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
+                                            break;
 
-                                    case "Host":
-                                        serverHost = CryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
-                                        break;
+                                        case "Port":
+                                            serverPort = CryptHelper.Decrypt(serverElements.InnerText);
+                                            serverElements.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
+                                            break;
 
-                                    case "Port":
-                                        serverPort = CryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
-                                        break;
+                                        case "Username":
+                                            serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
+                                            serverElements.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
+                                            break;
 
-                                    case "Username":
-                                        serverUsername = CryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
-                                        break;
+                                        case "Password":
+                                            serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
+                                            serverElements.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
+                                            break;
 
-                                    case "Password":
-                                        serverPassword = CryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
-                                        break;
+                                        case "Type":
+                                            var serverType = CryptHelper.Decrypt(serverElements.InnerText);
+                                            serverElements.InnerText = CryptHelper.Encrypt(serverType, newPassword);
+                                            break;
+                                    }
 
-                                    case "Type":
-                                        serverType = CryptHelper.Decrypt(serverElements.InnerText);
-                                        serverElements.InnerText = CryptHelper.Encrypt(serverType, newPassword);
-                                        break;
+                                    string[] progressArgs = new string[]
+                                        {"recrypt", count + " / " + MainForm.tView.GetNodeCount(true)};
+                                    bwProgress.ReportProgress(
+                                        count / MainForm.tView.GetNodeCount(true) * 100,
+                                        progressArgs);
                                 }
 
-                                string[] progressArgs = new string[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
-                                bwProgress.ReportProgress(((int)((double)count / (double)MainForm.tView.GetNodeCount(true) * 100)), progressArgs);
-                            }
+                                break;
+                            case "DefaultHost":
+                                serverHost = CryptHelper.Decrypt(xmlElement.InnerText);
+                                xmlElement.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
+                                break;
 
-                            break;
-                        case "DefaultHost":
-                            serverHost = CryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = CryptHelper.Encrypt(serverHost, newPassword);
-                            break;
+                            case "DefaultPort":
+                                serverPort = CryptHelper.Decrypt(xmlElement.InnerText);
+                                xmlElement.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
+                                break;
 
-                        case "DefaultPort":
-                            serverPort = CryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = CryptHelper.Encrypt(serverPort, newPassword);
-                            break;
+                            case "DefaultUsername":
+                                serverUsername = CryptHelper.Decrypt(xmlElement.InnerText);
+                                xmlElement.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
+                                break;
 
-                        case "DefaultUsername":
-                            serverUsername = CryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = CryptHelper.Encrypt(serverUsername, newPassword);
-                            break;
-
-                        case "DefaultPassword":
-                            serverPassword = CryptHelper.Decrypt(xmlElement.InnerText);
-                            xmlElement.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
-                            break;
+                            case "DefaultPassword":
+                                serverPassword = CryptHelper.Decrypt(xmlElement.InnerText);
+                                xmlElement.InnerText = CryptHelper.Encrypt(serverPassword, newPassword);
+                                break;
+                        }
                     }
-
-                    
                 }
-            }
 
-            var args = new string[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
-            bwProgress.ReportProgress(((int)((double)count / (double)MainForm.tView.GetNodeCount(true) * 100)), args);
+            var args = new[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
+            bwProgress.ReportProgress(((count / MainForm.tView.GetNodeCount(true) * 100)), args);
 
             xmldoc.Save(Settings.Default.cfgpath);
         }
 
         private void ImportList(string importFilePath)
         {
-            ImportEmpty = false;
             string line;
-            int c_add = 0;
-            int c_replace = 0;
-            int c_skip = 0;
-            int c_total = 0;
+            int cAdd = 0;
+            int cReplace = 0;
+            int cSkip = 0;
+            int cTotal = 0;
 
             ArrayList importDatas = new ArrayList();
             StreamReader stream = new StreamReader(importFilePath);
             while ((line = stream.ReadLine()) != null) importDatas.Add(line.Trim());
             stream.Close();
 
-            string[] args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
-            bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
+            string[] args = new string[] { "import", cTotal + " / " + importDatas.Count, cAdd.ToString(), cReplace.ToString(), cSkip.ToString() };
+            bwProgress.ReportProgress(((cTotal / importDatas.Count * 100)), args);
 
             for (int i = 0; i < importDatas.Count; i++)
             {
-                c_total++;
+                cTotal++;
 
                 string[] currentImportData = importDatas[i].ToString().Split('	');
 
+                string serverName = currentImportData[1].Trim();
+                string serverPort = "";
                 if (currentImportData.Length > 1)
                 {
                     ImportReplace = "";
-                    string _groupName = currentImportData[0].Trim();
-                    string _serverName = currentImportData[1].Trim();
-                    string _serverHost = "";
-                    string _serverPort = "";
-                    string _serverUser = "";
-                    string _serverPass = "";
-                    string _serverType = "";
+                    string groupName = currentImportData[0].Trim();
+                    string serverHost = "";
+                    string serverUser = "";
+                    string serverPass = "";
+                    string serverType = "";
 
 
-                    if (currentImportData.Length > 2) _serverHost = currentImportData[2].Trim();
-                    if (currentImportData.Length > 3) _serverUser = currentImportData[3].Trim();
-                    if (currentImportData.Length > 4) _serverUser = currentImportData[4].Trim();
-                    if (currentImportData.Length > 5) _serverPass = currentImportData[5].Trim();
-                    if (currentImportData.Length > 6) _serverType = currentImportData[6].Trim();
+                    if (currentImportData.Length > 2) serverHost = currentImportData[2].Trim();
+                    if (currentImportData.Length > 3) serverPort = currentImportData[3].Trim();
+                    if (currentImportData.Length > 4) serverUser = currentImportData[4].Trim();
+                    if (currentImportData.Length > 5) serverPass = currentImportData[5].Trim();
+                    if (currentImportData.Length > 6) serverType = currentImportData[6].Trim();
 
                     //Create group if not exist
-                    GroupElement groupNodes = MainForm.XmlHelper.getGroupDefaultInfo(_groupName);
+                    GroupElement groupNodes = MainForm.XmlHelper.getGroupDefaultInfo(groupName);
 
                     if (groupNodes == null)
-                        MainForm.XmlHelper.createGroup(_groupName, "", "", "", "");
+                        MainForm.XmlHelper.createGroup(groupName, "", "", "", "");
 
-                    if (MainForm.XmlHelper.serverExist(_groupName, _serverName))
+                    if (MainForm.XmlHelper.serverExist(groupName, serverName))
                     {
 
                         if (cbGSkip.Checked)
-                        {
-                            c_skip++;
-                        }
+                            cSkip++;
 
                         if (cbGReplace.Checked)
                         {
                             MainForm.XmlHelper.modifyServer(
-                                _groupName, _serverName, new ServerElement(
-                                    _serverName, _serverHost, _serverPort, _serverUser, _serverPass, _serverType));
+                                groupName, serverName, new ServerElement(
+                                    serverName, serverHost, serverPort, serverUser, serverPass, serverType));
 
-                            c_replace++;
+                            cReplace++;
                         }
 
 
-                        args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
-                        bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
+                        args = new[] { "import", cTotal + " / " + importDatas.Count, cAdd.ToString(), cReplace.ToString(), cSkip.ToString() };
+                        bwProgress.ReportProgress(((cTotal / importDatas.Count * 100)), args);
 
-                        continue;;
+                        continue;
                     }
 
-                    MainForm.XmlHelper.addServer(_groupName, _serverName, _serverHost, _serverPort, _serverUser,
-                        _serverPass, _serverType);
+                    MainForm.XmlHelper.addServer(groupName, serverName, serverHost, serverPort, serverUser,
+                        serverPass, serverType);
 
-                    c_add++;
+                    cAdd++;
                 }
-                args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
-                bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
+                args = new[] { "import", cTotal + " / " + importDatas.Count, cAdd.ToString(), cReplace.ToString(), cSkip.ToString() };
+                bwProgress.ReportProgress(((cTotal / importDatas.Count * 100)), args);
 
             }
-            //if ((c_add + c_replace + c_skip) < 1) ImportEmpty = true;
-            MainForm.updateTreeView();
-        }
 
-        public bool ImportAskDuplicate(string n)
-        {
-            ImportPopup.ToggleDuplicateWarning(true, "Duplicate found: " + n);
-            lock (locker) while (ImportReplace == "") Monitor.Wait(locker);
-            if (ImportReplace == "replace") return true;
-            return false;
+            MainForm.updateTreeView();
         }
 
         #endregion

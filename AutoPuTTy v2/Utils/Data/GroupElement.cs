@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace AutoPuTTY.Utils.Datas
+namespace AutoPuTTY.Utils.Data
 {
     class GroupElement
     {

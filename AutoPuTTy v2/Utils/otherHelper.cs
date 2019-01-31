@@ -68,8 +68,7 @@ namespace AutoPuTTY.Utils
         {
             Bitmap bmp = new Bitmap(image.Width, image.Height);
             Graphics gfx = Graphics.FromImage(bmp);
-            ColorMatrix cmx = new ColorMatrix();
-            cmx.Matrix33 = opacity;
+            ColorMatrix cmx = new ColorMatrix {Matrix33 = opacity};
 
             ImageAttributes ia = new ImageAttributes();
             ia.SetColorMatrix(cmx, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
