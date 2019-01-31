@@ -748,27 +748,30 @@ namespace AutoPuTTY
         /// <summary>
         /// Clear Tree View and read xml config after add groups and servers
         /// </summary>
-        private void updateTreeView()
+        public void updateTreeView()
         {
-            tView.Nodes.Clear();
-
-            groupList = xmlHelper.getAllData();
-
-            foreach (GroupElement group in groupList)
+            BeginInvoke(new MethodInvoker(delegate
             {
-                string currentGroupName = group.groupName;
-                TreeNode groupNode = tView.Nodes.Add(currentGroupName);
+                tView.Nodes.Clear();
 
-                if (group.servers.Count > 0)
+                groupList = xmlHelper.getAllData();
+
+                foreach (GroupElement group in groupList)
                 {
-                    foreach (ServerElement server in group.servers)
-                    {
-                        string currentServerName = server.Name;
-                        groupNode.Nodes.Add(currentServerName);
-                    }
+                    string currentGroupName = group.groupName;
+                    TreeNode groupNode = tView.Nodes.Add(currentGroupName);
 
+                    if (group.servers.Count > 0)
+                    {
+                        foreach (ServerElement server in group.servers)
+                        {
+                            string currentServerName = server.Name;
+                            groupNode.Nodes.Add(currentServerName);
+                        }
+
+                    }
                 }
-            }
+            }));
         }
 
         /// <summary>

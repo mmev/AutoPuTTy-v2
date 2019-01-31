@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils;
+using AutoPuTTY.Utils.Datas;
 
 namespace AutoPuTTY
 {
@@ -321,10 +322,7 @@ namespace AutoPuTTY
                 Filter = Resources.formOptions_bGImport_Click_TXT_File____txt____txt
             };
 
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                tbPuTTYExecute.Text = browseFile.FileName;
-            }
+            tbPuTTYExecute.Text = browseFile.ShowDialog() == DialogResult.OK ? browseFile.FileName : "";
         }
 
         /// <summary>
@@ -341,10 +339,7 @@ namespace AutoPuTTY
                     .formOptions_bWSCPKey_Click_PuTTY_private_key_files____ppk____ppk_All_files__________
             };
 
-            if (browseFile.ShowDialog() == DialogResult.OK)
-            {
-                tbPuTTYKey.Text = browseFile.FileName;
-            }
+            tbPuTTYKey.Text = browseFile.ShowDialog() == DialogResult.OK ? browseFile.FileName : "";
         }
 
         /// <summary>
@@ -357,10 +352,7 @@ namespace AutoPuTTY
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog {Description = Resources.formOptions_bRDKeep_Click_Select__rdp_files_path};
             DialogResult result = folderBrowserDialog.ShowDialog();
 
-            if (result == DialogResult.OK)
-            {
-                tbRDKeep.Text = folderBrowserDialog.SelectedPath;
-            }
+            tbRDKeep.Text = result == DialogResult.OK ? folderBrowserDialog.SelectedPath : "";
         }
 
         #endregion
@@ -782,7 +774,7 @@ namespace AutoPuTTY
             xmldoc.Save(Settings.Default.cfgpath);
         }
 
-        private void ImportList(string f)
+        private void ImportList(string importFilePath)
         {
             ImportEmpty = false;
             string line;
@@ -791,114 +783,54 @@ namespace AutoPuTTY
             int c_skip = 0;
             int c_total = 0;
 
-            // Read the import file line by line.
-
-            ArrayList lines = new ArrayList();
-            StreamReader stream = new StreamReader(f);
-            while ((line = stream.ReadLine()) != null) lines.Add(line.Trim());
+            ArrayList importDatas = new ArrayList();
+            StreamReader stream = new StreamReader(importFilePath);
+            while ((line = stream.ReadLine()) != null) importDatas.Add(line.Trim());
             stream.Close();
 
-            string file = Settings.Default.cfgpath;
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.Load(file);
+            string[] args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
+            bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
 
-            string[] args = new string[] { "import", c_total + " / " + lines.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
-            bwProgress.ReportProgress(((int)((double)c_total / (double)lines.Count * 100)), args);
-
-            for (int i = 0; i < lines.Count; i++)
+            for (int i = 0; i < importDatas.Count; i++)
             {
-                //cancel = bwProgress.CancellationPending;
-                //if (cancel) break;
                 c_total++;
-                line = lines[i].ToString();
 
-                ArrayList listarray = new ArrayList();
-                string[] split = line.Split('	');
+                string[] currentImportData = importDatas[i].ToString().Split('	');
 
-                foreach (string arg in split) listarray.Add(arg.Trim());
-
-                if (listarray.Count > 1)
+                if (currentImportData.Length > 1)
                 {
                     ImportReplace = "";
-                    string _name = split[0].Trim();
-                    string _host = split[1].Trim();
-                    string _user = "";
-                    string _pass = "";
-                    int _type = 0;
+                    string _groupName = currentImportData[0].Trim();
+                    string _serverName = currentImportData[1].Trim();
+                    string _serverHost = "";
+                    string _serverPort = "";
+                    string _serverUser = "";
+                    string _serverPass = "";
+                    string _serverType = "";
 
-                    if (listarray.Count > 2) _user = split[2];
-                    if (listarray.Count > 3) _pass = split[3];
-                    if (listarray.Count > 4) Int32.TryParse(split[4], out _type);
 
-                    XmlElement newserver = xmldoc.CreateElement("Server");
-                    XmlAttribute name = xmldoc.CreateAttribute("Name");
-                    name.Value = _name;
-                    newserver.SetAttributeNode(name);
+                    if (currentImportData.Length > 2) _serverHost = currentImportData[2].Trim();
+                    if (currentImportData.Length > 3) _serverUser = currentImportData[3].Trim();
+                    if (currentImportData.Length > 4) _serverUser = currentImportData[4].Trim();
+                    if (currentImportData.Length > 5) _serverPass = currentImportData[5].Trim();
+                    if (currentImportData.Length > 6) _serverType = currentImportData[6].Trim();
 
-                    if (_host != "")
-                    {
-                        XmlElement host = xmldoc.CreateElement("Host");
-                        host.InnerText = CryptHelper.Encrypt(_host);
-                        newserver.AppendChild(host);
-                    }
-                    if (_user != "")
-                    {
-                        XmlElement user = xmldoc.CreateElement("User");
-                        user.InnerText = CryptHelper.Encrypt(_user);
-                        newserver.AppendChild(user);
-                    }
-                    if (_pass != "")
-                    {
-                        XmlElement pass = xmldoc.CreateElement("Password");
-                        pass.InnerText = CryptHelper.Encrypt(_pass);
-                        newserver.AppendChild(pass);
-                    }
-                    if (_type > 0)
-                    {
-                        XmlElement type = xmldoc.CreateElement("Type");
-                        type.InnerText = _type.ToString();
-                        newserver.AppendChild(type);
-                    }
+                    //Create group if not exist
+                    GroupElement groupNodes = MainForm.XmlHelper.getGroupDefaultInfo(_groupName);
 
-                    if (MainForm.tView.Nodes.Find(_name, true) != null) //duplicate
-                    {
-                        if (cbGSkip.Checked) //skip
-                        {
-                            c_skip++;
-                        }
-                        else //replace
-                        {
-                            if (cbGReplace.Checked || (!cbGReplace.Checked && ImportAskDuplicate(_name)))
-                            {
-                                XmlNodeList xmlnode = xmldoc.SelectNodes("//*[@Name=" + MainForm.XmlHelper.parseXpathString(_name) + "]");
-                                if (xmldoc.DocumentElement != null)
-                                {
-                                    if (xmlnode != null) xmldoc.DocumentElement.ReplaceChild(newserver, xmlnode[0]);
-                                }
-                                //if (MainForm.lbList.InvokeRequired) Invoke(new MethodInvoker(delegate
-                                //{
-                                //    MainForm.lbList.Items.Remove(_name);
-                                //    MainForm.lbList.Items.Add(_name);
-                                //}));
-                                //else
-                                //{
-                                //    MainForm.lbList.Items.Remove(_name);
-                                //    MainForm.lbList.Items.Add(_name);
-                                //}
-                                c_replace++;
-                            }
-                            else //cancel or skip
-                            {
-                                c_total--;
-                            }
-                        }
-                    }
+                    if (groupNodes == null)
+                        MainForm.XmlHelper.createGroup(_groupName, "", "", "", "");
+
+                    MainForm.XmlHelper.addServer(_groupName, _serverName, _serverHost, _serverPort, _serverUser,
+                            _serverPass, _serverType);
+                    c_add++;
                 }
-                args = new string[] { "import", c_total + " / " + lines.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
-                bwProgress.ReportProgress(((int)((double)c_total / (double)lines.Count * 100)), args);
+
+                args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
+                bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
             }
-            xmldoc.Save(file);
-            if ((c_add + c_replace + c_skip) < 1) ImportEmpty = true;
+            //if ((c_add + c_replace + c_skip) < 1) ImportEmpty = true;
+            MainForm.updateTreeView();
         }
 
         public bool ImportAskDuplicate(string n)
