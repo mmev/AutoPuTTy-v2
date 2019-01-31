@@ -821,13 +821,38 @@ namespace AutoPuTTY
                     if (groupNodes == null)
                         MainForm.XmlHelper.createGroup(_groupName, "", "", "", "");
 
+                    if (MainForm.XmlHelper.serverExist(_groupName, _serverName))
+                    {
+
+                        if (cbGSkip.Checked)
+                        {
+                            c_skip++;
+                        }
+
+                        if (cbGReplace.Checked)
+                        {
+                            MainForm.XmlHelper.modifyServer(
+                                _groupName, _serverName, new ServerElement(
+                                    _serverName, _serverHost, _serverPort, _serverUser, _serverPass, _serverType));
+
+                            c_replace++;
+                        }
+
+
+                        args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
+                        bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
+
+                        continue;;
+                    }
+
                     MainForm.XmlHelper.addServer(_groupName, _serverName, _serverHost, _serverPort, _serverUser,
-                            _serverPass, _serverType);
+                        _serverPass, _serverType);
+
                     c_add++;
                 }
-
                 args = new string[] { "import", c_total + " / " + importDatas.Count, c_add.ToString(), c_replace.ToString(), c_skip.ToString() };
                 bwProgress.ReportProgress(((int)((double)c_total / (double)importDatas.Count * 100)), args);
+
             }
             //if ((c_add + c_replace + c_skip) < 1) ImportEmpty = true;
             MainForm.updateTreeView();

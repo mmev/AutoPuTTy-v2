@@ -658,5 +658,24 @@ namespace AutoPuTTY.Utils
                 }
             }
         }
+
+        /// <summary>
+        /// check server exist in xml config
+        /// </summary>
+        /// <param name="groupName">group name</param>
+        /// <param name="serverName">server name</param>
+        /// <returns></returns>
+        public bool serverExist(string groupName, string serverName)
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmlDocument.SelectSingleNode("//*[@GroupName='" + groupName + "']/*[@Name='"+ serverName + "']");
+
+            if (xmlGroup != null)
+                return true;
+
+            return false;
+        }
     }
 }

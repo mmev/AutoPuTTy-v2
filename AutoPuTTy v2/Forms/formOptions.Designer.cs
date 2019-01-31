@@ -896,6 +896,8 @@ namespace AutoPuTTY
             // cbGSkip
             // 
             this.cbGSkip.AutoSize = true;
+            this.cbGSkip.Checked = true;
+            this.cbGSkip.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbGSkip.Location = new System.Drawing.Point(2, 77);
             this.cbGSkip.Name = "cbGSkip";
             this.cbGSkip.Size = new System.Drawing.Size(98, 17);
