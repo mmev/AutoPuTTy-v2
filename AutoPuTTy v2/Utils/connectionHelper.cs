@@ -156,7 +156,7 @@ namespace AutoPuTTY.Utils
                         Directory.CreateDirectory(_vncOutPath);
                 }
 
-                TextWriter vncFile = new StreamWriter(_vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name.ToString()) + ".vnc");
+                TextWriter vncFile = new StreamWriter(_vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name) + ".vnc");
 
                 vncFile.WriteLine("[Connection]");
                 vncFile.WriteLine(host != "" ? "host=" + host : "");
@@ -182,7 +182,7 @@ namespace AutoPuTTY.Utils
                     StartInfo =
                     {
                         FileName = Settings.Default.vncpath,
-                        Arguments = "-config \"" + _vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name.ToString()) +
+                        Arguments = "-config \"" + _vncOutPath + OtherHelper.ReplaceU(f, serverElement.Name) +
                                     ".vnc\"" + (vncArgs != "" ? " " + vncArgs : "")
                     }
                 };
@@ -306,12 +306,12 @@ namespace AutoPuTTY.Utils
             if (path.IndexOf("\"", StringComparison.Ordinal) == 0)
             {
                 var s = path.Substring(1).IndexOf("\"", StringComparison.Ordinal);
-                return s > 0 ? new string[] { path.Substring(1, s), path.Substring(s + 2).Trim() } : new string[] { path.Substring(1), "" };
+                return s > 0 ? new[] { path.Substring(1, s), path.Substring(s + 2).Trim() } : new[] { path.Substring(1), "" };
             }
             else
             {
                 int s = path.Substring(1).IndexOf(" ", StringComparison.Ordinal);
-                return s > 0 ? new string[] { path.Substring(0, s + 1), path.Substring(s + 2).Trim() } : new string[] { path.Substring(0), "" };
+                return s > 0 ? new[] { path.Substring(0, s + 1), path.Substring(s + 2).Trim() } : new[] { path.Substring(0), "" };
             }
         }
     }

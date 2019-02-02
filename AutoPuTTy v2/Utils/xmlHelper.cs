@@ -622,24 +622,33 @@ namespace AutoPuTTY.Utils
 
                             xmlElement.Attributes["Name"].Value = serverElement.Name;
 
+                            bool existHost = false;
+                            bool existPort = false;
+                            bool existUsername = false;
+                            bool existPassword = false;
+
                             foreach (XmlElement subElements in xmlElement.ChildNodes)
                             {
                                 switch (subElements.Name)
                                 {
                                     case "Host":
                                         subElements.InnerText = CryptHelper.Encrypt(serverElement.Host);
+                                        existHost = true;
                                         break;
 
                                     case "Port":
                                         subElements.InnerText = CryptHelper.Encrypt(serverElement.Port);
+                                        existPort = true;
                                         break;
 
                                     case "Username":
                                         subElements.InnerText = CryptHelper.Encrypt(serverElement.Username);
+                                        existUsername = true;
                                         break;
 
                                     case "Password":
                                         subElements.InnerText = CryptHelper.Encrypt(serverElement.Password);
+                                        existPassword = true;
                                         break;
 
                                     case "Type":
@@ -647,6 +656,34 @@ namespace AutoPuTTY.Utils
                                             CryptHelper.Encrypt(((int) serverElement.Type).ToString());
                                         break;
                                 }
+                            }
+
+                            if (!existHost)
+                            {
+                                XmlElement newElement = xmldoc.CreateElement("Host");
+                                newElement.InnerText = CryptHelper.Encrypt(serverElement.Host);
+                                xmlElement.AppendChild(newElement);
+                            }
+
+                            if (!existPort)
+                            {
+                                XmlElement newElement = xmldoc.CreateElement("Port");
+                                newElement.InnerText = CryptHelper.Encrypt(serverElement.Port);
+                                xmlElement.AppendChild(newElement);
+                            }
+
+                            if (!existUsername)
+                            {
+                                XmlElement newElement = xmldoc.CreateElement("Username");
+                                newElement.InnerText = CryptHelper.Encrypt(serverElement.Username);
+                                xmlElement.AppendChild(newElement);
+                            }
+
+                            if (!existPassword)
+                            {
+                                XmlElement newElement = xmldoc.CreateElement("Password");
+                                newElement.InnerText = CryptHelper.Encrypt(serverElement.Password);
+                                xmlElement.AppendChild(newElement);
                             }
 
                             break;
