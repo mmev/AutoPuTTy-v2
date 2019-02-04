@@ -210,6 +210,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\autoputty.ico" />
+    <None Include="Resources\red-icon.png" />
+    <None Include="Resources\green-icon.bmp" />
+    <None Include="Resources\blue-icon.png" />
+    <None Include="Resources\gray-icon.png" />
+    <None Include="Resources\greed-icon.png" />
     <Content Include="Resources\iconeyehide.png" />
     <Content Include="Resources\iconeyeshow.png" />
     <None Include="Resources\close.png" />

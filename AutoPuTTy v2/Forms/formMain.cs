@@ -147,6 +147,14 @@ namespace AutoPuTTY.Forms
 
             AutoSize = false;
             MinimumSize = Size;
+
+            ToolTip PortCheckBoxTip = new ToolTip();
+            PortCheckBoxTip.AutoPopDelay = 30000;
+            PortCheckBoxTip.InitialDelay = 300;
+            PortCheckBoxTip.ReshowDelay = 500;
+            PortCheckBoxTip.ShowAlways = true;
+
+            PortCheckBoxTip.SetToolTip(this.cbAutoCheck, "Автоматическая проверка хоста при его выборе в TreeVeiw\nВыполняет ping и openport проверки.");
         }
 
         #endregion
@@ -576,6 +584,7 @@ namespace AutoPuTTY.Forms
                     textBox1.Enabled = true;
                     tbServerPass.Enabled = true;
                     cbType.Enabled = true;
+                    cbAutoCheck.Enabled = true;
 
                     placeholderMode = true;
 
