@@ -553,80 +553,91 @@ namespace AutoPuTTY.Forms
 
         private void tView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Parent == null)
+            if (tView.GetNodeCount(true) > 0)
             {
-                currentGroup = e.Node.Text;
+                if (e.Node.Parent == null)
+                {
+                    currentGroup = e.Node.Text;
 
-                GroupElement groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
+                    GroupElement groupInfo = xmlHelper.getGroupDefaultInfo(e.Node.Text);
 
-                tbGroupName.Text = e.Node.Text;
-                tbGroupDefaultHost.Text = groupInfo.defaultHost;
-                tbGroupDefaultPort.Text = groupInfo.defaultPort;
-                tbGroupDefaultUsername.Text = groupInfo.defaultUsername;
-                tbGroupDefaultPassword.Text = groupInfo.defaultPassword;
+                    tbGroupName.Text = e.Node.Text;
+                    tbGroupDefaultHost.Text = groupInfo.defaultHost;
+                    tbGroupDefaultPort.Text = groupInfo.defaultPort;
+                    tbGroupDefaultUsername.Text = groupInfo.defaultUsername;
+                    tbGroupDefaultPassword.Text = groupInfo.defaultPassword;
+
+                    bGroupAdd.Enabled = false;
+                    bGroupDelete.Enabled = true;
+
+                    tbServerHost.Enabled = true;
+                    tbServerName.Enabled = true;
+                    tbServerUser.Enabled = true;
+                    textBox1.Enabled = true;
+                    tbServerPass.Enabled = true;
+                    cbType.Enabled = true;
+
+                    placeholderMode = true;
+
+                    setPlaceholderTextBox(tbServerHost, groupInfo.defaultHost);
+                    setPlaceholderTextBox(textBox1, groupInfo.defaultPort);
+                    setPlaceholderTextBox(tbServerUser, groupInfo.defaultUsername);
+                    setPlaceholderTextBox(tbServerPass, groupInfo.defaultPassword);
+
+                    placeholderServerHost = groupInfo.defaultHost;
+                    placeholderServerPort = groupInfo.defaultPort;
+                    placeholderServerUsername = groupInfo.defaultUsername;
+                    placeholderServerPassword = groupInfo.defaultPassword;
+
+                    bServerDelete.Enabled = false;
+                    bServerModify.Enabled = false;
+
+                    changeGroupState(true);
+
+                    tbServerName.Text = "";
+
+                    return;
+                }
+
+
+                TreeNode parent = e.Node.Parent;
+                TreeNode currentNode = e.Node;
+
+                currentGroup = parent.Text;
+
+                ServerElement currentServer = XmlHelper.getServerByName(parent.Text, currentNode.Text);
+
+                placeholderMode = false;
+
+                tbServerName.ForeColor = Color.Black;
+                tbServerHost.ForeColor = Color.Black;
+                textBox1.ForeColor = Color.Black;
+                tbServerUser.ForeColor = Color.Black;
+                tbServerPass.ForeColor = Color.Black;
+
+                tbServerName.Text = currentServer.Name;
+                tbServerHost.Text = currentServer.Host;
+                textBox1.Text = currentServer.Port;
+                tbServerUser.Text = currentServer.Username;
+                tbServerPass.Text = currentServer.Password;
+                cbType.SelectedIndex = Array.IndexOf(Types, types[Convert.ToInt32(currentServer.Type)]);
+
+                bServerDelete.Enabled = true;
+
+                changeGroupState(false);
 
                 bGroupAdd.Enabled = false;
-                bGroupDelete.Enabled = true;
-
-                tbServerHost.Enabled = true;
-                tbServerName.Enabled = true;
-                tbServerUser.Enabled = true;
-                textBox1.Enabled = true;
-                tbServerPass.Enabled = true;
-                cbType.Enabled = true;
-
-                placeholderMode = true;
-
-                setPlaceholderTextBox(tbServerHost, groupInfo.defaultHost);
-                setPlaceholderTextBox(textBox1, groupInfo.defaultPort);
-                setPlaceholderTextBox(tbServerUser, groupInfo.defaultUsername);
-                setPlaceholderTextBox(tbServerPass, groupInfo.defaultPassword);
-
-                placeholderServerHost = groupInfo.defaultHost;
-                placeholderServerPort = groupInfo.defaultPort;
-                placeholderServerUsername = groupInfo.defaultUsername;
-                placeholderServerPassword = groupInfo.defaultPassword;
-
-                bServerDelete.Enabled = false;
-                bServerModify.Enabled = false;
-
-                changeGroupState(true);
-
-                tbServerName.Text = "";
-
-                return;
+                bGroupModify.Enabled = false;
+                bGroupDelete.Enabled = false;
             }
-
-
-            TreeNode parent = e.Node.Parent;
-            TreeNode currentNode = e.Node;
-
-            currentGroup = parent.Text;
-
-            ServerElement currentServer = XmlHelper.getServerByName(parent.Text, currentNode.Text);
-
-            placeholderMode = false;
-
-            tbServerName.ForeColor = Color.Black;
-            tbServerHost.ForeColor = Color.Black;
-            textBox1.ForeColor = Color.Black;
-            tbServerUser.ForeColor = Color.Black;
-            tbServerPass.ForeColor = Color.Black;
-
-            tbServerName.Text = currentServer.Name;
-            tbServerHost.Text = currentServer.Host;
-            textBox1.Text = currentServer.Port;
-            tbServerUser.Text = currentServer.Username;
-            tbServerPass.Text = currentServer.Password;
-            cbType.SelectedIndex = Array.IndexOf(Types, types[Convert.ToInt32(currentServer.Type)]);
-
-            bServerDelete.Enabled = true;
-
-            changeGroupState(false);
-
-            bGroupAdd.Enabled = false;
-            bGroupModify.Enabled = false;
-            bGroupDelete.Enabled = false;
+            else
+            {
+                tbGroupName.Text = "";
+                tbGroupDefaultHost.Text = "";
+                tbGroupDefaultPort.Text = "";
+                tbGroupDefaultUsername.Text = "";
+                tbGroupDefaultPassword.Text = "";
+            }
         }
 
         private void tView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

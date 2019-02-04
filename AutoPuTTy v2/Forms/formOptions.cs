@@ -755,7 +755,6 @@ namespace AutoPuTTY.Forms
             int nodesCount = MainForm.tView.GetNodeCount(true) == 0 ? 1 : MainForm.tView.GetNodeCount(true);
             count = count == 0 ? 1 : 0;
 
-
             var args = new[] { "recrypt", count + " / " + nodesCount };
             bwProgress.ReportProgress(((count / nodesCount * 100)), args);
 
