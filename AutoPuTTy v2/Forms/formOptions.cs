@@ -619,7 +619,7 @@ namespace AutoPuTTY.Forms
                     ImportList((string)args[1]);
                     break;
                 case "recrypt":
-                    ReCryptServeList((string)args[1]);
+                    ReCryptServerList((string)args[1]);
                     break;
             }
             e.Result = args[0];
@@ -664,7 +664,7 @@ namespace AutoPuTTY.Forms
         /// Method for re crypt group default data and server data with new custom password
         /// </summary>
         /// <param name="newPassword">new password for encrypt</param>
-        private void ReCryptServeList(string newPassword)
+        private void ReCryptServerList(string newPassword)
         {
             var count = 0;
 
@@ -752,8 +752,12 @@ namespace AutoPuTTY.Forms
                     }
                 }
 
-            var args = new[] { "recrypt", count + " / " + MainForm.tView.GetNodeCount(true) };
-            bwProgress.ReportProgress(((count / MainForm.tView.GetNodeCount(true) * 100)), args);
+            int nodesCount = MainForm.tView.GetNodeCount(true) == 0 ? 1 : MainForm.tView.GetNodeCount(true);
+            count = count == 0 ? 1 : 0;
+
+
+            var args = new[] { "recrypt", count + " / " + nodesCount };
+            bwProgress.ReportProgress(((count / nodesCount * 100)), args);
 
             xmldoc.Save(Settings.Default.cfgpath);
         }
