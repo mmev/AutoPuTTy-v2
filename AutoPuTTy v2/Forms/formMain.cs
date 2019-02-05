@@ -131,6 +131,9 @@ namespace AutoPuTTY.Forms
             if (XmlHelper.configGet("winscpkey").ToLower() == "true") Settings.Default.winscpkey = true;
             if (XmlHelper.configGet("winscpkeyfile") != "") Settings.Default.winscpkeyfile = XmlHelper.configGet("winscpkeyfile");
             if (XmlHelper.configGet("winscppassive").ToLower() == "false") Settings.Default.winscppassive = false;
+            if (XmlHelper.configGet("ncpath") != "") Settings.Default.ncpath = XmlHelper.configGet("ncpath");
+            if (XmlHelper.configGet("nccommand") != "") Settings.Default.nccommand = XmlHelper.configGet("nccommand");
+            if (XmlHelper.configGet("ncexecute").ToLower() == "true") Settings.Default.ncexecute = true;
 
             optionsForm = new formOptions(this);
 

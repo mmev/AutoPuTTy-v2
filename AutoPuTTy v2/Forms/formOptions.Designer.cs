@@ -110,6 +110,16 @@ namespace AutoPuTTY.Forms
             this.tabRD = new System.Windows.Forms.TabPage();
             this.tabVNC = new System.Windows.Forms.TabPage();
             this.tabWSCP = new System.Windows.Forms.TabPage();
+            this.tabNetCat = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.bNCCommand = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cbNCExecuteCommand = new System.Windows.Forms.CheckBox();
+            this.tbNCCommand = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.bNCPath = new System.Windows.Forms.Button();
+            this.tbNCPath = new System.Windows.Forms.TextBox();
+            this.lNCPath = new System.Windows.Forms.Label();
             this.bwProgress = new System.ComponentModel.BackgroundWorker();
             this.bOK = new System.Windows.Forms.Button();
             this.pOPuTTY.SuspendLayout();
@@ -127,6 +137,8 @@ namespace AutoPuTTY.Forms
             this.tabRD.SuspendLayout();
             this.tabVNC.SuspendLayout();
             this.tabWSCP.SuspendLayout();
+            this.tabNetCat.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pOPuTTY
@@ -824,6 +836,7 @@ namespace AutoPuTTY.Forms
             this.tabs.Controls.Add(this.tabRD);
             this.tabs.Controls.Add(this.tabVNC);
             this.tabs.Controls.Add(this.tabWSCP);
+            this.tabs.Controls.Add(this.tabNetCat);
             this.tabs.Location = new System.Drawing.Point(2, 2);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -1149,6 +1162,123 @@ namespace AutoPuTTY.Forms
             this.tabWSCP.Text = "WinSCP";
             this.tabWSCP.UseVisualStyleBackColor = true;
             // 
+            // tabNetCat
+            // 
+            this.tabNetCat.Controls.Add(this.panel1);
+            this.tabNetCat.Location = new System.Drawing.Point(4, 22);
+            this.tabNetCat.Name = "tabNetCat";
+            this.tabNetCat.Size = new System.Drawing.Size(294, 192);
+            this.tabNetCat.TabIndex = 5;
+            this.tabNetCat.Text = "NetCat";
+            this.tabNetCat.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.bNCCommand);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.cbNCExecuteCommand);
+            this.panel1.Controls.Add(this.tbNCCommand);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.bNCPath);
+            this.panel1.Controls.Add(this.tbNCPath);
+            this.panel1.Controls.Add(this.lNCPath);
+            this.panel1.Location = new System.Drawing.Point(4, 4);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(286, 185);
+            this.panel1.TabIndex = 0;
+            // 
+            // bNCCommand
+            // 
+            this.bNCCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bNCCommand.Enabled = false;
+            this.bNCCommand.Location = new System.Drawing.Point(235, 63);
+            this.bNCCommand.Margin = new System.Windows.Forms.Padding(0);
+            this.bNCCommand.Name = "bNCCommand";
+            this.bNCCommand.Size = new System.Drawing.Size(50, 22);
+            this.bNCCommand.TabIndex = 11;
+            this.bNCCommand.Text = "Select";
+            this.bNCCommand.UseCompatibleTextRendering = true;
+            this.bNCCommand.UseVisualStyleBackColor = true;
+            this.bNCCommand.Click += new System.EventHandler(this.bNCCommand_Click);
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label4.Location = new System.Drawing.Point(2, 61);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(283, 2);
+            this.label4.TabIndex = 9;
+            // 
+            // cbNCExecuteCommand
+            // 
+            this.cbNCExecuteCommand.AutoSize = true;
+            this.cbNCExecuteCommand.Location = new System.Drawing.Point(2, 46);
+            this.cbNCExecuteCommand.Name = "cbNCExecuteCommand";
+            this.cbNCExecuteCommand.Size = new System.Drawing.Size(119, 17);
+            this.cbNCExecuteCommand.TabIndex = 8;
+            this.cbNCExecuteCommand.Text = "Execute commands";
+            this.cbNCExecuteCommand.CheckedChanged += new System.EventHandler(this.cbNCExecuteCommand_CheckedChanged);
+            // 
+            // tbNCCommand
+            // 
+            this.tbNCCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbNCCommand.Enabled = false;
+            this.tbNCCommand.Location = new System.Drawing.Point(2, 64);
+            this.tbNCCommand.Name = "tbNCCommand";
+            this.tbNCCommand.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tbNCCommand.Size = new System.Drawing.Size(232, 20);
+            this.tbNCCommand.TabIndex = 10;
+            this.tbNCCommand.TextChanged += new System.EventHandler(this.tbNCCommand_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label3.Location = new System.Drawing.Point(2, 21);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(283, 2);
+            this.label3.TabIndex = 4;
+            // 
+            // bNCPath
+            // 
+            this.bNCPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bNCPath.Location = new System.Drawing.Point(235, 23);
+            this.bNCPath.Margin = new System.Windows.Forms.Padding(0);
+            this.bNCPath.Name = "bNCPath";
+            this.bNCPath.Size = new System.Drawing.Size(50, 22);
+            this.bNCPath.TabIndex = 6;
+            this.bNCPath.Text = "Select";
+            this.bNCPath.UseCompatibleTextRendering = true;
+            this.bNCPath.UseVisualStyleBackColor = true;
+            this.bNCPath.Click += new System.EventHandler(this.bNCPath_Click);
+            // 
+            // tbNCPath
+            // 
+            this.tbNCPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbNCPath.Location = new System.Drawing.Point(2, 24);
+            this.tbNCPath.Name = "tbNCPath";
+            this.tbNCPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tbNCPath.Size = new System.Drawing.Size(232, 20);
+            this.tbNCPath.TabIndex = 5;
+            this.tbNCPath.TextChanged += new System.EventHandler(this.tbNCPath_TextChanged);
+            // 
+            // lNCPath
+            // 
+            this.lNCPath.AutoSize = true;
+            this.lNCPath.Location = new System.Drawing.Point(4, 4);
+            this.lNCPath.Name = "lNCPath";
+            this.lNCPath.Size = new System.Drawing.Size(85, 13);
+            this.lNCPath.TabIndex = 0;
+            this.lNCPath.Text = "Path (nc64.exe):";
+            // 
             // bwProgress
             // 
             this.bwProgress.WorkerReportsProgress = true;
@@ -1206,6 +1336,9 @@ namespace AutoPuTTY.Forms
             this.tabRD.ResumeLayout(false);
             this.tabVNC.ResumeLayout(false);
             this.tabWSCP.ResumeLayout(false);
+            this.tabNetCat.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1300,6 +1433,16 @@ namespace AutoPuTTY.Forms
         private System.Windows.Forms.Label lWSCPOther;
         public System.Windows.Forms.CheckBox cbWSCPPassive;
         private System.Windows.Forms.Label lSep5;
+        private System.Windows.Forms.TabPage tabNetCat;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button bNCPath;
+        private System.Windows.Forms.TextBox tbNCPath;
+        private System.Windows.Forms.Label lNCPath;
+        public System.Windows.Forms.Button bNCCommand;
+        private System.Windows.Forms.Label label4;
+        public System.Windows.Forms.CheckBox cbNCExecuteCommand;
+        public System.Windows.Forms.TextBox tbNCCommand;
     }
 }
 

@@ -89,6 +89,15 @@ namespace AutoPuTTY.Forms {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Select NetCat executable.
+        /// </summary>
+        internal static string formOptions_bNCPath_Click_Select_NetCat_executable {
+            get {
+                return ResourceManager.GetString("formOptions_bNCPath_Click_Select_NetCat_executable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Import list.
         /// </summary>
         internal static string formOptions_liGImport_LinkClicked_Import_list {

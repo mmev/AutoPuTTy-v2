@@ -111,4 +111,7 @@ Files will be generated in the current path.</value>
   <data name="formOptions_liGImport_LinkClicked_Import_list" xml:space="preserve">
     <value>Import list</value>
   </data>
+  <data name="formOptions_bNCPath_Click_Select_NetCat_executable" xml:space="preserve">
+    <value>Select NetCat executable</value>
+  </data>
 </root>

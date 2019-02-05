@@ -376,5 +376,41 @@ namespace AutoPuTTY.Properties {
                 this["winscppassive"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ncexecute {
+            get {
+                return ((bool)(this["ncexecute"]));
+            }
+            set {
+                this["ncexecute"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string nccommand {
+            get {
+                return ((string)(this["nccommand"]));
+            }
+            set {
+                this["nccommand"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ncpath {
+            get {
+                return ((string)(this["ncpath"]));
+            }
+            set {
+                this["ncpath"] = value;
+            }
+        }
     }
 }

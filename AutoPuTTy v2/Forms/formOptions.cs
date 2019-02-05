@@ -62,6 +62,10 @@ namespace AutoPuTTY.Forms
                 tbWSCPKey.Text = Settings.Default.winscpkeyfile;
                 cbWSCPPassive.Checked = Settings.Default.winscppassive;
 
+                tbNCPath.Text = Settings.Default.ncpath;
+                tbNCCommand.Text = Settings.Default.nccommand;
+                cbNCExecuteCommand.Checked = Settings.Default.ncexecute;
+
                 cbGMinimize.Checked = Settings.Default.minimize;
                 if (Settings.Default.password.Trim() != "")
                 {
@@ -843,5 +847,60 @@ namespace AutoPuTTY.Forms
         }
 
         #endregion
+
+        private void bNCPath_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = StringResources.formOptions_bNCPath_Click_Select_NetCat_executable,
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
+                tbNCPath.Text = browseFile.FileName;
+            }
+        }
+
+        private void bNCCommand_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = Resources.formOptions_bPuTTYExecute_Click_Select_commands_file,
+                Filter = Resources.formOptions_bGImport_Click_TXT_File____txt____txt
+            };
+
+            tbNCCommand.Text = browseFile.ShowDialog() == DialogResult.OK ? browseFile.FileName : "";
+        }
+
+        private void cbNCExecuteCommand_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.ncexecute = cbNCExecuteCommand.Checked;
+            if (!FirstRead) MainForm.XmlHelper.configSet("ncexecute", Settings.Default.ncexecute.ToString());
+
+            if (Settings.Default.ncexecute)
+            {
+                tbNCCommand.Enabled = true;
+                bNCCommand.Enabled = true;
+            }
+            else
+            {
+                tbNCCommand.Enabled = false;
+                bNCCommand.Enabled = false;
+            }
+        }
+
+        private void tbNCPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.ncpath = tbNCPath.Text;
+            if (!FirstRead) MainForm.XmlHelper.configSet("ncpath", Settings.Default.ncpath);
+        }
+
+        private void tbNCCommand_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.nccommand = tbNCCommand.Text;
+            if (!FirstRead) MainForm.XmlHelper.configSet("nccommand", Settings.Default.nccommand);
+        }
     }
 }
