@@ -177,8 +177,9 @@ namespace AutoPuTTY.Forms
                 string newServerUsername = tbServerUser.Text.Trim();
                 string newServerPassword = tbServerPass.Text.Trim();
                 string newServerType = Array.IndexOf(types, cbType.Text).ToString();
+                bool newServerChecks = cbAutoCheck.Checked;
 
-                ServerElement server = new ServerElement(newServerName, newServerHost, newServerPort, newServerUsername, newServerPassword, newServerType);
+                ServerElement server = new ServerElement(newServerName, newServerHost, newServerPort, newServerUsername, newServerPassword, newServerType, newServerChecks);
 
                 xmlHelper.modifyServer(groupName, oldServerName, server);
 
@@ -204,9 +205,10 @@ namespace AutoPuTTY.Forms
                 string serverUsername = tbServerUser.Text.Trim();
                 string serverPassword = tbServerPass.Text.Trim();
                 string serverType = Array.IndexOf(types, cbType.Text).ToString();
+                bool serverChecks = cbAutoCheck.Checked;
 
                 xmlHelper.addServer(groupName, serverName, serverHostname, serverPort,
-                    serverUsername, serverPassword, serverType);
+                    serverUsername, serverPassword, serverType, serverChecks);
 
                 tbServerName.Text = tbServerName.Text.Trim();
 
@@ -340,6 +342,11 @@ namespace AutoPuTTY.Forms
         }
 
         #endregion
+
+        private void cbAutoCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            tbName_TextChanged(this, e);
+        }
 
         #region TextBox Events
 
@@ -633,6 +640,7 @@ namespace AutoPuTTY.Forms
                 tbServerUser.Text = currentServer.Username;
                 tbServerPass.Text = currentServer.Password;
                 cbType.SelectedIndex = Array.IndexOf(Types, types[Convert.ToInt32(currentServer.Type)]);
+                cbAutoCheck.Checked = currentServer.AutoChecks;
 
                 bServerDelete.Enabled = true;
 
@@ -827,5 +835,7 @@ namespace AutoPuTTY.Forms
         }
 
         #endregion
+
+        
     }
 }

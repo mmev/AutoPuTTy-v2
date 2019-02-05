@@ -821,7 +821,7 @@ namespace AutoPuTTY.Forms
                         {
                             MainForm.XmlHelper.modifyServer(
                                 groupName, serverName, new ServerElement(
-                                    serverName, serverHost, serverPort, serverUser, serverPass, serverType));
+                                    serverName, serverHost, serverPort, serverUser, serverPass, serverType, false));
 
                             cReplace++;
                         }
@@ -834,7 +834,7 @@ namespace AutoPuTTY.Forms
                     }
 
                     MainForm.XmlHelper.addServer(groupName, serverName, serverHost, serverPort, serverUser,
-                        serverPass, serverType);
+                        serverPass, serverType, false);
 
                     cAdd++;
                 }

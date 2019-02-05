@@ -12,11 +12,12 @@ namespace AutoPuTTY.Utils.Data
         public string Password;
 
         public ConnectionType Type;
+        public bool AutoChecks;
 
         public string HostWithServer;
 
         public ServerElement(string name, string host, string port, 
-            string username, string password, string type)
+            string username, string password, string type, bool autoChecks)
         {
             Name = name.Trim();
 
@@ -26,6 +27,7 @@ namespace AutoPuTTY.Utils.Data
             Password = password.Trim();
 
             Type = (ConnectionType) Int32.Parse(type.Trim());
+            AutoChecks = autoChecks;
 
             HostWithServer = host.Trim() + ":" + port.Trim();
         }

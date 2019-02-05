@@ -197,6 +197,7 @@ namespace AutoPuTTY.Utils
                                     string serverUsername = "";
                                     string serverPassword = "";
                                     string serverType = "";
+                                    bool serverChecks = false;
 
                                     foreach (XmlElement serverElement in childNode.ChildNodes)
                                     {
@@ -217,10 +218,14 @@ namespace AutoPuTTY.Utils
                                             case "Type":
                                                 serverType = CryptHelper.Decrypt(serverElement.InnerText);
                                                 break;
+                                            case "Checks":
+                                                serverChecks = Boolean.Parse(serverElement.InnerText);
+                                                break;
+
                                         }
                                     }
 
-                                    servers.Add(new ServerElement(serverName, serverHost, serverPort, serverUsername, serverPassword, serverType));
+                                    servers.Add(new ServerElement(serverName, serverHost, serverPort, serverUsername, serverPassword, serverType, serverChecks));
                                     break;
                             }
                         }
@@ -433,7 +438,7 @@ namespace AutoPuTTY.Utils
         /// <param name="serverPassword">server password</param>
         /// <param name="serverType">server type</param>
         public void addServer(string groupName, string serverName, string serverHost, string serverPort,
-            string serverUsername, string serverPassword, string serverType)
+            string serverUsername, string serverPassword, string serverType, bool autoChecks)
         {
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load(Settings.Default.cfgpath);
@@ -482,6 +487,10 @@ namespace AutoPuTTY.Utils
                 newServer.AppendChild(host);
             }
 
+            XmlElement checks = xmlDocument.CreateElement("Checks");
+            checks.InnerText = autoChecks.ToString();
+            newServer.AppendChild(checks);
+
             xmlGroup?.AppendChild(newServer);
 
             try
@@ -522,6 +531,7 @@ namespace AutoPuTTY.Utils
                             string serverUsername = "";
                             string serverPassword = "";
                             string serverType = "";
+                            bool serverChecks = false;
 
                             foreach (XmlElement serverElements in xmlElement.ChildNodes)
                             {
@@ -546,11 +556,14 @@ namespace AutoPuTTY.Utils
                                     case "Type":
                                         serverType = CryptHelper.Decrypt(serverElements.InnerText);
                                         break;
+                                    case "Checks":
+                                        serverChecks = Boolean.Parse(serverElements.InnerText);
+                                        break;
                                 }
                             }
 
                             ServerElement currentServer = new ServerElement(foundedServerName, serverHost, serverPort,
-                                serverUsername, serverPassword, serverType);
+                                serverUsername, serverPassword, serverType, serverChecks);
 
                             return currentServer;
                     }
@@ -654,6 +667,10 @@ namespace AutoPuTTY.Utils
                                     case "Type":
                                         subElements.InnerText =
                                             CryptHelper.Encrypt(((int) serverElement.Type).ToString());
+                                        break;
+
+                                    case "Checks":
+                                        subElements.InnerText = serverElement.AutoChecks.ToString();
                                         break;
                                 }
                             }
