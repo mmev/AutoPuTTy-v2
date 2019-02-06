@@ -27,6 +27,7 @@ namespace AutoPuTTY.Forms
         public const int WmSysCommand = 0x112;
 
         public static formOptions optionsForm;
+        public static formMain CurrentFormMain;
 
         public string[] types = { "PuTTY", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
         public string[] Types;
@@ -65,6 +66,8 @@ namespace AutoPuTTY.Forms
             XmlHelper = new XmlHelper();
             Cryptor = new CryptHelper();
             OtherHelper = new OtherHelper();
+
+            CurrentFormMain = this;
 
             //clone types array to have a sorted version
             Types = (string[])types.Clone();
@@ -619,6 +622,8 @@ namespace AutoPuTTY.Forms
 
                     tbServerName.Text = "";
 
+                    resetPbIcons();
+
                     return;
                 }
 
@@ -653,6 +658,8 @@ namespace AutoPuTTY.Forms
                 bGroupAdd.Enabled = false;
                 bGroupModify.Enabled = false;
                 bGroupDelete.Enabled = false;
+
+                new BackgroundHelper(tbServerHost.Text, textBox1.Text);
             }
             else
             {
@@ -762,6 +769,11 @@ namespace AutoPuTTY.Forms
             }
         }
 
+        /// <summary>
+        /// Call NetCat open port after click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void pbNC_Click(object sender, EventArgs e)
         {
             if (tView.SelectedNode?.Parent != null)
@@ -770,6 +782,22 @@ namespace AutoPuTTY.Forms
                 string serverPort = textBox1.Text;
                 ConnectionHelper.LaunchNetCat(serverIP, serverPort);
             }
+        }
+
+        private void resetPbIcons()
+        {
+            changePbPingIcon(Resources.gray_icon);
+            changePbOpenPortIcon(Resources.gray_icon);
+        }
+
+        public void changePbPingIcon(Bitmap newIcon)
+        {
+            BeginInvoke(new MethodInvoker(delegate { pbPIng.Image = newIcon; }));
+        }
+
+        public void changePbOpenPortIcon(Bitmap newIcon)
+        {
+            BeginInvoke(new MethodInvoker(delegate { pbNC.Image = newIcon; }));
         }
 
         #endregion
