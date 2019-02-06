@@ -343,10 +343,14 @@ namespace AutoPuTTY.Forms
 
         #endregion
 
+        #region CheckBox Events
+
         private void cbAutoCheck_CheckedChanged(object sender, EventArgs e)
         {
             tbName_TextChanged(this, e);
         }
+
+        #endregion
 
         #region TextBox Events
 
@@ -744,6 +748,30 @@ namespace AutoPuTTY.Forms
             }
         }
 
+        /// <summary>
+        /// Call ICMP Ping server after click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pbPIng_Click(object sender, EventArgs e)
+        {
+            if (tView.SelectedNode?.Parent != null)
+            {
+                string serverIP = tbServerHost.Text;
+                ConnectionHelper.LaunchICMPPing(serverIP);
+            }
+        }
+
+        public void pbNC_Click(object sender, EventArgs e)
+        {
+            if (tView.SelectedNode?.Parent != null)
+            {
+                string serverIP = tbServerHost.Text;
+                string serverPort = textBox1.Text;
+                ConnectionHelper.LaunchNetCat(serverIP, serverPort);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -852,9 +880,6 @@ namespace AutoPuTTY.Forms
             ConnectionHelper.StartConnect(tView.SelectedNode);
         }
 
-
         #endregion
-
-        
     }
 }

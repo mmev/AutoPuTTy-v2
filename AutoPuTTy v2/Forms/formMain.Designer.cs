@@ -181,6 +181,7 @@ namespace AutoPuTTY.Forms
             this.pbNC.Size = new System.Drawing.Size(24, 26);
             this.pbNC.TabIndex = 48;
             this.pbNC.TabStop = false;
+            this.pbNC.Click += new System.EventHandler(this.pbNC_Click);
             // 
             // pbPIng
             // 
@@ -190,6 +191,7 @@ namespace AutoPuTTY.Forms
             this.pbPIng.Size = new System.Drawing.Size(24, 26);
             this.pbPIng.TabIndex = 47;
             this.pbPIng.TabStop = false;
+            this.pbPIng.Click += new System.EventHandler(this.pbPIng_Click);
             // 
             // cbAutoCheck
             // 

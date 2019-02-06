@@ -99,7 +99,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ncpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">nc64.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>

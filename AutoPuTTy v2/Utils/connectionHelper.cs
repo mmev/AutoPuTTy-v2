@@ -70,7 +70,32 @@ namespace AutoPuTTY.Utils
         public static void LaunchTracert(String serverIP)
         {
             string strCmdText = "/C tracert " + serverIP + " &pause";
-            System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+            Process.Start("CMD.exe", strCmdText);
+        }
+
+        public static void LaunchICMPPing(String serverIP)
+        {
+            string strCmdText = "/C ping " + serverIP + " &pause";
+            Process.Start("CMD.exe", strCmdText);
+        }
+
+        public static void LaunchNetCat(String serverHost, String serverPort)
+        {
+            string ncPath = Settings.Default.ncpath;
+
+            if (File.Exists(ncPath))
+            {
+                string strCmdText = "/C " + ncPath + " -zv " + serverHost + " " + serverPort + " &pause";
+                Process.Start("CMD.exe", strCmdText);
+            }
+            else
+            {
+                if (MessageBox.Show("Could not find file \"" + ncPath + "\"\nDo you want to change the configuration ?",
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsForm.bNCPath_Click();
+                }
+            }
         }
 
         /// <summary>

@@ -201,6 +201,12 @@ namespace AutoPuTTY.Forms
             MainForm.connect();
         }
 
+        public void bNCPath_Click()
+        {
+            bNCPath_Click(new object(), new EventArgs());
+            MainForm.pbNC_Click(new object(), new EventArgs());
+        }
+
         /// <summary>
         /// Open file dialog for select WinSCP client exe
         /// </summary>
