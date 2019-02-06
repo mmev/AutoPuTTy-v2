@@ -603,6 +603,8 @@ namespace AutoPuTTY.Forms
                     cbType.Enabled = true;
                     cbAutoCheck.Enabled = true;
 
+                    cbAutoCheck.Checked = false;
+
                     placeholderMode = true;
 
                     setPlaceholderTextBox(tbServerHost, groupInfo.defaultHost);
@@ -622,7 +624,7 @@ namespace AutoPuTTY.Forms
 
                     tbServerName.Text = "";
 
-                    resetPbIcons();
+                    resetPbIcons(Resources.gray_icon);
 
                     return;
                 }
@@ -659,7 +661,10 @@ namespace AutoPuTTY.Forms
                 bGroupModify.Enabled = false;
                 bGroupDelete.Enabled = false;
 
-                new BackgroundHelper(tbServerHost.Text, textBox1.Text);
+                resetPbIcons(Resources.red_icon);
+
+                if (currentServer.AutoChecks)
+                    new BackgroundHelper(tbServerHost.Text, textBox1.Text);
             }
             else
             {
@@ -784,10 +789,10 @@ namespace AutoPuTTY.Forms
             }
         }
 
-        private void resetPbIcons()
+        private void resetPbIcons(Bitmap newIcon)
         {
-            changePbPingIcon(Resources.gray_icon);
-            changePbOpenPortIcon(Resources.gray_icon);
+            changePbPingIcon(newIcon);
+            changePbOpenPortIcon(newIcon);
         }
 
         public void changePbPingIcon(Bitmap newIcon)
