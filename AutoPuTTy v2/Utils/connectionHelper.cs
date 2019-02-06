@@ -67,6 +67,12 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        public static void LaunchTracert(String serverIP)
+        {
+            string strCmdText = "/C tracert " + serverIP + " &pause";
+            System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+        }
+
         /// <summary>
         /// Method for launch default RDP client (mstcs.exe)
         /// </summary>

@@ -96,6 +96,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\BackgroundHelper.cs" />
     <Compile Include="Utils\ConnectionHelper.cs" />
     <Compile Include="Utils\CryptHelper.cs" />
     <Compile Include="Utils\Data\ConnectionType.cs" />

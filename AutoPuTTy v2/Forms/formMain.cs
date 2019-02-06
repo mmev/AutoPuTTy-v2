@@ -728,6 +728,24 @@ namespace AutoPuTTY.Forms
 
         #endregion
 
+        #region Check Events
+
+        /// <summary>
+        /// Call Tracert func after click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pbTracert_Click(object sender, EventArgs e)
+        {
+            if (tView.SelectedNode?.Parent != null)
+            {
+                string serverIP = tbServerHost.Text;
+                ConnectionHelper.LaunchTracert(serverIP);
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -833,6 +851,7 @@ namespace AutoPuTTY.Forms
         {
             ConnectionHelper.StartConnect(tView.SelectedNode);
         }
+
 
         #endregion
 

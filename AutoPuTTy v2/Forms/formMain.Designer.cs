@@ -171,6 +171,7 @@ namespace AutoPuTTY.Forms
             this.pbTracert.Size = new System.Drawing.Size(24, 26);
             this.pbTracert.TabIndex = 49;
             this.pbTracert.TabStop = false;
+            this.pbTracert.Click += new System.EventHandler(this.pbTracert_Click);
             // 
             // pbNC
             // 
