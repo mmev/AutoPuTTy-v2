@@ -735,6 +735,7 @@ namespace AutoPuTTY.Forms
             this.tView.ShowLines = false;
             this.tView.Size = new System.Drawing.Size(249, 564);
             this.tView.TabIndex = 3;
+            this.tView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tView_AfterSelect);
             this.tView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseClick);
             this.tView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tView_NodeMouseDoubleClick);
             // 

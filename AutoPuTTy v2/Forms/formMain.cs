@@ -681,6 +681,11 @@ namespace AutoPuTTY.Forms
             connect();
         }
 
+        private void tView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            tView_NodeMouseClick(sender, new TreeNodeMouseClickEventArgs(e.Node, MouseButtons.Left, 1, 1, 1));
+        }
+
         #endregion
 
         #region Other Events
@@ -914,5 +919,7 @@ namespace AutoPuTTY.Forms
         }
 
         #endregion
+
+        
     }
 }
