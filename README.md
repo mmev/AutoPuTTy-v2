@@ -11,17 +11,9 @@
 * VNC (VNCViewer)
 * SCP (WinSCP)
 * FTP (WinSCP)
+* NetCat
 
 Хотите новый протокол? Откройте Issue и сообщите об этом.
 
-TODO:
-- [x] Замена ListBox на TreeView
-- [ ] Добавить Ammyy
-- [ ] Добавить Radmin
-- [ ] Добавить Supremo
-- [ ] Добавить TemViewer
-- [ ] Добавить WinBox
-- [ ] Провести рефакторинг кода
-
 ## Screenshots
-![Main Window](https://cdn3.savepice.ru/uploads/2019/1/25/e4cdfedcc7a694a2fac5bdfad1602814-full.png)
+![Main Window](https://i.paste.pics/7bca7190431b48cd0a3340e5a84532d8.png)
