@@ -12,6 +12,7 @@
 * SCP (WinSCP)
 * FTP (WinSCP)
 * NetCat
+* Telnet
 
 Хотите новый протокол? Откройте Issue и сообщите об этом.
 
