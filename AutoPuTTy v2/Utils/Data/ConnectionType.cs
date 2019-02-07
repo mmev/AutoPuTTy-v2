@@ -7,6 +7,7 @@
         Vnc,
         Scp,
         Ftp,
-        Sftp
+        Sftp,
+        Telnet,
     }
 }

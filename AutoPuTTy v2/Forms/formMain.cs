@@ -29,7 +29,7 @@ namespace AutoPuTTY.Forms
         public static formOptions optionsForm;
         public static formMain CurrentFormMain;
 
-        public string[] types = { "PuTTY", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)" };
+        public string[] types = { "SSH", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)", "Telnet"};
         public string[] Types;
 
         private string lastState = "normal";
@@ -71,7 +71,6 @@ namespace AutoPuTTY.Forms
 
             //clone types array to have a sorted version
             Types = (string[])types.Clone();
-            Array.Sort(Types);
             string configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 

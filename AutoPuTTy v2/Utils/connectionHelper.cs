@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using AutoPuTTY.Forms;
@@ -26,6 +28,9 @@ namespace AutoPuTTY.Utils
 
         private static string _rdpOutPath;
         private static string _vncOutPath;
+
+        [DllImport("User32.dll")]
+        static extern int SetForegroundWindow(IntPtr point);
 
         /// <summary>
         /// Start connection method
@@ -61,7 +66,10 @@ namespace AutoPuTTY.Utils
                 case ConnectionType.Ftp: //WinSCP (FTP)
                     LaunchWinScp("ftp://", serverElement);
                     break;
-                default: //PuTTY
+                case ConnectionType.Telnet:
+                    LaunchTelnet(serverElement);
+                    break;
+                default:
                     LaunchPuTTy(serverElement);
                     break;
             }
@@ -273,6 +281,47 @@ namespace AutoPuTTY.Utils
             }
         }
 
+        private static void LaunchTelnet(ServerElement serverElement)
+        {
+            string[] puttyExtractPath = ExtractFilePath(Settings.Default.puttypath);
+            string puttyPath = Environment.ExpandEnvironmentVariables(puttyExtractPath[0]);
+
+            if (File.Exists(puttyPath))
+            {
+                string host = serverElement.Host;
+                string port = serverElement.Port != "" ? serverElement.Port : "22";
+
+                using (Process puttyProcess = new Process())
+                {
+                    puttyProcess.StartInfo.FileName = Settings.Default.puttypath;
+                    puttyProcess.StartInfo.Arguments = "-telnet ";
+                    puttyProcess.StartInfo.Arguments += serverElement.Username != "" ? serverElement.Username + "@" : "";
+
+                    puttyProcess.StartInfo.Arguments += host != "" ? host : "";
+                    puttyProcess.StartInfo.Arguments += port != "" ? " " + port : "";
+
+                    puttyProcess.Start();
+
+                    Thread.Sleep(1500);
+
+                    IntPtr h = puttyProcess.MainWindowHandle;
+
+                    SetForegroundWindow(h);
+                    SendKeys.SendWait(serverElement.Username);
+                    SendKeys.SendWait("~");
+                    SendKeys.SendWait(serverElement.Password);
+                    SendKeys.SendWait("~");
+                }
+            }
+            else
+            {
+                if (MessageBox.Show(Resources.connectionHelper_LaunchVnc_M1 + puttyPath + Resources.connectionHelper_LaunchVnc_M2,
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsForm.bPuTTYPath_Click();
+                }
+            }
+        }
 
         /// <summary>
         /// Method for launch WinSCP: SCP, FTP, SFTP Protocols
