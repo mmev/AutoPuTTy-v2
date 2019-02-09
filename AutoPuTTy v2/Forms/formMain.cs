@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using AutoPuTTY.Forms.Popups;
 using AutoPuTTY.Properties;
@@ -337,7 +338,9 @@ namespace AutoPuTTY.Forms
                     newGroupDefaultUsername, newGroupDefaultPassword);
 
                 int selectedNodeIndex = tView.SelectedNode.Index;
+
                 updateTreeView();
+
                 tView.SelectedNode = tView.Nodes[selectedNodeIndex];
                 tView_NodeMouseClick(this, new TreeNodeMouseClickEventArgs(tView.Nodes[selectedNodeIndex], MouseButtons.Left, 1, 1, 1));
             }
@@ -858,10 +861,13 @@ namespace AutoPuTTY.Forms
 
         /// <summary>
         /// Clear Tree View and read xml config after add groups and servers
+        ///
+        /// Странное поведение BeginInvoke
+        /// Происходит задержка и из-за неё не получается nodeMouseClick получить параметры из конфига
         /// </summary>
         public void updateTreeView()
         {
-            BeginInvoke(new MethodInvoker(delegate
+            if (!InvokeRequired)
             {
                 tView.Nodes.Clear();
 
@@ -882,7 +888,32 @@ namespace AutoPuTTY.Forms
 
                     }
                 }
-            }));
+            }
+            else
+            {
+                BeginInvoke(new MethodInvoker(delegate
+                {
+                    tView.Nodes.Clear();
+
+                    groupList = xmlHelper.getAllData();
+
+                    foreach (GroupElement group in groupList)
+                    {
+                        string currentGroupName = group.groupName;
+                        TreeNode groupNode = tView.Nodes.Add(currentGroupName);
+
+                        if (group.servers.Count > 0)
+                        {
+                            foreach (ServerElement server in group.servers)
+                            {
+                                string currentServerName = server.Name;
+                                groupNode.Nodes.Add(currentServerName);
+                            }
+
+                        }
+                    }
+                }));
+            }
         }
 
         /// <summary>
