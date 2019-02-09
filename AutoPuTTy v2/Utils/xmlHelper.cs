@@ -639,6 +639,7 @@ namespace AutoPuTTY.Utils
                             bool existPort = false;
                             bool existUsername = false;
                             bool existPassword = false;
+                            bool existChecks = false;
 
                             foreach (XmlElement subElements in xmlElement.ChildNodes)
                             {
@@ -671,6 +672,7 @@ namespace AutoPuTTY.Utils
 
                                     case "Checks":
                                         subElements.InnerText = serverElement.AutoChecks.ToString();
+                                        existChecks = true;
                                         break;
                                 }
                             }
@@ -700,6 +702,13 @@ namespace AutoPuTTY.Utils
                             {
                                 XmlElement newElement = xmldoc.CreateElement("Password");
                                 newElement.InnerText = CryptHelper.Encrypt(serverElement.Password);
+                                xmlElement.AppendChild(newElement);
+                            }
+
+                            if (!existChecks)
+                            {
+                                XmlElement newElement = xmldoc.CreateElement("Checks");
+                                newElement.InnerText = serverElement.AutoChecks.ToString();
                                 xmlElement.AppendChild(newElement);
                             }
 
