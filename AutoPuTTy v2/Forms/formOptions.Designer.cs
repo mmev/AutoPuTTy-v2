@@ -26,7 +26,6 @@ namespace AutoPuTTY.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formOptions));
             this.pOPuTTY = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.cbPuTTYForward = new System.Windows.Forms.CheckBox();
             this.bPuTTYExecute = new System.Windows.Forms.Button();
             this.lSep8 = new System.Windows.Forms.Label();
@@ -122,6 +121,10 @@ namespace AutoPuTTY.Forms
             this.lNCPath = new System.Windows.Forms.Label();
             this.bwProgress = new System.ComponentModel.BackgroundWorker();
             this.bOK = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.pOPuTTY.SuspendLayout();
             this.pORD.SuspendLayout();
             this.pOVNC.SuspendLayout();
@@ -147,8 +150,11 @@ namespace AutoPuTTY.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pOPuTTY.BackColor = System.Drawing.Color.Transparent;
-            this.pOPuTTY.Controls.Add(this.label2);
             this.pOPuTTY.Controls.Add(this.label1);
+            this.pOPuTTY.Controls.Add(this.label5);
+            this.pOPuTTY.Controls.Add(this.button1);
+            this.pOPuTTY.Controls.Add(this.textBox1);
+            this.pOPuTTY.Controls.Add(this.label2);
             this.pOPuTTY.Controls.Add(this.cbPuTTYForward);
             this.pOPuTTY.Controls.Add(this.bPuTTYExecute);
             this.pOPuTTY.Controls.Add(this.lSep8);
@@ -172,24 +178,15 @@ namespace AutoPuTTY.Forms
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label2.Location = new System.Drawing.Point(2, 134);
+            this.label2.Location = new System.Drawing.Point(2, 161);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(283, 2);
             this.label2.TabIndex = 14;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 120);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 13);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Other";
-            // 
             // cbPuTTYForward
             // 
             this.cbPuTTYForward.AutoSize = true;
-            this.cbPuTTYForward.Location = new System.Drawing.Point(2, 136);
+            this.cbPuTTYForward.Location = new System.Drawing.Point(2, 163);
             this.cbPuTTYForward.Name = "cbPuTTYForward";
             this.cbPuTTYForward.Size = new System.Drawing.Size(100, 17);
             this.cbPuTTYForward.TabIndex = 12;
@@ -1298,6 +1295,49 @@ namespace AutoPuTTY.Forms
             this.bOK.Text = "OK";
             this.bOK.UseVisualStyleBackColor = true;
             // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label5.Location = new System.Drawing.Point(2, 134);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(283, 2);
+            this.label5.TabIndex = 16;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(235, 136);
+            this.button1.Margin = new System.Windows.Forms.Padding(0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(50, 22);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "Select";
+            this.button1.UseCompatibleTextRendering = true;
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(2, 137);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.textBox1.Size = new System.Drawing.Size(232, 20);
+            this.textBox1.TabIndex = 17;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 121);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 13);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Path (plink.exe)";
+            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1427,7 +1467,6 @@ namespace AutoPuTTY.Forms
         public System.Windows.Forms.CheckBox cbRDAdmin;
         public System.Windows.Forms.CheckBox cbPuTTYForward;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         public System.Windows.Forms.CheckBox cbRDSpan;
         private System.Windows.Forms.Label lSep19;
         private System.Windows.Forms.Label lWSCPOther;
@@ -1443,6 +1482,10 @@ namespace AutoPuTTY.Forms
         private System.Windows.Forms.Label label4;
         public System.Windows.Forms.CheckBox cbNCExecuteCommand;
         public System.Windows.Forms.TextBox tbNCCommand;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.TextBox textBox1;
     }
 }
 

@@ -9,5 +9,6 @@
         Ftp,
         Sftp,
         Telnet,
+        Plink
     }
 }

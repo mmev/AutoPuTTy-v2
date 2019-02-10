@@ -30,7 +30,7 @@ namespace AutoPuTTY.Forms
         public static formOptions optionsForm;
         public static formMain CurrentFormMain;
 
-        public string[] types = { "SSH", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)", "Telnet"};
+        public string[] types = { "SSH", StringResources.formMain_cbType_SelectedIndexChanged_Remote_Desktop, "VNC", "WinSCP (SCP)", "WinSCP (SFTP)", "WinSCP (FTP)", "Telnet", "Plink"};
         public string[] Types;
 
         private string lastState = "normal";
