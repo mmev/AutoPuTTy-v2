@@ -101,5 +101,8 @@
     <Setting Name="ncpath" Type="System.String" Scope="User">
       <Value Profile="(Default)">nc64.exe</Value>
     </Setting>
+    <Setting Name="plinkpath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">plink.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

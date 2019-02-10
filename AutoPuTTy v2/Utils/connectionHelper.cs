@@ -69,6 +69,9 @@ namespace AutoPuTTY.Utils
                 case ConnectionType.Telnet:
                     LaunchTelnet(serverElement);
                     break;
+                case ConnectionType.Plink:
+                    LaunchPlink(serverElement);
+                    break;
                 default:
                     LaunchPuTTy(serverElement);
                     break;
@@ -99,6 +102,25 @@ namespace AutoPuTTY.Utils
             else
             {
                 if (MessageBox.Show("Could not find file \"" + ncPath + "\"\nDo you want to change the configuration ?",
+                        Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                {
+                    formMain.optionsForm.bNCPath_Click();
+                }
+            }
+        }
+
+        public static void LaunchPlink(ServerElement currentServer)
+        {
+            string plinkPath = Settings.Default.plinkpath;
+
+            if (File.Exists(plinkPath))
+            {
+                string strCmdText = "/C " + plinkPath + " -ssh -l " + currentServer.Username + " -pw " + currentServer.Password + " " + currentServer.Host + " \"reboot\" &pause";
+                Process.Start("CMD.exe", strCmdText);
+            }
+            else
+            {
+                if (MessageBox.Show("Could not find file \"" + plinkPath + "\"\nDo you want to change the configuration ?",
                         Resources.connectionHelper_LaunchVnc_Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
                     formMain.optionsForm.bNCPath_Click();
@@ -139,7 +161,7 @@ namespace AutoPuTTY.Utils
                 rdpFileWriter.WriteLine(Settings.Default.rdsize == "Full screen" ? "screen mode id:i:2" : "screen mode id:i:1");
                 rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopwidth:i:" + sizes[0] : "");
                 rdpFileWriter.WriteLine(sizes.Length == 2 ? "desktopheight:i:" + sizes[1] : "");
-                rdpFileWriter.WriteLine(serverElement.HostWithServer != "" ? "full address:s:" + serverElement.HostWithServer : "");
+                rdpFileWriter.WriteLine(serverElement.HostWithPort != "" ? "full address:s:" + serverElement.HostWithPort : "");
                 rdpFileWriter.WriteLine(serverElement.Username != "" ? "username:s:" + serverElement.Username : "");
                 rdpFileWriter.WriteLine(serverElement.Username != "" && serverElement.Password != "" ? "password 51:b:" + CryptHelper.encryptpw(serverElement.Password) : "");
                 rdpFileWriter.WriteLine(Settings.Default.rddrives ? "redirectdrives:i:1" : "");

@@ -137,6 +137,7 @@ namespace AutoPuTTY.Forms
             if (XmlHelper.configGet("ncpath") != "") Settings.Default.ncpath = XmlHelper.configGet("ncpath");
             if (XmlHelper.configGet("nccommand") != "") Settings.Default.nccommand = XmlHelper.configGet("nccommand");
             if (XmlHelper.configGet("ncexecute").ToLower() == "true") Settings.Default.ncexecute = true;
+            if (XmlHelper.configGet("plinkpath") != "") Settings.Default.plinkpath = XmlHelper.configGet("plinkpath");
 
             optionsForm = new formOptions(this);
 

@@ -412,5 +412,17 @@ namespace AutoPuTTY.Properties {
                 this["ncpath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("plink.exe")]
+        public string plinkpath {
+            get {
+                return ((string)(this["plinkpath"]));
+            }
+            set {
+                this["plinkpath"] = value;
+            }
+        }
     }
 }

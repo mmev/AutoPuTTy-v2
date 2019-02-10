@@ -66,6 +66,8 @@ namespace AutoPuTTY.Forms
                 tbNCCommand.Text = Settings.Default.nccommand;
                 cbNCExecuteCommand.Checked = Settings.Default.ncexecute;
 
+                tbPlinkPath.Text = Settings.Default.plinkpath;
+
                 cbGMinimize.Checked = Settings.Default.minimize;
                 if (Settings.Default.password.Trim() != "")
                 {
@@ -907,6 +909,28 @@ namespace AutoPuTTY.Forms
         {
             Settings.Default.nccommand = tbNCCommand.Text;
             if (!FirstRead) MainForm.XmlHelper.configSet("nccommand", Settings.Default.nccommand);
+        }
+
+        private void bPlinkPath_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog browseFile = new OpenFileDialog
+            {
+                Title = "Select Plink executable",
+                Filter = Resources.formOptions_bPuTTYPath_Click_EXE_File____exe____exe
+            };
+
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                if (browseFile.FileName.Contains(" ")) browseFile.FileName = "\"" + browseFile.FileName + "\"";
+                string sourceFilePath = browseFile.FileName;
+                tbPlinkPath.Text = sourceFilePath;
+            }
+        }
+
+        private void tbPlinkPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Default.plinkpath = tbPlinkPath.Text;
+            if (!FirstRead) MainForm.XmlHelper.configSet("plinkpath", Settings.Default.plinkpath);
         }
     }
 }

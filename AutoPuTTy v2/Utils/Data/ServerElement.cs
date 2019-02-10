@@ -14,7 +14,7 @@ namespace AutoPuTTY.Utils.Data
         public ConnectionType Type;
         public bool AutoChecks;
 
-        public string HostWithServer;
+        public string HostWithPort;
 
         public ServerElement(string name, string host, string port, 
             string username, string password, string type, bool autoChecks)
@@ -29,7 +29,8 @@ namespace AutoPuTTY.Utils.Data
             Type = (ConnectionType) Int32.Parse(type.Trim());
             AutoChecks = autoChecks;
 
-            HostWithServer = host.Trim() + ":" + port.Trim();
+            
+            HostWithPort = host.Trim() + ":" + port.Trim() == "" ? "" : port.Trim();
         }
 
     }

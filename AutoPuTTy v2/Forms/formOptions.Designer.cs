@@ -25,6 +25,10 @@ namespace AutoPuTTY.Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formOptions));
             this.pOPuTTY = new System.Windows.Forms.Panel();
+            this.lPlinkPath = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.bPlinkPath = new System.Windows.Forms.Button();
+            this.tbPlinkPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbPuTTYForward = new System.Windows.Forms.CheckBox();
             this.bPuTTYExecute = new System.Windows.Forms.Button();
@@ -121,10 +125,6 @@ namespace AutoPuTTY.Forms
             this.lNCPath = new System.Windows.Forms.Label();
             this.bwProgress = new System.ComponentModel.BackgroundWorker();
             this.bOK = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.pOPuTTY.SuspendLayout();
             this.pORD.SuspendLayout();
             this.pOVNC.SuspendLayout();
@@ -150,10 +150,10 @@ namespace AutoPuTTY.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pOPuTTY.BackColor = System.Drawing.Color.Transparent;
-            this.pOPuTTY.Controls.Add(this.label1);
+            this.pOPuTTY.Controls.Add(this.lPlinkPath);
             this.pOPuTTY.Controls.Add(this.label5);
-            this.pOPuTTY.Controls.Add(this.button1);
-            this.pOPuTTY.Controls.Add(this.textBox1);
+            this.pOPuTTY.Controls.Add(this.bPlinkPath);
+            this.pOPuTTY.Controls.Add(this.tbPlinkPath);
             this.pOPuTTY.Controls.Add(this.label2);
             this.pOPuTTY.Controls.Add(this.cbPuTTYForward);
             this.pOPuTTY.Controls.Add(this.bPuTTYExecute);
@@ -172,6 +172,49 @@ namespace AutoPuTTY.Forms
             this.pOPuTTY.Name = "pOPuTTY";
             this.pOPuTTY.Size = new System.Drawing.Size(286, 185);
             this.pOPuTTY.TabIndex = 0;
+            // 
+            // lPlinkPath
+            // 
+            this.lPlinkPath.AutoSize = true;
+            this.lPlinkPath.Location = new System.Drawing.Point(3, 121);
+            this.lPlinkPath.Name = "lPlinkPath";
+            this.lPlinkPath.Size = new System.Drawing.Size(80, 13);
+            this.lPlinkPath.TabIndex = 19;
+            this.lPlinkPath.Text = "Path (plink.exe)";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label5.Location = new System.Drawing.Point(2, 134);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(283, 2);
+            this.label5.TabIndex = 16;
+            // 
+            // bPlinkPath
+            // 
+            this.bPlinkPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bPlinkPath.Location = new System.Drawing.Point(235, 136);
+            this.bPlinkPath.Margin = new System.Windows.Forms.Padding(0);
+            this.bPlinkPath.Name = "bPlinkPath";
+            this.bPlinkPath.Size = new System.Drawing.Size(50, 22);
+            this.bPlinkPath.TabIndex = 18;
+            this.bPlinkPath.Text = "Select";
+            this.bPlinkPath.UseCompatibleTextRendering = true;
+            this.bPlinkPath.UseVisualStyleBackColor = true;
+            this.bPlinkPath.Click += new System.EventHandler(this.bPlinkPath_Click);
+            // 
+            // tbPlinkPath
+            // 
+            this.tbPlinkPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPlinkPath.Location = new System.Drawing.Point(2, 137);
+            this.tbPlinkPath.Name = "tbPlinkPath";
+            this.tbPlinkPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tbPlinkPath.Size = new System.Drawing.Size(232, 20);
+            this.tbPlinkPath.TabIndex = 17;
+            this.tbPlinkPath.TextChanged += new System.EventHandler(this.tbPlinkPath_TextChanged);
             // 
             // label2
             // 
@@ -1295,49 +1338,6 @@ namespace AutoPuTTY.Forms
             this.bOK.Text = "OK";
             this.bOK.UseVisualStyleBackColor = true;
             // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(2, 134);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(283, 2);
-            this.label5.TabIndex = 16;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(235, 136);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(50, 22);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "Select";
-            this.button1.UseCompatibleTextRendering = true;
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(2, 137);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.textBox1.Size = new System.Drawing.Size(232, 20);
-            this.textBox1.TabIndex = 17;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 121);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 13);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Path (plink.exe)";
-            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1482,10 +1482,10 @@ namespace AutoPuTTY.Forms
         private System.Windows.Forms.Label label4;
         public System.Windows.Forms.CheckBox cbNCExecuteCommand;
         public System.Windows.Forms.TextBox tbNCCommand;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lPlinkPath;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
-        public System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button bPlinkPath;
+        public System.Windows.Forms.TextBox tbPlinkPath;
     }
 }
 
