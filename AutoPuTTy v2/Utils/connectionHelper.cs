@@ -7,6 +7,7 @@ using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using AutoPuTTY.Forms;
+using AutoPuTTY.Forms.Popups;
 using AutoPuTTY.Properties;
 using AutoPuTTY.Utils.Data;
 
@@ -49,6 +50,28 @@ namespace AutoPuTTY.Utils
             ServerElement serverElement = XmlHelper.getServerByName(_currentGroup, _currentServer);
             if (serverElement == null) return;
 
+            string plinkCommand = "";
+
+            if (serverElement.Type == ConnectionType.Plink)
+            {
+                plinkCommand = XmlHelper.getServerParamByServerId(_currentGroup, _currentServer, "plinkCommand");
+
+                if (plinkCommand == "")
+                {
+                    InputBoxItem[] items = new InputBoxItem[] {
+                        new InputBoxItem("Command")
+                    };
+
+                    InputBox input = InputBox.Show("Enter new Plink command", items, InputBoxButtons.OKCancel);
+                    if (input.Result == InputBoxResult.OK)
+                    {
+                        plinkCommand = input.Items["Command"];
+                        XmlHelper.setServerParamByServerId(_currentGroup, _currentServer, "plinkCommand", input.Items["Command"]);
+                    }
+                    else return;
+                }
+            }
+
             switch (serverElement.Type)
             {
                 case ConnectionType.Rdp: //RDP
@@ -70,7 +93,7 @@ namespace AutoPuTTY.Utils
                     LaunchTelnet(serverElement);
                     break;
                 case ConnectionType.Plink:
-                    LaunchPlink(serverElement);
+                    LaunchPlink(serverElement, plinkCommand);
                     break;
                 default:
                     LaunchPuTTy(serverElement);
@@ -109,13 +132,13 @@ namespace AutoPuTTY.Utils
             }
         }
 
-        public static void LaunchPlink(ServerElement currentServer)
+        public static void LaunchPlink(ServerElement currentServer, string command)
         {
             string plinkPath = Settings.Default.plinkpath;
 
             if (File.Exists(plinkPath))
             {
-                string strCmdText = "/C " + plinkPath + " -ssh -l " + currentServer.Username + " -pw " + currentServer.Password + " " + currentServer.Host + " \"reboot\" &pause";
+                string strCmdText = "/C " + plinkPath + " -ssh -l " + currentServer.Username + " -pw " + currentServer.Password + " " + currentServer.Host + " \"" + command + "\" &pause";
                 Process.Start("CMD.exe", strCmdText);
             }
             else

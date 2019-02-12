@@ -745,5 +745,97 @@ namespace AutoPuTTY.Utils
 
             return false;
         }
+
+        /// <summary>
+        /// get param in server by server, group, paramname
+        /// </summary>
+        /// <param name="_groupName"></param>
+        /// <param name="_serverName"></param>
+        /// <param name="_paramName"></param>
+        /// <returns></returns>
+        public static string getServerParamByServerId(string _groupName, string _serverName, string _paramName)
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmlDocument.SelectSingleNode("//*[@GroupName='" + _groupName + "']");
+
+            if (xmlGroup != null)
+                foreach (XmlElement xmlElement in xmlGroup)
+                {
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
+                            string foundedServerName = xmlElement.GetAttribute("Name");
+
+                            if (!foundedServerName.Equals(_serverName)) continue;
+
+                            string currentData = "";
+
+                            foreach (XmlElement serverElements in xmlElement.ChildNodes)
+                            {
+                                if (serverElements.Name == _paramName)
+                                    currentData = serverElements.InnerText;
+                            }
+
+                            return currentData;
+                    }
+                }
+
+            //TODO: Fix return null
+            return "";
+        }
+
+        public static void setServerParamByServerId(string _groupName, string _serverName, string _paramName,
+            string _newData)
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Settings.Default.cfgpath);
+
+            XmlNode xmlGroup = xmlDocument.SelectSingleNode("//*[@GroupName='" + _groupName + "']");
+
+            if (xmlGroup != null)
+                foreach (XmlElement xmlElement in xmlGroup)
+                {
+                    switch (xmlElement.Name)
+                    {
+                        case "Server":
+                            string foundedServerName = xmlElement.GetAttribute("Name");
+
+                            if (!foundedServerName.Equals(_serverName)) continue;
+
+                            string currentData = "";
+                            bool isCurrentExist = false;
+
+                            foreach (XmlElement serverElements in xmlElement.ChildNodes)
+                            {
+                                if (serverElements.Name == _paramName)
+                                {
+                                    serverElements.InnerText = _newData;
+                                    isCurrentExist = true;
+                                }
+                            }
+
+                            if (!isCurrentExist)
+                            {
+                                XmlElement newElement = xmlDocument.CreateElement(_paramName);
+                                newElement.InnerText = _newData;
+                                xmlElement.AppendChild(newElement);
+                            }
+
+                            break;
+                    }
+                }
+
+            try
+            {
+                xmlDocument.Save(Settings.Default.cfgpath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                OtherHelper.Error(
+                    "Could not write to configuration file :'(\rModifications will not be saved\rPlease check your user permissions.");
+            }
+        }
     }
 }

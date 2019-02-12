@@ -29,7 +29,6 @@ namespace AutoPuTTY.Utils.Data
             Type = (ConnectionType) Int32.Parse(type.Trim());
             AutoChecks = autoChecks;
 
-            
             HostWithPort = host.Trim() + ":" + port.Trim() == "" ? "" : port.Trim();
         }
 
